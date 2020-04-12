@@ -971,16 +971,214 @@ Let’s recap what we’ve discussed about references:
 
 
 
-
-
-
-
-
-
-
-
-
 ### 4.3. The Slice Type
+
+Another data type that does not have ownership is the slice. Slices let you reference a contiguous sequence of elements in a collection rather than the whole collection.
+
+Image we have a function `first_word` that find the first word in a string, and return the index of first blank in the string.
+
+```rs
+fn first_word(s: &String) -> usize { // use &String, becuase we don't want the ownership of the passing in string
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return i;
+        }
+    }
+
+    s.len()
+}
+
+fn main() {
+    let mut s = String::from("hello world");
+
+    let word = first_word(&s); // word will get the value 5
+
+    s.clear(); // this empties the String, making it equal to ""
+
+    // word still has the value 5 here, but there's no more string that
+    // we could meaningfully use the value 5 with. word is now totally invalid!
+}
+```
+
+>Listing 4-8: Storing the result from calling the `first_word` function and then changing the String contents
+
+This program compiles without any errors and would also do so if we used `word` after calling `s.clear()`. Because `word` isn’t connected to the state of `s` at all, `word` still contains the value `5`. We could use that value `5` with the variable `s` to try to extract the first word out, but this would be a bug because the contents of `s` have changed since we saved `5` in `word`.
+
+We now have the index in word getting out of sync with the data in `s` and it is tedious and error prone. Luckily, Rust has a solution to this problem: string slices.
+
+String Slices
+
+A string slice is a reference to part of a `String`, and it looks like this:
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let s = String::from("hello world");
+
+    let hello = &s[0..5];
+    let world = &s[6..11];
+}
+```
+
+This is similar to taking a reference to the whole `String` but with the extra `[0..5]` bit. Rather than a reference to the entire `String`, it’s a reference to a portion of the String.
+
+We can create slices using a range within brackets by specifying `[starting_index..ending_index]`, where `starting_index` is the first position in the slice and `ending_index` is one more than the last position in the slice. Internally, the slice data structure stores the starting position and the length of the slice, which corresponds to ending_index minus starting_index. So in the case of `let world = &s[6..11];, world` would be a slice that contains a pointer to the 7th byte (counting from 1) of `s` with a length value of 5.
+
+>![Alternate text](./static/img/trpl04-06.svg)
+>Figure 4-6: String slice referring to part of a String
+
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+    let s = String::from("hello");
+
+    let slice = &s[0..2]; // slice the first two bytes
+    let slice = &s[..2];  // same but short hand
+
+    let len = s.len();
+
+    let slice = &s[3..len]; // slice from the 4th to the end
+    let slice = &s[3..];  // same but short hand
+
+    let slice = &s[0..len]; // slice the whole string
+    let slice = &s[..]; // same but short hand
+}
+```
+
+>Note: String slice range indices must occur at valid UTF-8 character boundaries. If you attempt to create a string slice in the middle of a multibyte character, your program will exit with an error. For the purposes of introducing string slices, we are assuming ASCII only in this section; a more thorough discussion of UTF-8 handling is in the “Storing UTF-8 Encoded Text with Strings” section of Chapter 8.
+
+With all this information in mind, let’s rewrite `first_word` to return a slice. The type that signifies “string slice” is written as `&str`:
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    fn first_word(s: &String) -> &str {
+        let bytes = s.as_bytes();
+
+        for (i, &item) in bytes.iter().enumerate() {
+            if item == b' ' {
+                return &s[0..i];
+            }
+        }
+
+        &s[..]
+    }
+}
+```
+
+Now when we call first_word, we get back a single value that is tied to the underlying data. The value is made up of a reference to the starting point of the slice and the number of elements in the slice.
+
+We now have a straightforward API that’s much harder to mess up, because the compiler will ensure the references into the String remain valid. Remember the bug in the program in Listing 4-8, when we got the index to the end of the first word but then cleared the string so our index was invalid? That code was logically incorrect but didn’t show any immediate errors. The problems would show up later if we kept trying to use the first word index with an emptied string. Slices make this bug impossible and let us know we have a problem with our code much sooner. Using the slice version of first_word will throw a compile-time error:
+
+```rs
+fn main() {
+    let mut s = String::from("hello world");
+
+    let word = first_word(&s);
+
+    s.clear(); // error!
+
+    println!("the first word is: {}", word);
+}
+```
+
+Here’s the compiler error:
+
+```
+error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
+  --> src/main.rs:18:5
+   |
+16 |     let word = first_word(&s);
+   |                           -- immutable borrow occurs here
+17 |
+18 |     s.clear(); // error!
+   |     ^^^^^^^^^ mutable borrow occurs here
+19 |
+20 |     println!("the first word is: {}", word);
+   |                                       ---- immutable borrow later used here
+```
+
+Recall from the borrowing rules that if we have an immutable reference to something, we cannot also take a mutable reference. Because clear needs to truncate the String, it needs to get a mutable reference. Rust disallows this, and compilation fails. 
+
+String Literals Are Slices
+
+Recall that we talked about string literals being stored inside the binary. Now that we know about slices, we can properly understand string literals:
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let s = "Hello, world!";
+}
+```
+
+The type of `s` here is `&str`: it’s a slice pointing to that specific point of the binary. This is also why string literals are immutable; `&str` is an immutable reference.
+
+String Slices as Parameters
+
+Knowing that you can take slices of literals and String values leads us to one more improvement on `first_word`, and that’s its signature:
+
+```rs
+fn first_word(s: &str) -> &str {
+```
+
+>Listing 4-9: Improving the first_word function by using a string slice for the type of the s parameter
+
+If we have a string slice, we can pass that directly. If we have a `String`, we can pass a slice of the entire `String`. Defining a function to take a string slice instead of a reference to a `String` makes our API more general and useful without losing any functionality:
+
+```rs
+fn first_word(s: &str) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
+}
+fn main() {
+    let my_string = String::from("hello world");
+
+    // first_word works on slices of `String`s
+    let word = first_word(&my_string[..]);
+
+    let my_string_literal = "hello world";
+
+    // first_word works on slices of string literals
+    let word = first_word(&my_string_literal[..]);
+
+    // Because string literals *are* string slices already,
+    // this works too, without the slice syntax!
+    let word = first_word(my_string_literal);
+}
+```
+
+Other Slices
+
+String slices, as you might imagine, are specific to strings. But there’s a more general slice type, too. Consider this array:
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let a = [1, 2, 3, 4, 5];
+
+    let slice = &a[1..3];
+}
+```
+
+This slice has the type &[i32]. It works the same way as string slices do, by storing a reference to the first element and a length. 
+
+
+Summary
+
+The concepts of ownership, borrowing, and slices ensure memory safety in Rust programs at compile time. The Rust language gives you control over your memory usage in the same way as other systems programming languages, but having the owner of data automatically clean up that data when the owner goes out of scope means you don’t have to write and debug extra code to get this control.
+
+
+
 
 
 ## Q & A
@@ -988,3 +1186,7 @@ Let’s recap what we’ve discussed about references:
 
 1. How to organize code:  
 When the code base is getting larger, you might need to work with multiple crates on the same project. Rust supports this via Workspaces, run example by: `(cd examples/hello && cargo run)`
+
+
+Refs:
+https://doc.rust-lang.org/book/title-page.html

@@ -1,5 +1,7 @@
 [workspace]
 members = [
     "lib",
-    "examples/hello"
+    "examples/hello",
+    "examples/list4-7",
+    "examples/list4-9"
 ]
