@@ -710,7 +710,8 @@ First, notice that all the tuple code in the variable declaration and the functi
 These ampersands are references, and they allow you to refer to some value without taking ownership of it. Figure 4-5 shows a diagram.
 
 >![Alternate text](./static/img/trpl04-05.svg)
->Figure 4-5: A diagram of `&String s` pointing at String `s1`
+>Figure 4-5: A diagram of `&String s` pointing at String `s1`  
+
 >Note: The opposite of referencing by using `&` is dereferencing, which is accomplished with the dereference operator, `*`. We’ll see some uses of the dereference operator in Chapter 8 and discuss details of dereferencing in Chapter 15.
 
 Let’s take a closer look at the function call here:
@@ -1178,8 +1179,374 @@ Summary
 The concepts of ownership, borrowing, and slices ensure memory safety in Rust programs at compile time. The Rust language gives you control over your memory usage in the same way as other systems programming languages, but having the owner of data automatically clean up that data when the owner goes out of scope means you don’t have to write and debug extra code to get this control.
 
 
+## 5. Using Structs to Structure Related Data
+
+A struct, or structure, is a custom data type that lets you name and package together multiple related values that make up a meaningful group. If you’re familiar with an object-oriented language, a struct is like an object’s data attributes
+
+### 5.1. Defining and Instantiating Structs
+
+Structs are similar to tuples. Like tuples, the pieces of a struct can be different types. Unlike with tuples, you’ll name each piece of data so it’s clear what the values mean. As a result of these names, structs are more flexible than tuples: you don’t have to rely on the order of the data to specify or access the values of an instance.
+
+To define a struct, we enter the keyword struct and name the entire struct. Then, inside curly brackets, we define the names and types of the pieces of data, which we call fields. 
+
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+    struct User {
+        username: String,
+        email: String,
+        sign_in_count: u64,
+        active: bool,
+    }
+}
+```
+> Listing 5-1: A User struct definition
+
+create *instance* of struct
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    struct User {
+        username: String,
+        email: String,
+        sign_in_count: u64,
+        active: bool,
+    }
+
+    let user1 = User {
+        email: String::from("someone@example.com"),
+        username: String::from("someusername123"),
+        active: true,
+        sign_in_count: 1,
+    };
+}
+```
+
+> Listing 5-2: Creating an instance of the User struct
+
+To get a specific value from a struct, we can use dot notation. If we wanted just this user’s email address, we could use `user1.email` wherever we wanted to use this value. If the instance is mutable, we can change a value by using the dot notation and assigning into a particular field. Listing 5-3 shows how to change the value in the `email` field of a mutable `User` instance.
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    struct User {
+        username: String,
+        email: String,
+        sign_in_count: u64,
+        active: bool,
+    }
+
+    let mut user1 = User {
+        email: String::from("someone@example.com"),
+        username: String::from("someusername123"),
+        active: true,
+        sign_in_count: 1,
+    };
+
+    user1.email = String::from("anotheremail@example.com");
+}
+```
+
+> Listing 5-3: Changing the value in the email field of a User instance
+
+Note that the entire instance must be mutable; Rust doesn’t allow us to mark only certain fields as mutable. 
+
+Using the Field Init Shorthand when Variables and Fields Have the Same Name
+
+When the parameter names and the struct field names are exactly the same, we can use the field init shorthand syntax to avoid repetition of email and username in comment out line, as shown in Listing 5-5.
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    struct User {
+        username: String,
+        email: String,
+        sign_in_count: u64,
+        active: bool,
+    }
+
+    // fn build_user(email: String, username: String) -> User {
+    //     User {
+    //         email: email, // having to repeat the email and username field names and variables is a bit tedious
+    //         username: username,
+    //         active: true,
+    //         sign_in_count: 1,
+    //     }
+    // }
+
+    fn build_user(email: String, username: String) -> User {
+        User {
+            email, // field name are the same with parameter name, use field init shorthand
+            username,
+            active: true,
+            sign_in_count: 1,
+        }
+    }
+}
+```
+
+Creating Instances From Other Instances With Struct Update Syntax
+
+It’s often useful to create a new instance of a struct that uses most of an old instance’s values but changes some. You’ll do this using *struct update syntax*.
 
 
+```rs
+#![allow(unused_variables)]
+fn main() {
+    struct User {
+        username: String,
+        email: String,
+        sign_in_count: u64,
+        active: bool,
+    }
+
+    let user1 = User {
+        email: String::from("someone@example.com"),
+        username: String::from("someusername123"),
+        active: true,
+        sign_in_count: 1,
+    };
+
+    // let user2 = User {
+    //     email: String::from("another@example.com"),
+    //     username: String::from("anotherusername567"),
+    //     active: user1.active,  // create a new instance with same active and sign_in_count value as instance user1 manually
+    //     sign_in_count: user1.sign_in_count,
+    // };
+
+    let user2 = User {
+        email: String::from("another@example.com"), // struct update syntax
+        username: String::from("anotherusername567"),
+        ..user1
+    };
+}
+```
+
+> Listing 5-7: Using struct update syntax to set new `email` and `username` values for a User instance but use the rest of the values from the fields of the instance in the `user1` variable
+
+Using Tuple Structs without Named Fields to Create Different Types
+
+You can also define structs that look similar to tuples, called tuple structs. Tuple structs have the added meaning the struct name provides but don’t have names associated with their fields; rather, they just have the types of the fields. Tuple structs are useful when you want to give the whole tuple a name and make the tuple be a different type from other tuples, and naming each field as in a regular struct would be verbose or redundant.
+
+To define a tuple struct, start with the `struct` keyword and the struct name followed by the types in the tuple. For example, here are definitions and usages of two tuple structs named `Color` and `Point`:
+
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+    struct Color(i32, i32, i32);
+    struct Point(i32, i32, i32);
+
+    let black = Color(0, 0, 0);
+    let origin = Point(0, 0, 0);
+}
+```
+
+> Note that the black and origin values are different types, because they’re instances of different tuple structs. Each struct you define is its own type, even though the fields within the struct have the same types. For example, a function that takes a parameter of type Color cannot take a Point as an argument, even though both types are made up of three i32 values. Otherwise, tuple struct instances behave like tuples: you can destructure them into their individual pieces, you can use a . followed by the index to access an individual value, and so on.
+
+Unit-Like Structs Without Any Fields
+
+You can also define structs that don’t have any fields! These are called unit-like structs because they behave similarly to (), the unit type. Unit-like structs can be useful in situations in which you need to implement a trait on some type but don’t have any data that you want to store in the type itself.
+
+> **Ownership of Struct Data**  
+> In the User struct definition in Listing 5-1, we used the owned String type rather than the &str string slice type. This is a deliberate choice because we want instances of this struct to own all of its data and for that data to be valid for as long as the entire struct is valid.  
+> It’s possible for structs to store references to data owned by something else, but to do so requires the use of lifetimes, a Rust feature that we’ll discuss in Chapter 10. Lifetimes ensure that the data referenced by a struct is valid for as long as the struct is. Let’s say you try to store a reference in a struct without specifying lifetimes, like this, which won’t work:
+
+```rs
+struct User {
+    username: &str,
+    email: &str,
+    sign_in_count: u64,
+    active: bool,
+}
+
+fn main() {
+    let user1 = User {
+        email: "someone@example.com",
+        username: "someusername123",
+        active: true,
+        sign_in_count: 1,
+    };
+}
+```
+
+The compiler will complain that it needs lifetime specifiers:
+
+```
+error[E0106]: missing lifetime specifier
+ -->
+  |
+2 |     username: &str,
+  |               ^ expected lifetime parameter
+
+error[E0106]: missing lifetime specifier
+ -->
+  |
+3 |     email: &str,
+  |            ^ expected lifetime parameter
+```
+
+### 5.2. An Example Program Using Structs
+
+use struct instance as function parameter
+
+```rs
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+fn main() {
+    let rect1 = Rectangle { width: 30, height: 50 };
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        area(&rect1)
+    );
+}
+
+fn area(rectangle: &Rectangle) -> u32 {
+    rectangle.width * rectangle.height
+}
+```
+
+> Listing 5-10: Defining a Rectangle struct
+
+### 5.3. Method Syntax
+
+*Methods* are similar to functions: they’re declared with the `fn` keyword and their name, they can have parameters and a return value, and they contain some code that is run when they’re called from somewhere else. However, methods are different from functions in that they’re defined within the context of a struct (or an enum or a trait object, which we cover in Chapters 6 and 17, respectively), and their first parameter is always `self`, which represents the instance of the struct the method is being called on.
+
+Defining Methods
+
+```rs
+#![allow(used_methods)]
+fn main() {
+    let rect = Rectangle {
+        width: 30,
+        height: 50,
+    };
+    let rect2 = Rectangle {
+        width: 20,
+        height: 30,
+    };
+    println!("rect detail: {:?}", rect);
+    println!("rect2 detail: {:?}", rect2);
+    println!(
+        "Rect can hold Rect2? {}.",
+        rect.can_hold(&rect2)
+    );
+}
+
+
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    // define method on Rectangle struct
+    fn area(&self) -> u32 { // user &self reference here, because we don't want to take ownership
+        self.width * self.width
+    }
+
+    fn can_hold(&self, another: &Rectangle) -> bool {
+        self.width > another.width && self.height > another.height
+    }
+}
+```
+
+> Listing 5-13: Defining an area method on the Rectangle struct
+
+To define the function within the context of Rectangle, we start an impl (implementation) block. Then we move the area function within the impl curly brackets and change the first (and in this case, only) parameter to be self in the signature and everywhere within the body. 
+
+
+Associated Functions
+
+Another useful feature of `impl` blocks is that we’re allowed to define functions within `impl` blocks that don’t take `self` as a parameter. These are called associated functions because they’re associated with the struct. They’re still functions, not methods, because they don’t have an instance of the struct to work with. You’ve already used the `String::from` associated function.
+
+Associated functions are often used for constructors that will return a new instance of the struct.
+
+
+```rs
+fn main() {
+    let square = Rectangle::square(20);
+    println!("square detail: {:?}", square);
+    println!(
+        "The area of the square is {} square pixels.",
+        square.area()
+    );
+}
+
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    // associated functions are associated with the struct.
+    // They’re still functions, not methods, because they don’t have an instance of the struct to work with
+    // usage: let sq = Rectangle::square(3)
+    fn square(size: u32) -> Rectangle {
+        Rectangle { width: size, height: size }
+    }
+
+    // define method on Rectangle struct
+    fn area(&self) -> u32 { // user &self reference here, because we don't want to take ownership
+        self.width * self.width
+    }
+
+    fn can_hold(&self, another: &Rectangle) -> bool {
+        self.width > another.width && self.height > another.height
+    }
+}
+```
+
+Multiple `impl` Blocks
+
+Each struct is allowed to have multiple impl blocks. 
+
+
+```rs
+fn main() {}
+
+
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    // associated functions are associated with the struct.
+    // They’re still functions, not methods, because they don’t have an instance of the struct to work with
+    // usage: let sq = Rectangle::square(3)
+    fn square(size: u32) -> Rectangle {
+        Rectangle { width: size, height: size }
+    }
+
+    // define method on Rectangle struct
+    fn area(&self) -> u32 { // user &self reference here, because we don't want to take ownership
+        self.width * self.width
+    }
+}
+
+// one struct can have multiple impl block
+impl Rectangle {
+    fn can_hold(&self, another: &Rectangle) -> bool {
+        self.width > another.width && self.height > another.height
+    }
+}
+```
+
+Summary
+
+Structs let you create custom types that are meaningful for your domain. By using structs, you can keep associated pieces of data connected to each other and name each piece to make your code clear. Methods let you specify the behavior that instances of your structs have, and associated functions let you namespace functionality that is particular to your struct without having an instance available.
+
+But structs aren’t the only way you can create custom types: let’s turn to Rust’s enum feature to add another tool to your toolbox.
 
 ## Q & A
 

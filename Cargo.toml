@@ -3,5 +3,12 @@ members = [
     "lib",
     "examples/hello",
     "examples/list4-7",
-    "examples/list4-9"
+    "examples/list4-9",
+    "examples/list5-8",
+    "examples/list5-9",
+    "examples/list5-10",
+    "examples/list5-13",
+    "examples/list5-14",
+    "examples/list5-15",
+    "examples/list5-16",
 ]
