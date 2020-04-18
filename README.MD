@@ -2879,48 +2879,176 @@ fn main() {
 
 Strings Are Not So Simple
 
+### 8.3. Storing Keys with Associated Values in Hash Maps
 
+Creating a New Hash Map
 
+```rs
+#![allow(unused_variables)]
+fn main() {
+    use std::collections::HashMap;
 
+    let mut scores = HashMap::new();
 
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
+}
+```
 
+> Listing 8-20: Creating a new hash map and inserting some keys and values
 
+Another way of constructing a hash map is by using the `collect` method on a vector of tuples, where each tuple consists of a key and its value. The `collect` method gathers data into a number of collection types, including `HashMap`. 
 
+```rs
 
+#![allow(unused_variables)]
+fn main() {
+    use std::collections::HashMap;
 
+    let teams  = vec![String::from("Blue"), String::from("Yellow")];
+    let initial_scores = vec![10, 50];
 
+    let scores: HashMap<_, _> = teams.iter().zip(initial_scores.iter()).collect();
+}
+```
 
+> Listing 8-21: Creating a hash map from a list of teams and a list of scores
 
+The type annotation `HashMap<_, _>` is needed here because it’s possible to `collect` into many different data structures and Rust doesn’t know which you want unless you specify. For the parameters for the key and value types, however, we use underscores, and Rust can infer the types that the hash map contains based on the types of the data in the vectors.
 
+Hash Maps and Ownership
 
+For types that implement the `Copy` trait, like `i32`, the values are copied into the hash map. For owned values like `String`, the values will be moved and the hash map will be the owner of those values, as demonstrated in Listing 8-22.
 
+```rs
+#![allow(unused_variables)]
+fn main() {
+    use std::collections::HashMap;
 
+    let field_name = String::from("Favorite color");
+    let field_value = String::from("Blue");
 
+    let mut map = HashMap::new();
+    map.insert(field_name, field_value);
+    // field_name and field_value are invalid at this point, try using them and
+    // see what compiler error you get!
+}
+```
 
+> Listing 8-22: Showing that keys and values are owned by the hash map once they’re inserted
 
+We aren’t able to use the variables `field_name` and `field_value` after they’ve been moved into the hash map with the call to `insert`.
 
+If we insert references to values into the hash map, the values won’t be moved into the hash map. The values that the references point to must be valid for at least as long as the hash map is valid.
 
+Accessing Values in a Hash Map
 
+```rs
+#![allow(unused_variables)]
+fn main() {
+    use std::collections::HashMap;
 
+    let mut scores = HashMap::new();
 
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
 
+    let team_name = String::from("Blue");
+    let score = scores.get(&team_name);
+}
+```
 
+Iterate over a map
 
+```rs
+#![allow(unused_variables)]
+fn main() {
+    use std::collections::HashMap;
 
+    let mut scores = HashMap::new();
 
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
 
+    for (key, value) in &scores {
+        println!("{}: {}", key, value);
+    }
+}
+```
 
+Updating a Hash Map
 
+need handle case when the key-value pair not exists
 
+Overwriting a Value
 
+when insert different value for the same key, map will only keep the last value for the key
 
+```rs
 
+#![allow(unused_variables)]
+fn main() {
+    use std::collections::HashMap;
 
+    let mut scores = HashMap::new();
 
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Blue"), 25); // overwrites the previous value
 
+    println!("{:?}", scores);
+}
+```
 
+> Listing 8-24: Replacing a value stored with a particular key
 
+Only Inserting a Value If the Key Has No Value
 
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+    use std::collections::HashMap;
+
+    let mut scores = HashMap::new();
+    scores.insert(String::from("Blue"), 10);
+
+    scores.entry(String::from("Yellow")).or_insert(50);
+    scores.entry(String::from("Blue")).or_insert(50);
+
+    println!("{:?}", scores);
+}
+```
+
+> Listing 8-25: Using the `entry` method to only insert if the key does not already have a value
+
+Updating a Value Based on the Old Value
+
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+    use std::collections::HashMap;
+
+    let text = "hello world wonderful world";
+
+    let mut map = HashMap::new();
+
+    for word in text.split_whitespace() {
+        let count = map.entry(word).or_insert(0); // insert conditionaly and return a mutable reference to current value
+        *count += 1;
+    }
+
+    println!("{:?}", map);
+}
+```
+
+> Listing 8-26: Counting occurrences of words using a hash map that stores words and counts
+
+Hashing Functions
+
+By default, `HashMap` uses a “cryptographically strong”[1] hashing function that can provide resistance to Denial of Service (DoS) attacks. This is not the fastest hashing algorithm available, but the trade-off for better security that comes with the drop in performance is worth it. If you profile your code and find that the default hash function is too slow for your purposes, you can switch to another function by specifying a different hasher. A *hasher* is a type that implements the `BuildHasher` trait.
+
+[1] https://www.131002.net/siphash/siphash.pdf
 
 
 
