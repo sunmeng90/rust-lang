@@ -1,6 +1,7 @@
 mod front_of_house {
-    mod hosting {
-        fn add_to_waitlist() {}
+    pub mod hosting {
+        // make hosting module public
+        pub fn add_to_waitlist() {}
 
         fn seat_at_table() {}
     }
@@ -29,3 +30,23 @@ mod front_of_house {
 //             ├── take_order
 //             ├── serve_order
 //             └── take_payment
+
+pub fn eat_at_restaurant() {
+    // absolute path
+    crate::front_of_house::hosting::add_to_waitlist(); // `crate` is the root of crate's module tree
+
+    // relative path
+    self::front_of_house::hosting::add_to_waitlist();
+}
+
+//==================================================================================================
+fn serve_order() {}
+
+mod back_of_house {
+    fn fix_incorrect_order() {
+        cook_order();
+        super::serve_order(); // access function in parent module using `super` keyword
+    }
+
+    fn cook_order() {}
+}

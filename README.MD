@@ -2110,6 +2110,188 @@ Earlier, we mentioned that `src/main.rs` and `src/lib.rs` are called crate roots
 
 The module tree might remind you of the filesystem’s directory tree on your computer; this is a very apt comparison! Just like directories in a filesystem, you use modules to organize your code. And just like files in a directory, we need a way to find our modules.
 
+### 7.3. Paths for Referring to an Item in the Module Tree
+
+To show Rust where to find an item in a module tree, we use a path in the same way we use a path when navigating a filesystem. If we want to call a function, we need to know its path.
+
+A path can take two forms:
+
+* An *absolute path* starts from a crate root by using a crate name or a literal `crate`.
+* A *relative path* starts from the current module and uses `self`, `super`, or an identifier in the current module.
+Both absolute and relative paths are followed by one or more identifiers separated by double colons (`::`).
+
+Let’s try to compile Listing 7-3 and find out why it won’t compile yet! The error we get is shown in Listing 7-4.
+
+```console
+$ cargo build
+   Compiling restaurant v0.1.0 (file:///projects/restaurant)
+error[E0603]: module `hosting` is private
+ --> src/lib.rs:9:28
+  |
+9 |     crate::front_of_house::hosting::add_to_waitlist();
+  |                            ^^^^^^^
+
+error[E0603]: module `hosting` is private
+  --> src/lib.rs:12:21
+   |
+12 |     front_of_house::hosting::add_to_waitlist();
+   |                     ^^^^^^^
+```
+
+> Listing 7-4: Compiler errors from building the code in Listing 7-3
+
+The error messages say that module `hosting` is private. In other words, we have the correct paths for the `hosting` module and the `add_to_waitlist` function, but Rust won’t let us use them because it doesn’t have access to the private sections.
+
+Modules aren’t useful only for organizing your code. They also define Rust’s privacy boundary: the line that encapsulates the implementation details external code isn’t allowed to know about, call, or rely on. So, if you want to make an item like a function or struct private, you put it in a module.
+
+The way privacy works in Rust is that all items (functions, methods, structs, enums, modules, and constants) are private by default. **Items in a parent module can’t use the private items inside child modules, but items in child modules can use the items in their ancestor modules.** The reason is that child modules wrap and hide their implementation details, but the child modules can see the context in which they’re defined. 
+
+But you can expose inner parts of child modules code to outer ancestor modules by using the pub keyword to make an item public.
+
+Exposing Paths with the `pub` Keyword
+
+```rs
+mod front_of_house {
+    pub mod hosting {
+        fn add_to_waitlist() {}
+    }
+}
+
+pub fn eat_at_restaurant() {
+    // Absolute path
+    crate::front_of_house::hosting::add_to_waitlist();
+
+    // Relative path
+    front_of_house::hosting::add_to_waitlist();
+}
+```
+
+> Listing 7-5: Declaring the hosting module as `pub` to use it from `eat_at_restaurant`
+
+```console
+$ cargo build
+   Compiling restaurant v0.1.0 (file:///projects/restaurant)
+error[E0603]: function `add_to_waitlist` is private
+ --> src/lib.rs:9:37
+  |
+9 |     crate::front_of_house::hosting::add_to_waitlist();
+  |                                     ^^^^^^^^^^^^^^^
+
+error[E0603]: function `add_to_waitlist` is private
+  --> src/lib.rs:12:30
+   |
+12 |     front_of_house::hosting::add_to_waitlist();
+   |                              ^^^^^^^^^^^^^^^
+```
+> Listing 7-6: Compiler errors from building the code in Listing 7-5
+
+Adding the pub keyword in front of mod hosting makes the module public. But the contents of hosting are still private; making the module public doesn’t make its contents public. The pub keyword on a module only lets code in its ancestor modules refer to it
+
+Let’s also make the add_to_waitlist function public by adding the pub keyword before its definition, as in Listing 7-7.
+
+```rs
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+pub fn eat_at_restaurant() {
+    // Absolute path
+    crate::front_of_house::hosting::add_to_waitlist();
+
+    // Relative path
+    front_of_house::hosting::add_to_waitlist();
+}
+fn main() {}
+```
+
+Starting Relative Paths with `super`
+
+In file system, we can access parent directory using .., likewise in rust we can access parent module using keyword `super`
+
+```rs
+fn serve_order() {}
+
+mod back_of_house {
+    fn fix_incorrect_order() {
+        cook_order();
+        super::serve_order();
+    }
+
+    fn cook_order() {}
+}
+fn main() {}
+```
+
+> Listing 7-8: Calling a function using a relative path starting with `super`
+
+Making Structs and Enums Public
+
+We can also use `pub` to designate structs and enums as public, but there are a few extra details. If we use `pub` before a struct definition, we make the struct public, but the struct’s fields will still be private. We can make each field public or not on a case-by-case basis.
+
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    mod back_of_house {
+        pub struct Breakfast {
+            pub toast: String,
+            seasonal_fruit: String,
+        }
+
+        impl Breakfast {
+            pub fn summer(toast: &str) -> Breakfast {
+                Breakfast {
+                    toast: String::from(toast),
+                    seasonal_fruit: String::from("peaches"),
+                }
+            }
+        }
+    }
+
+    pub fn eat_at_restaurant() {
+        // Order a breakfast in the summer with Rye toast
+        let mut meal = back_of_house::Breakfast::summer("Rye");
+        // Change our mind about what bread we'd like
+        meal.toast = String::from("Wheat");
+        println!("I'd like {} toast please", meal.toast);
+
+        // The next line won't compile if we uncomment it; we're not allowed
+        // to see or modify the seasonal fruit that comes with the meal
+        // meal.seasonal_fruit = String::from("blueberries");
+    }
+}
+```
+
+> Listing 7-9: A struct with some public fields and some private fields
+
+In contrast, if we make an enum public, all of its variants are then public. We only need the `pub` before the `enum` keyword
+
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+    mod back_of_house {
+        pub enum Appetizer {
+            Soup,
+            Salad,
+        }
+    }
+
+    pub fn eat_at_restaurant() {
+        let order1 = back_of_house::Appetizer::Soup;
+        let order2 = back_of_house::Appetizer::Salad;
+    }
+}
+```
+
+> Listing 7-10: Designating an `enum` as public makes all its variants public
+
+Enums aren’t very useful unless their variants are public; it would be annoying to have to annotate all enum variants with `pub` in every case, so the default for enum variants is to be public. Structs are often useful without their fields being public, so struct fields follow the general rule of everything being private by default unless annotated with `pub`.
+
+
+
 
 
 ## Q & A
