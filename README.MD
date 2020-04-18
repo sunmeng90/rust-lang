@@ -2505,6 +2505,211 @@ Summary
 
 Rust lets you split a package into multiple crates and a crate into modules so you can refer to items defined in one module from another module. You can do this by specifying absolute or relative paths. These paths can be brought into scope with a `use` statement so you can use a shorter path for multiple uses of the item in that scope. Module code is private by default, but you can make definitions public by adding the `pub` keyword.
 
+## 8. Common Collections
+
+* A vector allows you to store a variable number of values next to each other.
+* A string is a collection of characters. We’ve mentioned the String type previously, but in this chapter we’ll talk about it in depth.
+* A hash map allows you to associate a value with a particular key. It’s a particular implementation of the more general data structure called a map.
+
+### 8.1. Storing Lists of Values with Vectors
+
+`Vec<T>`, also known as a vector allows you to store more than one value in a single data structure that puts all the values next to each other in memory. Vectors can only store values of the same type. 
+
+Creating a New Vector
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let v: Vec<i32> = Vec::new();
+}
+```
+
+> Listing 8-1: Creating a new, empty vector to hold values of type `i32`
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let v = vec![1, 2, 3]; // rust can infer that the type of element in vector v
+}
+```
+
+> Listing 8-2: Creating a new vector containing values
+
+Updating a Vector
+
+add element by `push`
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let mut v = Vec::new();
+
+    v.push(5);
+    v.push(6);
+    v.push(7);
+    v.push(8);
+}
+```
+
+> Listing 8-3: Using the `push` method to add values to a vector
+
+Dropping a Vector Drops Its Elements
+
+a vector is freed when it goes out of scope
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    {
+        let v = vec![1, 2, 3, 4];
+
+        // do stuff with v
+
+    } // <- v goes out of scope and is freed here
+}
+```
+> Listing 8-4: Showing where the vector and its elements are dropped
+
+When the vector gets dropped, all of its contents are also dropped, meaning those integers it holds will be cleaned up. This may seem like a straightforward point but can get a bit more complicated when you start to introduce references to the elements of the vector.
+
+Reading Elements of Vectors
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let v = vec![1, 2, 3, 4, 5];
+
+    let third: &i32 = &v[2];
+    println!("The third element is {}", third);
+
+    match v.get(2) {
+        Some(third) => println!("The third element is {}", third),
+        None => println!("There is no third element."),
+    }
+}
+```
+> Listing 8-5: Using indexing syntax or the get method to access an item in a vector
+
+Vectors are indexed by number, starting at zero
+
+* by using & and [], which gives us a reference
+* by using the get method with the index passed as an argument, which gives us an Option<&T>
+
+When access a non-existent element from vector:
+
+* &[] will cause panic
+* get will return None
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let v = vec![1, 2, 3, 4, 5];
+
+    let does_not_exist = &v[100]; // panic
+    let does_not_exist = v.get(100); // return None
+}
+```
+
+> Listing 8-6: Attempting to access the element at index 100 in a vector containing five elements
+
+When the program has a valid reference, the borrow checker enforces the ownership and borrowing rules (covered in Chapter 4) to ensure this reference and any other references to the contents of the vector remain valid. Recall the rule that states you can’t have mutable and immutable references in the same scope. That rule applies in Listing 8-7, where we hold an immutable reference to the first element in a vector and try to add an element to the end, which won’t work.
+
+```rs
+let mut v = vec![1, 2, 3, 4, 5];
+
+let first = &v[0];
+
+v.push(6); // may cause the re-allocate memory and the reference to first element will become invalid
+
+println!("The first element is: {}", first);
+```
+
+> Listing 8-7: Attempting to add an element to a vector while holding a reference to an item
+
+Compiling this code will result in this error:
+
+```console
+error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
+ --> src/main.rs:6:5
+  |
+4 |     let first = &v[0];
+  |                  - immutable borrow occurs here
+5 |
+6 |     v.push(6);
+  |     ^^^^^^^^^ mutable borrow occurs here
+7 |
+8 |     println!("The first element is: {}", first);
+  |                                          ----- immutable borrow later used here
+```
+
+The code in Listing 8-7 might look like it should work: why should a reference to the first element care about what changes at the end of the vector? This error is due to the way vectors work: adding a new element onto the end of the vector might require allocating new memory and copying the old elements to the new space, if there isn’t enough room to put all the elements next to each other where the vector currently is. In that case, the reference to the first element would be pointing to deallocated memory. 
+
+Iterating over the Values in a Vector
+
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+let v = vec![100, 32, 57];
+    for i in &v {
+        println!("{}", i); // i is immutable reference
+    }
+}
+```
+
+> Listing 8-8: Printing each element in a vector by iterating over the elements using a for loop
+
+We can also iterate over mutable references to each element in a mutable vector in order to make changes to all the elements. The for loop in Listing 8-9 will add 50 to each element.
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let mut v = vec![100, 32, 57];
+    for i in &mut v {
+        *i += 50;
+    }
+}
+```
+
+> Listing 8-9: Iterating over mutable references to elements in a vector
+
+To change the value that the mutable reference refers to, we have to use the dereference operator (`*`) to get to the value in i before we can use the `+=` operator. 
+
+Using an Enum to Store Multiple Types
+
+Vectors can only store values that are the same type. When we want to save elements of a different type in a vector, we can define an enum whose variants will hold the different value types, and then all the variants will be considered the same type. 
+
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+    enum SpreadsheetCell {
+        Int(i32),
+        Float(f64),
+        Text(String),
+    }
+
+    let row = vec![
+        SpreadsheetCell::Int(3),
+        SpreadsheetCell::Text(String::from("blue")),
+        SpreadsheetCell::Float(10.12),
+    ];
+}
+```
+
+> Listing 8-10: Defining an `enum` to store values of different types in one vector
+
+
+Rust needs to know what types will be in the vector at compile time so it knows exactly how much memory on the heap will be needed to store each element. A secondary advantage is that we can be explicit about what types are allowed in this vector. If Rust allowed a vector to hold any type, there would be a chance that one or more of the types would cause errors with the operations performed on the elements of the vector. Using an enum plus a `match` expression means that Rust will ensure at compile time that every possible case is handled, as discussed in Chapter 6.
+
+When you’re writing a program, if you don’t know the exhaustive set of types the program will get at runtime to store in a vector, the enum technique won’t work. Instead, you can use a trait object, which we’ll cover in Chapter 17.
+
+### 8.2. Storing UTF-8 Encoded Text with Strings
+
+```rs
+
+```
+
 ## Q & A
 
 
