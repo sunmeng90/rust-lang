@@ -12,5 +12,4 @@ fn main() {
         SpreadsheetCell::Float(10.12),
         SpreadsheetCell::Text(String::from("blue"))
     ];
-
 }

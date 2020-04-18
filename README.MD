@@ -2706,9 +2706,224 @@ When you’re writing a program, if you don’t know the exhaustive set of types
 
 ### 8.2. Storing UTF-8 Encoded Text with Strings
 
+ Rust has only one string type in the core language, which is the string slice `str` that is usually seen in its borrowed form `&str`.
+
+ The `String` type, which is provided by Rust’s standard library rather than coded into the core language, is a growable, mutable, owned, UTF-8 encoded string type. When Rustaceans refer to “strings” in Rust, they usually mean the `String` and the string slice `&str` types, not just one of those types.
+
+Creating a New String
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let mut s = String::new(); //creates a new empty string called s, which we can then load data into. 
+}
+```
+> Listing 8-11: Creating a new, empty `String`
+
 ```rs
 
+#![allow(unused_variables)]
+fn main() {
+    let data = "initial contents";
+
+    let s = data.to_string(); // will create a String value from the string literal
+
+    // the method also works on a literal directly:
+    let s = "initial contents".to_string();
+}
 ```
+> Listing 8-12: Using the `to_string` method to create a `String` from a string literal
+
+Updating a String
+
+A `String` can grow in size and its contents can change, just like the contents of a `Vec<T>`, if you push more data into it. In addition, you can conveniently use the `+` operator or the `format!` macro to concatenate `String` values.
+
+Appending to a String with `push_str` and `push`
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let mut s = String::from("foo");
+    let s2 = "bar";
+    s.push_str(s2); // push_str take a string slice as parameter, hence doesn't take the ownership of passing in parameter
+    println!("s2 is {}", s2);
+}
+```
+
+> Listing 8-16: Using a string slice after appending its contents to a `String`
+
+the `push` method takes a single character as parameter and adds it to `String`. 
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let mut s = String::from("lo");
+    s.push('l');
+}
+```
+
+> Listing 8-17: Adding one character to a `String` value using `push`
+
+Concatenation with the `+` Operator or the `format!` Macro
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let s1 = String::from("Hello, ");
+    let s2 = String::from("world!");
+    let s3 = s1 + &s2; // note s1 has been moved here and can no longer be used
+}
+```
+> Listing 8-18: Using the `+` operator to combine two `String` values into a new `String` value
+
+The `+` operator uses the `add` method, whose signature looks something like this:
+
+```rs
+    fn add(self, s: &str) -> String;
+```
+
+When we need to concatenate multiple strings, we can use `format!`
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let s1 = String::from("tic");
+    let s2 = String::from("tac");
+    let s3 = String::from("toe");
+
+    let s = format!("{}-{}-{}", s1, s2, s3);
+}
+```
+
+Indexing into Strings
+
+In rust we can't index a `String`, becauase `String`'s intenal representation is `Vec<u8>`, and some `String` contains muti-bytes characters.
+
+```rs
+let s1 = String::from("hello");
+let h = s1[0];
+
+// error[E0277]: the trait bound `std::string::String: std::ops::Index<{integer}>` is not satisfied
+//  -->
+//   |
+// 3 |     let h = s1[0];
+//   |             ^^^^^ the type `std::string::String` cannot be indexed by `{integer}`
+//   |
+//   = help: the trait `std::ops::Index<{integer}>` is not implemented for `std::string::String`
+
+```
+
+> Listing 8-19: Attempting to use indexing syntax with a `String`
+
+Internal Representation
+
+A `String` is a wrapper over a `Vec<u8>`. 
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let len = String::from("Hola").len();
+}
+```
+
+In this case, len will be 4, which means the vector storing the string “Hola” is 4 bytes long. Each of these letters takes 1 byte when encoded in UTF-8.
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let len = String::from("世界").len();
+    let hello = "世界";
+    let answer = &hello[0]; // compile error, rust think it's meaningless to acces the first byte and may cause bugs
+}
+```
+
+Bytes and Scalar Values and Grapheme Clusters! Oh My!
+
+Another point about UTF-8 is that there are actually three relevant ways to look at strings from Rust’s perspective: as bytes, scalar values, and grapheme clusters (the closest thing to what we would call letters).
+
+A final reason Rust doesn’t allow us to index into a `String` to get a character is that indexing operations are expected to always take constant time (O(1)). But it isn’t possible to guarantee that performance with a `String`, because Rust would have to walk through the contents from the beginning to the index to determine how many valid characters there were.
+
+Slicing Strings
+
+Indexing into a string is often a bad idea because it’s not clear what the return type of the string-indexing operation should be: a byte value, a character, a grapheme cluster, or a string slice. Therefore, Rust asks you to be more specific if you really need to use indices to create string slices. To be more specific in your indexing and indicate that you want a string slice, rather than indexing using [] with a single number, you can use [] with a range to create a string slice containing particular bytes:
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    let hello = "世界";
+
+    let s = &hello[0..5];
+
+    let s1 = &hello[0..1]; // will panic at runtime, if the slice cause broken characters
+}
+```
+
+You should use ranges to create string slices with caution, because doing so can crash your program.
+
+Methods for Iterating Over Strings
+
+Fortunately, you can access elements in a string in other ways.
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    for c in "世界".chars() { // iterate over char sequence for the string
+        println!("{}", c);
+    }
+
+    for c in "世界".bytes() { // iterate over bytes sequence for the string
+        println!("{}", c);
+    }
+}
+```
+
+Strings Are Not So Simple
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Q & A
 
