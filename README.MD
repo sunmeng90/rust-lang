@@ -2290,9 +2290,220 @@ fn main() {
 
 Enums aren’t very useful unless their variants are public; it would be annoying to have to annotate all enum variants with `pub` in every case, so the default for enum variants is to be public. Structs are often useful without their fields being public, so struct fields follow the general rule of everything being private by default unless annotated with `pub`.
 
+### 7.4. Bringing Paths Into Scope with the `use` Keyword
 
+Using path to refer to item in module tree is verbose and inconvenient. We can bring a path into a scope once and then use items in that path as if they're local items with the `use` keyword.
 
+```rs
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
 
+use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+}
+fn main() {}
+```
+
+> Listing 7-11: Bringing a module into scope with `use`
+
+Adding use and a path in a scope is similar to creating a symbolic link in the filesystem. 
+
+Creating Idiomatic `use` Paths
+
+```rs
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+use crate::front_of_house::hosting::add_to_waitlist; // do this :)
+
+use crate::front_of_house::hosting::add_to_waitlist; // don't do this :(
+
+pub fn eat_at_restaurant() {
+    add_to_waitlist();
+    add_to_waitlist();
+    add_to_waitlist();
+}
+fn main() {}
+```
+
+> Listing 7-13: Bringing the `add_to_waitlist` function into scope with use, which is `unidiomatic`
+
+Bringing the function’s parent module into scope with `use` so we have to specify the parent module when calling the function makes it clear that the function isn’t locally defined while still minimizing repetition of the full path. The code in Listing 7-13 is unclear as to where `add_to_waitlist` is defined.
+
+On the other hand, when bringing in structs, enums, and other items with `use`, it’s idiomatic to specify the full path. Listing 7-14 shows the idiomatic way to bring the standard library’s HashMap struct into the scope of a binary crate.
+
+```rs
+use std::collections::HashMap;
+
+fn main() {
+    let mut map = HashMap::new();
+    map.insert(1, 2);
+}
+```
+> Listing 7-14: Bringing `HashMap` into scope in an idiomatic way
+
+Providing New Names with the `as` Keyword
+
+If we’re bringing two items with the same name into scope with use statements, we can use 'as' keyword after the path to create a new local name or alias for the item.
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    use std::fmt::Result;
+    use std::io::Result as IoResult;
+
+    fn function1() -> Result {
+        // --snip--
+        Ok(())
+    }
+
+    fn function2() -> IoResult<()> {
+        // --snip--
+        Ok(())
+    }
+}
+```
+
+> Listing 7-16: Renaming a type when it’s brought into scope with the `as` keyword
+
+Re-exporting Names with `pub use`
+
+When we bring a name into scope with the `use` keyword, the name available in the new scope is private. To enable the code that calls our code to refer to that name as if it had been defined in that code’s scope, we can combine `pub` and `use`. This technique is called *re-exporting* because we’re bringing an item into scope but also making that item available for others to bring into their scope.
+
+```rs
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+pub use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+}
+fn main() {}
+```
+
+> Listing 7-17: Making a name available for any code to use from a new scope with `pub use`
+
+By using `pub use`, external code can now call the `add_to_waitlist` function using `hosting::add_to_waitlist`. If we hadn’t specified `pub use`, the `eat_at_restaurant` function could call `hosting::add_to_waitlist` in its scope, but external code couldn’t take advantage of this new path.
+
+Re-exporting is useful when the internal structure of your code is different from how programmers calling your code would think about the domain. For example, in this restaurant metaphor, the people running the restaurant think about “front of house” and “back of house.” But customers visiting a restaurant probably won’t think about the parts of the restaurant in those terms. With pub use, we can write our code with one structure but expose a different structure. Doing so makes our library well organized for programmers working on the library and programmers calling the library.
+
+Using External Packages
+
+add external package dependency in *Cargo.toml*:  
+
+```toml
+[dependencies]
+rand = "0.5.5"
+```
+
+Adding rand as a dependency in Cargo.toml tells Cargo to download the rand package and any dependencies from crates.io and make rand available to our project.
+
+Then, to bring `rand` definitions into the scope of our package, we added a `use` line starting with the name of the package, `rand`, and listed the items we wanted to bring into scope. 
+
+```rs
+use rand::Rng;
+fn main() {
+    let secret_number = rand::thread_rng().gen_range(1, 101);
+}
+```
+
+Note that the standard library (`std`) is also a crate that’s external to our package. Because the standard library is shipped with the Rust language, we don’t need to change *Cargo.toml* to include `std`. But we do need to refer to it with `use` to bring items from there into our package’s scope. 
+
+Using Nested Paths to Clean Up Large `use` Lists
+
+If we’re using multiple items defined in the same package or same module, listing each item on its own line can take up a lot of vertical space in our files.
+
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+    use std::io;
+    use std::cmp::Ordering;
+    // ---snip---
+}
+```
+
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+    use std::{cmp::Ordering, io};
+    // ---snip---
+}
+```
+
+> Listing 7-18: Specifying a nested path to bring multiple items with the same prefix into scope
+
+The Glob Operator
+
+If we want to bring all public items defined in a path into scope, we can specify that path followed by `*`, the glob operator:
+
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+    use std::collections::*;
+}
+```
+
+This `use` statement brings all public items defined in `std::collections` into the current scope. Be careful when using the glob operator! Glob can make it harder to tell what names are in scope and where a name used in your program was defined.
+
+The glob operator is often used when testing to bring everything under test into the `tests` module;
+
+### 7.5. Separating Modules into Different Files
+
+So far, all the examples in this chapter defined multiple modules in one file. When modules get large, you might want to move their definitions to a separate file to make the code easier to navigate.
+
+```rs
+mod front_of_house;
+
+pub use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+}
+```
+
+> Listing 7-21: Declaring the `front_of_house` module whose body will be in *src/front_of_house.rs*
+
+And src/front_of_house.rs gets the definitions from the body of the front_of_house module, as shown in Listing 7-22.
+
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+```
+> Listing 7-22: Definitions inside the `front_of_house` module in *src/front_of_house.rs*
+
+Using a semicolon after `mod front_of_house` rather than using a block tells Rust to load the contents of the module from another file with the same name as the module. 
+
+The `mod` keyword declares modules, and Rust looks in a file with the same name as the module for the code that goes into that module.
+
+Summary
+
+Rust lets you split a package into multiple crates and a crate into modules so you can refer to items defined in one module from another module. You can do this by specifying absolute or relative paths. These paths can be brought into scope with a `use` statement so you can use a shorter path for multiple uses of the item in that scope. Module code is private by default, but you can make definitions public by adding the `pub` keyword.
 
 ## Q & A
 
