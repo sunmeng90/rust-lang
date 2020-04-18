@@ -2020,6 +2020,98 @@ Your Rust programs can now express concepts in your domain using structs and enu
 
 In order to provide a well-organized API to your users that is straightforward to use and only exposes exactly what your users will need, let’s now turn to Rust’s modules.
 
+
+## 7. Managing Growing Projects with Packages, Crates, and Modules
+
+when project grows and becomes complex you may need to: grouping functionality and encapsulating implementation.
+
+A related concept is scope: the nested context in which code is written has a set of names that are defined as “in scope.” When reading, writing, and compiling code, programmers and compilers need to know whether a particular name at a particular spot refers to a variable, function, struct, enum, module, constant, or other item and what that item means. You can create scopes and change which names are in or out of scope. You can’t have two items with the same name in the same scope
+
+Rust has a number of features that allow you to manage your code’s organization, including which details are exposed, which details are private, and what names are in each scope in your programs. These features, sometimes collectively referred to as the *module system*, include:
+
+* **Packages:** A Cargo feature that lets you build, test, and share crates
+* **Crates:** A tree of modules that produces a library or executable
+* **Modules** and **use:** Let you control the organization, scope, and privacy of paths
+* **Paths:** A way of naming an item, such as a struct, function, or module
+
+### 7.1. Packages and Crates
+
+A crate is a binary or library. The *crate root* is a source file that the Rust compiler starts from and makes up the root module of your crate. A package is one or more crates that provide a set of functionality. A package contains a Cargo.toml file that describes how to build those crates.
+
+Several rules determine what a package can contain. A package *must* contain zero or one library crates, and no more. It can contain as many binary crates as you’d like, but it must contain at least one crate (either library or binary).
+
+Let’s walk through what happens when we create a package. First, we enter the command `cargo new`:
+
+```sh
+$ cargo new my-project
+     Created binary (application) `my-project` package
+$ ls my-project
+Cargo.toml
+src
+$ ls my-project/src
+main.rs
+```
+
+Cargo follows a convention that src/main.rs is the crate root of a binary crate with the same name as the package. Likewise, If the package directory contains src/lib.rs, the package contains a library crate with the same name as the package, and src/lib.rs is its crate root. Cargo passes the crate root files to rustc to build the library or binary.
+
+A crate will group related functionality together in a scope so the functionality is easy to share between multiple projects. For example, when we bring the `rand` crate into our project’s scope. All the functionality provided by the `rand` crate is accessible through the crate’s name, `rand`.
+
+Keeping a crate’s functionality in its own scope clarifies whether particular functionality is defined in our crate or the rand crate and prevents potential conflicts.
+
+### 7.2. Defining Modules to Control Scope and Privacy
+
+In this section, we’ll talk about modules and other parts of the module system, namely *paths* that allow you to name items; the `use` keyword that brings a path into scope; and the `pub` keyword to make items public. We’ll also discuss the as keyword, external packages, and the glob operator. 
+
+*Modules* let us organize code within a crate into groups for readability and easy reuse. Modules also control the *privacy* of items, which is whether an item can be used by outside code (*public*) or is an internal implementation detail and not available for outside use (*private*).
+
+Modules can hold definitions for other items, such as structs, enums, constants, traits, functions and modules.
+
+Let's take restaurant as an example, Some parts in a restaurant are referred to as *front of house* and others as *back of house*. Front of house is where customers are; this is where hosts seat customers, servers take orders and payment, and bartenders make drinks. Back of house is where the chefs and cooks work in the kitchen, dishwashers clean up, and managers do administrative work.
+
+To structure our crate in the same way that a real restaurant works, we can organize our code into nested modules. Create a new library named `restaurant` by running `cargo new --lib restaurant`; then put the code in Listing 7-1 into src/lib.rs to define some modules and function signatures.
+
+```rs
+mod front_of_house {
+    mod hosting {
+        fn add_to_waitlist() {}
+
+        fn seat_at_table() {}
+    }
+
+    mod serving {
+        fn take_order() {}
+
+        fn serve_order() {}
+
+        fn take_payment() {}
+    }
+}
+```
+
+> Listing 7-1: A `front_of_house` module containing other modules that then contain functions
+
+Here we define a module `front_of_house` and nested modules `hosting` and `serving`. an and the below is the module tree
+
+```console
+crate  # entire module tree is rooted under the implicit module named crate.
+ └── front_of_house
+     ├── hosting
+     │   ├── add_to_waitlist
+     │   └── seat_at_table
+     └── serving
+         ├── take_order
+         ├── serve_order
+         └── take_payment
+```
+
+> Listing 7-2: The module tree for the code in Listing 7-1
+
+Earlier, we mentioned that `src/main.rs` and `src/lib.rs` are called crate roots. The reason for their name is that the contents of either of these two files form a module named `crate` at the root of the crate’s module structure, known as the *module tree*.
+
+The module tree might remind you of the filesystem’s directory tree on your computer; this is a very apt comparison! Just like directories in a filesystem, you use modules to organize your code. And just like files in a directory, we need a way to find our modules.
+
+
+
 ## Q & A
 
 

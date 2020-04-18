@@ -3,7 +3,7 @@ fn main() {
 
     struct IpAddr {
         kind: IpAddrKind,
-        address: string,
+        address: String,
     }
 
     let home = IpAddr {
@@ -11,7 +11,7 @@ fn main() {
         address: String::from("127.0.0.1"),
     };
 
-    let lookback = IpAddr {
+    let loopback = IpAddr {
         kind: IpAddrKind::V6,
         address: String::from("::1"),
     };
