@@ -3506,45 +3506,357 @@ fn main() {
 
 Using generic will have no extra performance cost at runtime in Rust. Rust will turn generic code to specific code by filling in the concrete types at compile time. This process is called *Monomorphization *
 
+### 10.2. Traits: Defining Shared Behavior
 
+A `trait` tells the Rust compiler about functionality a particular type has and can share with other types. We can use traits to define shared behavior in an abstract way. We can use trait bounds to specify that a generic can be any type that has certain behavior.
 
+> Note: Traits are similar to a feature often called `interfaces` in other languages, although with some differences.
 
+**Defining a Trait**
 
+A type’s behavior consists of the methods we can call on that type. Different types share the same behavior if we can call the same methods on all of those types. Trait definitions are a way to group method signatures together to define a set of behaviors necessary to accomplish some purpose.
 
+For example, we define a trait that have a method that can summarize news contents
 
+```rs
+#![allow(unused_variables)]
+fn main() {
+    pub trait Summary {
+        fn summarize(&self) -> String;
+    }
+}
+```
 
+> Listing 10-12: A Summary `trait` that consists of the behavior provided by a `summarize` method
 
+**Implementing a Trait on a Type**
 
+We can implements the trait for different kinds of news: NewsArticle, Tweet, etc.
 
+```rs
 
+#![allow(unused_variables)]
+fn main() {
+    pub trait Summary {
+        fn summarize(&self) -> String;
+    }
 
+    pub struct NewsArticle {
+        pub headline: String,
+        pub location: String,
+        pub author: String,
+        pub content: String,
+    }
 
+    impl Summary for NewsArticle {
+        fn summarize(&self) -> String {
+            format!("{}, by {} ({})", self.headline, self.author, self.location)
+        }
+    }
 
+    pub struct Tweet {
+        pub username: String,
+        pub content: String,
+        pub reply: bool,
+        pub retweet: bool,
+    }
 
+    impl Summary for Tweet {
+        fn summarize(&self) -> String {
+            format!("{}: {}", self.username, self.content)
+        }
+    }
+}
+```
 
+> Listing 10-13: Implementing the `Summary` trait on the `NewsArticle` and `Tweet` types
 
+Implementing a trait on a type is similar to implementing regular methods. The difference is that after `impl`, we put the trait name that we want to implement, then use the `for` keyword, and then specify the name of the type we want to implement the trait for. 
 
+After implementing the trait, we can call the methods on instances of `NewsArticle` and `Tweet` in the same way we call regular methods, like this:
 
+```rs
+let tweet = Tweet {
+    username: String::from("horse_ebooks"),
+    content: String::from("of course, as you probably already know, people"),
+    reply: false,
+    retweet: false,
+};
 
+println!("1 new tweet: {}", tweet.summarize());
+```
 
+One restriction to note with trait implementations is that we can implement a trait on a type only if either the trait or the type is local to our crate. That is we can’t implement external traits on external types. This restriction is part of a property of programs called *coherence*, and more specifically the *orphan rule*, so named because the parent type is not present. This rule ensures that other people’s code can’t break your code and vice versa. Without the rule, two crates could implement the same trait for the same type, and Rust wouldn’t know which implementation to use.
 
+**Default Implementations**
 
+Sometimes it’s useful to have default behavior for some or all of the methods in a trait instead of requiring implementations for all methods on every type. Then, as we implement the trait on a particular type, we can keep or override each method’s default behavior.
 
+Listing 10-14 shows how to specify a default string for the `summarize` method of the `Summary` trait instead of only defining the method signature, as we did in Listing 10-12.
 
+```rs
+#![allow(unused_variables)]
+fn main() {
+    pub trait Summary {
+        fn summarize(&self) -> String {
+            String::from("(Read more...)") // default impelmentation
+        }
+    }
+}
+```
 
+> Listing 10-14: Definition of a `Summary` trait with a default implementation of the `summarize` method
 
+To use a default implementation to summarize instances of `NewsArticle` instead of defining a custom implementation, we specify an empty `impl` block with `impl Summary for NewsArticle {}`.
 
+Default implementations can call other methods in the same trait, even if those other methods don’t have a default implementation. In this way, a trait can provide a lot of useful functionality and only require implementors to specify a small part of it.
 
+```rs
 
+#![allow(unused_variables)]
+fn main() {
+    pub trait Summary {
+        fn summarize_author(&self) -> String;
 
+        fn summarize(&self) -> String {
+            format!("(Read more from {}...)", self.summarize_author()) // a default method implementation call another method in the same trait
+        }
+    }
 
+    impl Summary for Tweet {
+        fn summarize_author(&self) -> String {
+            format!("@{}", self.username)
+        }
+    }
 
+}
+```
 
+**Traits as Parameters**
 
+```rs
+pub fn notify(item: impl Summary) { // a method that accept a trait as parameter
+    println!("Breaking news! {}", item.summarize());
+}
+```
 
+Instead of a concrete type for the `item` parameter, we specify the `impl` keyword and the trait name. This parameter accepts any type that implements the specified trait. 
 
+**Trait Bound Syntax**
 
+The `impl Trait` syntax works for straightforward cases but is actually syntax sugar for a longer form, which is called a *trait bound*; it looks like this:
 
+```rs
+pub fn notify<T: Summary>(item: T) {
+    println!("Breaking news! {}", item.summarize());
+}
+```
+
+This longer form is equivalent to the example in the previous section but is more verbose. 
+
+**Specifying Multiple Trait Bounds with the `+` Syntax**
+
+We can also specify more than one trait bound. Say we wanted `notify` to use display formatting on `item` as well as the `summarize` method: we specify in the notify definition that item must implement both `Display` and `Summary`. We can do so using the `+` syntax:
+
+```rs
+pub fn notify(item: impl Summary + Display) {
+```
+
+The `+` syntax is also valid with trait bounds on generic types:
+
+```rs
+pub fn notify<T: Summary + Display>(item: T) {
+```
+
+**Clearer Trait Bounds with `where` Clauses**
+
+Using too many trait bounds has its downsides. Each generic has its own trait bounds, so functions with multiple generic type parameters can contain lots of trait bound information between the function’s name and its parameter list, making the function signature hard to read. For this reason, Rust has alternate syntax for specifying trait bounds inside a where clause after the function signature. So instead of writing this:
+
+```rs
+fn some_function<T: Display + Clone, U: Clone + Debug>(t: T, u: U) -> i32 {
+```
+we can use a `where` clause, like this:
+
+```rs
+fn some_function<T, U>(t: T, u: U) -> i32
+    where T: Display + Clone,
+          U: Clone + Debug
+{
+```
+
+This function’s signature is less cluttered: the function name, parameter list, and return type are close together, similar to a function without lots of trait bounds.
+
+**Returning Types that Implement Traits**
+
+We can also use the impl Trait syntax in the return position to return a value of some type that implements a trait, as shown here:
+
+```rs
+fn returns_summarizable() -> impl Summary {
+    Tweet {
+        username: String::from("horse_ebooks"),
+        content: String::from("of course, as you probably already know, people"),
+        reply: false,
+        retweet: false,
+    }
+}
+```
+
+By using `impl Summary` for the return type, we specify that the `returns_summarizable` function returns some type that implements the `Summary` trait without naming the concrete type. In this case, `returns_summarizable` returns a `Tweet`, but the code calling this function doesn’t know that.
+
+The ability to return a type that is only specified by the trait it implements is especially useful in the context of closures and iterators, which we cover in Chapter 13. Closures and iterators create types that only the compiler knows or types that are very long to specify. The `impl Trait` syntax lets you concisely specify that a function returns some type that implements the `Iterator` trait without needing to write out a very long type.
+
+However, you can only use `impl Trait` if you’re returning a single type. For example, this code that returns either a `NewsArticle` or a `Tweet` with the return type specified as `impl Summary` wouldn’t work :x:
+
+```rs
+fn returns_summarizable(switch: bool) -> impl Summary {
+    if switch {
+        NewsArticle {
+            headline: String::from("Penguins win the Stanley Cup Championship!"),
+            location: String::from("Pittsburgh, PA, USA"),
+            author: String::from("Iceburgh"),
+            content: String::from("The Pittsburgh Penguins once again are the best
+            hockey team in the NHL."),
+        }
+    } else {
+        Tweet {
+            username: String::from("horse_ebooks"),
+            content: String::from("of course, as you probably already know, people"),
+            reply: false,
+            retweet: false,
+        }
+    }
+}
+```
+
+Returning either a `NewsArticle` or a `Tweet` isn’t allowed due to restrictions around how the `impl Trait` syntax is implemented in the compiler. We’ll cover how to write a function with this behavior in the “Using Trait Objects That Allow for Values of Different Types” section of Chapter 17.
+
+**Fixing the `largest` Function with Trait Bounds**
+
+Now that you know how to specify the behavior you want to use using the generic type parameter’s bounds, let’s return to Listing 10-5 to fix the definition of the `largest` function that uses a generic type parameter! Last time we tried to run that code, we received this error:
+
+```console
+error[E0369]: binary operation `>` cannot be applied to type `T`
+ --> src/main.rs:5:12
+  |
+5 |         if item > largest {
+  |            ^^^^^^^^^^^^^^
+  |
+  = note: an implementation of `std::cmp::PartialOrd` might be missing for `T`
+```
+
+In the body of `largest` we wanted to compare two values of type `T` using the greater than (`>`) operator. Because that operator is defined as a default method on the standard library trait `std::cmp::PartialOrd`, we need to specify `PartialOrd` in the trait bounds for `T` so the largest function can work on slices of any type that we can compare. 
+
+```rs
+fn largest<T: PartialOrd>(list: &[T]) -> T {
+```
+
+This time when we compile the code, we get a different set of errors:
+
+```console
+error[E0508]: cannot move out of type `[T]`, a non-copy slice
+ --> src/main.rs:2:23
+  |
+2 |     let mut largest = list[0];
+  |                       ^^^^^^^
+  |                       |
+  |                       cannot move out of here
+  |                       help: consider using a reference instead: `&list[0]`
+
+error[E0507]: cannot move out of borrowed content
+ --> src/main.rs:4:9
+  |
+4 |     for &item in list.iter() {
+  |         ^----
+  |         ||
+  |         |hint: to prevent move, use `ref item` or `ref mut item`
+  |         cannot move out of borrowed content
+```
+
+The key line in this error is cannot move out of type `[T]`, a non-copy slice. With our non-generic versions of the `largest` function, we were only trying to find the largest `i32` or `char`. As discussed in the “Stack-Only Data: Copy” section in Chapter 4, types like `i32` and `char` that have a known size can be stored on the stack, so they implement the `Copy` trait. But **when we made the `largest` function generic, it became possible for the list parameter to have types in it that don’t implement the `Copy` trait. Consequently, we wouldn’t be able to move the value out of `list[0]` and into the `largest` variable**, resulting in this error.
+
+To call this code with only those types that implement the `Copy` trait, we can add `Copy` to the trait bounds of `T`!
+
+```rs
+fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
+    let mut largest = list[0];
+
+    for &item in list.iter() {
+        if item > largest {
+            largest = item;
+        }
+    }
+
+    largest
+}
+
+fn main() {
+    let number_list = vec![34, 50, 25, 100, 65];
+
+    let result = largest(&number_list);
+    println!("The largest number is {}", result);
+
+    let char_list = vec!['y', 'm', 'a', 'q'];
+
+    let result = largest(&char_list);
+    println!("The largest char is {}", result);
+}
+```
+
+> Listing 10-15: A working definition of the `largest` function that works on any generic type that implements the `PartialOrd` and `Copy` traits
+
+Another way we could implement `largest` is for the function to return a reference to a `T` value in the slice. If we change the return type to `&T` instead of `T`, thereby changing the body of the function to return a reference, we wouldn’t need the `Clone` or `Copy` trait bounds and we could avoid heap allocations.
+
+**Using Trait Bounds to Conditionally Implement Methods**
+
+By using a trait bound with an `impl` block that uses generic type parameters, we can implement methods conditionally for types that implement the specified traits. For example, the type `Pair<T>` in Listing 10-16 always implements the `new` function. But `Pair<T>` only implements the `cmp_display` method if its inner type `T` implements the `PartialOrd` trait that enables comparison and the Display trait that enables printing.
+
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+    use std::fmt::Display;
+
+    struct Pair<T> {
+        x: T,
+        y: T,
+    }
+
+    impl<T> Pair<T> {
+        fn new(x: T, y: T) -> Self {
+            Self {
+                x,
+                y,
+            }
+        }
+    }
+
+    impl<T: Display + PartialOrd> Pair<T> {
+        fn cmp_display(&self) {
+            if self.x >= self.y {
+                println!("The largest member is x = {}", self.x);
+            } else {
+                println!("The largest member is y = {}", self.y);
+            }
+        }
+    }
+}
+```
+
+> Listing 10-16: Conditionally implement methods on a generic type depending on trait bounds
+
+We can also conditionally implement a trait for any type that implements another trait. Implementations of a trait on any type that satisfies the trait bounds are called *blanket implementations* and are extensively used in the Rust standard library. For example, the standard library implements the `ToString` trait on any type that implements the `Display` trait. The `impl` block in the standard library looks similar to this code:
+
+```rs
+impl<T: Display> ToString for T {
+    // --snip--
+}
+```
+
+Because the standard library has this blanket implementation, we can call the `to_string` method defined by the ToString trait on any type that implements the `Display` trait. 
+
+Traits and trait bounds let us write code that uses generic type parameters to reduce duplication but also specify to the compiler that we want the generic type to have particular behavior. The compiler can then use the trait bound information to check that all the concrete types used with our code provide the correct behavior. 
+
+Another kind of generic that we’ve already been using is called *lifetimes*. Rather than ensuring that a type has the behavior we want, lifetimes ensure that references are valid as long as we need them to be. Let’s look at how lifetimes do that.
 
 ## Q & A
 
