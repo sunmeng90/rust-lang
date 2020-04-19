@@ -3290,9 +3290,73 @@ fn main() {
 }
 ```
 
+### 9.3. To panic! or Not To panic!
 
+So how do you decide when you should call `panic!` and when you should return `Result`? When code panics, there’s no way to recover. You could call panic! for any error situation, whether there’s a possible way to recover or not, but then you’re making the decision on behalf of the code calling your code that a situation is unrecoverable. When you choose to return a `Result` value, you give the calling code options rather than making the decision for it. The calling code could choose to attempt to recover in a way that’s appropriate for its situation, or it could decide that an Err value in this case is unrecoverable, so it can call `panic!` and turn your recoverable error into an unrecoverable one. Therefore, returning `Result` is a good default choice when you’re defining a function that might fail.
 
+**Guidelines for Error Handling**
 
+It’s advisable to have your code panic when it’s possible that your code could end up in a *bad state*. In this context, a bad state is when some assumption, guarantee, contract, or invariant has been broken, such as when invalid values, contradictory values, or missing values are passed to your code—plus one or more of the following:
+
+* The bad state is not something that’s expected to happen occasionally.
+* Your code after this point needs to rely on not being in this bad state.
+* There’s not a good way to encode this information in the types you use.
+
+If someone calls your code and passes in values that don’t make sense, the best choice might be to call `panic!` and alert the person using your library to the bug in their code so they can fix it during development. Similarly, `panic!` is often appropriate if you’re calling external code that is out of your control and it returns an invalid state that you have no way of fixing.
+
+However, when failure is expected, it’s more appropriate to return a `Result` than to make a `panic!` call. Examples include a parser being given malformed data or an HTTP request returning a status that indicates you have hit a rate limit. In these cases, returning a `Result` indicates that failure is an expected possibility that the calling code must decide how to handle.
+
+**Creating Custom Types for Validation**
+
+```rs
+loop {
+    // --snip--
+
+    let guess: i32 = match guess.trim().parse() {
+        Ok(num) => num,
+        Err(_) => continue,
+    };
+
+    if guess < 1 || guess > 100 { // validation may happens anywhere
+        println!("The secret number will be between 1 and 100.");
+        continue;
+    }
+
+    match guess.cmp(&secret_number) {
+    // --snip--
+}
+```
+
+We can make a new type and put the validations in a function to create an instance of the type rather than repeating the validations everywhere. 
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    pub struct Guess {
+        value: i32,
+    }
+
+    impl Guess {
+        pub fn new(value: i32) -> Guess { // add documentation for the possibility of panic
+            if value < 1 || value > 100 {  // add validation to the new function when creating a instance, to avoid vaildations everywhere
+                panic!("Guess value must be between 1 and 100, got {}.", value);
+            }
+
+            Guess {
+                value
+            }
+        }
+
+        pub fn value(&self) -> i32 {
+            self.value
+        }
+    }
+}
+```
+
+Summary
+
+Rust’s error handling features are designed to help you write more robust code. The panic! macro signals that your program is in a state it can’t handle and lets you tell the process to stop instead of trying to proceed with invalid or incorrect values. The Result enum uses Rust’s type system to indicate that operations might fail in a way that your code could recover from. You can use Result to tell code that calls your code that it needs to handle potential success or failure as well. 
 
 
 ## Q & A
