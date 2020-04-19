@@ -3358,6 +3358,193 @@ Summary
 
 Rust’s error handling features are designed to help you write more robust code. The panic! macro signals that your program is in a state it can’t handle and lets you tell the process to stop instead of trying to proceed with invalid or incorrect values. The Result enum uses Rust’s type system to indicate that operations might fail in a way that your code could recover from. You can use Result to tell code that calls your code that it needs to handle potential success or failure as well. 
 
+## 10. Generic Types, Traits, and Lifetimes
+
+### 10.1. Generic Data Types
+
+We can use generics to create definitions for items like function signatures or structs, which we can then use with many different concrete data types. 
+
+**In Function Definitions**
+
+When defining a function that uses generics, we place the generics in the signature of the function where we would usually specify the data types of the parameters and return value. 
+
+```rs
+fn largest<T>(list: &[T]) -> T { // T is generic type for parameter and return value
+    let mut largest = list[0];
+
+    for &item in list.iter() {
+        if item > largest {
+            largest = item;
+        }
+    }
+
+    largest
+}
+
+fn main() {
+    let number_list = vec![34, 50, 25, 100, 65];
+
+    let result = largest(&number_list);
+    println!("The largest number is {}", result);
+
+    let char_list = vec!['y', 'm', 'a', 'q'];
+
+    let result = largest(&char_list); // compile error: because character doesn't support > operator
+    println!("The largest char is {}", result);
+}
+```
+
+> Listing 10-5: A definition of the largest function that uses generic type parameters but doesn’t compile yet
+
+
+**In Struct Definitions**
+
+We can also define structs to use a generic type parameter in one or more fields using the <> syntax.
+
+```rs
+struct Point<T> {
+    x: T,
+    y: T,
+}
+
+fn main() {
+    let integer = Point { x: 5, y: 10 };
+    let float = Point { x: 1.0, y: 4.0 };
+}
+```
+
+To define a Point struct where x and y are both generics but could have different types, we can use multiple generic type parameters.
+
+```rs
+struct Point<T, U> {
+    x: T,
+    y: U,
+}
+
+fn main() {
+    let both_integer = Point { x: 5, y: 10 };
+    let both_float = Point { x: 1.0, y: 4.0 };
+    let integer_and_float = Point { x: 5, y: 4.0 };
+}
+```
+
+**In Enum Definitions**
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    enum Option<T> {
+        Some(T),
+        None,
+    }
+
+    enum Result<T, E> {
+        Ok(T),
+        Err(E),
+    }
+
+}
+```
+
+**In Method Definitions**
+
+We can implement methods on structs and enums (as we did in Chapter 5) and use generic types in their definitions, too.
+
+```rs
+struct Point<T> {
+    x: T,
+    y: T,
+}
+
+impl<T> Point<T> { // By declaring T as a generic type after impl, Rust can identify that the type in the angle brackets in Point is a generic type rather than a concrete type.
+    fn x(&self) -> &T {
+        &self.x
+    }
+}
+
+fn main() {
+    let p = Point { x: 5, y: 10 };
+
+    println!("p.x = {}", p.x());
+}
+```
+
+> Listing 10-9: Implementing a method named `x` on the `Point<T>` struct that will return a reference to the `x` field of type `T`
+
+By declaring T as a generic type after impl, Rust can identify that the type in the angle brackets in Point is a generic type rather than a concrete type.
+
+Generic type parameters in a struct definition aren’t always the same as those you use in that struct’s method signatures. For example, Listing 10-11 defines the method `mixup` on the `Point<T, U>` struct from Listing 10-8. The method takes another `Point` as a parameter, which might have different types from the `self Point` we’re calling `mixup` on. The method creates a new Point instance with the `x` value from the `self Point` (of type `T`) and the `y` value from the passed-in `Point` (of type `W`). 
+
+```rs
+struct Point<T, U> {
+    x: T,
+    y: U,
+}
+
+impl<T, U> Point<T, U> {
+    fn mixup<V, W>(self, other: Point<V, W>) -> Point<T, W> { // other is another type of Point, return value is a third type of Point
+        Point { // a mixed type of point from self and other
+            x: self.x,
+            y: other.y,
+        }
+    }
+}
+
+fn main() {
+    let p1 = Point { x: 5, y: 10.4 };
+    let p2 = Point { x: "Hello", y: 'c'};
+
+    let p3 = p1.mixup(p2);
+
+    println!("p3.x = {}, p3.y = {}", p3.x, p3.y);
+}
+```
+
+> Listing 10-11: A method that uses different generic types from its struct’s definition
+
+**Performance of Code Using Generics**
+
+Using generic will have no extra performance cost at runtime in Rust. Rust will turn generic code to specific code by filling in the concrete types at compile time. This process is called *Monomorphization *
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Q & A
 
