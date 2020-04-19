@@ -26,4 +26,9 @@ members = [
     "examples/list8-23",
     "examples/list8-25",
     "examples/list8-26",
+    "examples/list9-4",
+    "examples/list9-5",
+    "examples/list9-6",
+    "examples/list9-7",
+    "examples/list9-8",
 ]

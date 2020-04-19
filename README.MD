@@ -3050,6 +3050,248 @@ By default, `HashMap` uses a “cryptographically strong”[1] hashing function 
 
 [1] https://www.131002.net/siphash/siphash.pdf
 
+## 9. Error Handling
+
+Rust’s commitment to reliability extends to error handling. 
+
+Rust groups errors into two major categories: `recoverable` and `unrecoverable` errors. For a recoverable error, such as a file not found error, it’s reasonable to report the problem to the user and retry the operation. Unrecoverable errors are always symptoms of bugs, like trying to access a location beyond the end of an array.
+
+Rust has the type Result<T, E> for recoverable errors and the panic! macro that stops execution when the program encounters an unrecoverable error. 
+
+### 9.1. Unrecoverable Errors with panic!
+
+When the panic! macro executes, your program will print a failure message, unwind and clean up the stack, and then quit. 
+
+```rs
+fn main() {
+    panic!("crash and burn");
+}
+```
+
+```console
+$ cargo run
+   Compiling panic v0.1.0 (file:///projects/panic)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.25s
+     Running `target/debug/panic`
+thread 'main' panicked at 'crash and burn', src/main.rs:2:5
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
+```
+
+Using a `panic!` Backtrace
+
+```rs
+fn main() {
+    let v = vec![1, 2, 3];
+
+    v[99];
+}
+```
+
+> Listing 9-1: Attempting to access an element beyond the end of a vector, which will cause a call to `panic!`
+
+A *backtrace* is a list of all the functions that have been called to get to this point. 
+
+```sh
+$ RUST_BACKTRACE=1 cargo run
+```
+
+### 9.2. Recoverable Errors with Result
+
+Rust use `Result<T,E> to represent a function call result that may succeed or fail(not panic)
+
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+    enum Result<T, E> {
+        Ok(T), // T represents the type of the value that will be returned in a success case within the Ok variant
+        Err(E), // E represents the type of the error that will be returned in a failure case within the Err variant.
+    }
+}
+```
+
+Open a file that may succeed or fail
+
+```rs
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt");
+
+    let f = match f {
+        Ok(file) => file,
+        Err(error) => {
+            panic!("Problem opening the file: {:?}", error)
+        },
+    };
+}
+```
+
+> Listing 9-4: Using a `match` expression to handle the Result variants that might be returned
+
+
+**Matching on Different Errors**
+
+If the function can report different errors, we can have a inner match in the `Err` block
+
+```rs
+use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let f = File::open("hello.txt");
+
+    let f = match f {
+        Ok(file) => file,
+        Err(error) => match error.kind() {
+            ErrorKind::NotFound => match File::create("hello.txt") {
+                Ok(fc) => fc,
+                Err(e) => panic!("Problem creating the file: {:?}", e),
+            },
+            other_error => panic!("Problem opening the file: {:?}", other_error),
+        },
+    };
+}
+```
+
+The type of the value that `File::open` returns inside the Err variant is `io::Error`, which is a struct provided by the standard library. This struct has a method kind that we can call to get an `io::ErrorKind` value. The enum `io::ErrorKind` is provided by the standard library and has variants representing the different kinds of errors that might result from an io operation. 
+
+**Shortcuts for Panic on Error: `unwrap` and `expect`**
+
+Using `match` works well enough, but it can be a bit verbose and doesn’t always communicate intent well. The `Result<T, E>` type has many helper methods defined on it to do various tasks. One of those methods, called `unwrap`, is a shortcut method that is implemented just like the match expression. If the `Result` value is the `Ok` variant, `unwrap` will return the value inside the `Ok`. If the `Result` is the `Err` variant, `unwrap` will call the `panic!` macro for us.
+
+```rs
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt").unwrap();
+}
+```
+
+Another method, expect, which is similar to unwrap, lets us also choose the panic! error message. Using expect instead of unwrap and providing good error messages can convey your intent and make tracking down the source of a panic easier.
+
+```rs
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt").expect("Failed to open hello.txt");
+}
+```
+
+**Propagating Errors**
+
+When you’re writing a function whose implementation calls something that might fail, instead of handling the error within this function, you can return the error to the calling code so that it can decide what to do. This is known as *propagating* the error and gives more control to the calling code
+
+For example, Listing 9-6 shows a function that reads a username from a file. If the file doesn’t exist or can’t be read, this function will return those errors to the code that called this function.
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    use std::io;
+    use std::io::Read;
+    use std::fs::File;
+
+    fn read_username_from_file() -> Result<String, io::Error> {
+        let f = File::open("hello.txt");
+
+        let mut f = match f {
+            Ok(file) => file,
+            Err(e) => return Err(e), // propagating error to the caller
+        };
+
+        let mut s = String::new();
+
+        match f.read_to_string(&mut s) {
+            Ok(_) => Ok(s),   // if succeed, return result to the caller
+            Err(e) => Err(e), // propagating error to the caller
+        }
+    }
+}
+
+```
+
+> Listing 9-6: A function that returns errors to the calling code using `match`
+
+ Let’s look at the return type of the function first: `Result<String, io::Error>`. This means the function is returning a value of the type `Result<T, E> `. If this function succeeds without any problems, the code that calls this function will receive an `Ok` value that holds a String—-the username that this function read from the file. If this function encounters any problems, the code that calls this function will receive an `Err` value that holds an instance of `io::Error` that contains more information about what the problems were. 
+
+This pattern of propagating errors is so common in Rust that Rust provides the question mark operator `?` to make this easier.
+
+**A Shortcut for Propagating Errors: the `?` Operator**
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    use std::io;
+    use std::io::Read;
+    use std::fs::File;
+
+    fn read_username_from_file() -> Result<String, io::Error> {
+        let mut f = File::open("hello.txt")?; // ? here, means that if succeed, the result will return from expression, if failed, error will be returned from the whole function
+        let mut s = String::new();
+        f.read_to_string(&mut s)?;
+        Ok(s)
+    }
+}
+```
+
+> Listing 9-7: A function that returns errors to the calling code using the `?` operator
+
+If the value of the Result is an `Ok`, the value inside the `Ok` will get returned from this expression, and the program will continue. If the value is an `Err`, the `Err` will be returned from the whole function as if we had used the `return` keyword so the error value gets propagated to the calling code.
+
+There is a difference between what the `match` expression from Listing 9-6 and the `?` operator do: There is a difference between what the match expression from Listing 9-6 and the `?` operator do: error values that have the `?` operator called on them go through the `from` function, defined in the `From` trait in the standard library, which is used to convert errors from one type into another. When the `?` operator calls the from function, the error type received is converted into the error type defined in the return type of the current function. This is useful when a function returns one error type to represent all the ways a function might fail, even if parts might fail for many different reasons. As long as each error type implements the from function to define how to convert itself to the returned error type, the `?` operator takes care of the conversion automatically.
+
+The `?` operator eliminates a lot of boilerplate and makes this function’s implementation simpler. We could even shorten this code further by chaining method calls immediately after the `?`, as shown in Listing 9-8.
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    use std::io;
+    use std::io::Read;
+    use std::fs::File;
+
+    fn read_username_from_file() -> Result<String, io::Error> {
+        let mut s = String::new();
+
+        File::open("hello.txt")?.read_to_string(&mut s)?; // if  open failed, then propagating error to caller, otherwise continue call read_to_string method
+
+        Ok(s)
+    }
+}
+```
+
+> Listing 9-8: Chaining method calls after the `?` operator
+
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    use std::io;
+    use std::fs;
+
+    fn read_username_from_file() -> Result<String, io::Error> {
+        fs::read_to_string("hello.txt")
+    }
+}
+```
+
+> Listing 9-9: Using `fs::read_to_string` instead of opening and then reading the file
+
+**The `?` Operator Can Be Used in Functions That Return `Result`**
+
+The `?` operator can be used in functions that have a return type of `Result`, because it is defined to work in the same way as the `match` expression we defined in Listing 9-6. The part of the match that requires a return type of `Result` is return `Err(e)`, so the return type of the function can be a `Result` to be compatible with this `return`.
+
+ We’re only allowed to use the `?` operator in a function that returns `Result` or `Option` or another type that implements `std::ops::Try`
+
+```rs
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt")?; // Error, the main function return type not statisfied the restriction on `?`
+}
+```
+
+
+
 
 
 
