@@ -4748,6 +4748,87 @@ If our project is a binary crate that only contains a *src/main.rs* file and doe
 
 This is one of the reasons Rust projects that provide a binary have a straightforward* src/main.rs* file that calls logic that lives in the src/lib.rs file. Using that structure, integration tests can test the library crate with `use` to make the important functionality available. If the important functionality works, the small amount of code in the *src/main.rs* file will work as well, and that small amount of code doesn’t need to be tested.
 
+## 12. An I/O Project: Building a Command Line Program
+
+### 12.1. Accepting Command Line Arguments
+
+```rs
+use std::env;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    println!("{:?}", args);
+}
+```
+
+> Listing 12-1: Collecting the command line arguments into a vector and printing them
+
+**Saving the Argument Values in Variables**
+
+```rs
+use std::env;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let query = &args[1];
+    let filename = &args[2];
+
+    println!("Searching for {}", query);
+    println!("In file {}", filename);
+}
+```
+
+> Listing 12-2: Creating variables to hold the query argument and filename argument
+
+**Reading a File**
+
+```rs
+use std::env;
+use std::fs;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let query = &args[1];
+    let filename = &args[2];
+
+    println!("Searching for {}", query);
+    // --snip--
+    println!("In file {}", filename);
+
+    let contents = fs::read_to_string(filename)
+        .expect("Something went wrong reading the file");
+
+    println!("With text:\n{}", contents);
+}
+```
+
+> Listing 12-4: Reading the contents of the file specified by the second argument
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Q & A
 
