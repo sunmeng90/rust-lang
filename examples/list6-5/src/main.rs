@@ -6,13 +6,13 @@ fn main() {
         match x {
             None => None,
             // Rust enum match is exhaustive, means that match arms need to cover every possible case
-            Some(i) => i + 1,
+            Some(i) => Some(i + 1),
         }
     }
 
     let five = Some(5);
-    let six = Some(6);
-    let non = Some(None);
+    let six = plus_one(five);
+    let non = plus_one(None);
     // ==================================
     let some_u8_value = 0u8;
     match some_u8_value {
