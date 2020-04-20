@@ -4806,6 +4806,296 @@ fn main() {
 
 > Listing 12-4: Reading the contents of the file specified by the second argument
 
+### 12.3. Refactoring to Improve Modularity and Error Handling
+
+**Separation of Concerns for Binary Projects**
+
+ the Rust community has developed a process to use as a guideline for splitting the separate concerns of a binary program when main starts getting large. The process has the following steps:
+
+* Split your program into a main.rs and a lib.rs and move your program’s logic to lib.rs.
+* As long as your command line parsing logic is small, it can remain in main.rs.
+* When the command line parsing logic starts getting complicated, extract it from main.rs and move it to lib.rs.
+
+The responsibilities that remain in the `main` function after this process should be limited to the following:
+
+* Calling the command line parsing logic with the argument values
+* Setting up any other configuration
+* Calling a run function in lib.rs
+* Handling the error if run returns an error
+
+This pattern is about separating concerns: *main.rs* handles running the program, and *lib.rs* handles all the logic of the task at hand.
+
+**Extracting the Argument Parser**
+
+We’ll extract the functionality for parsing arguments into a function that `main` will call to prepare for moving the command line parsing logic to *src/lib.rs.*. Listing 12-5 shows the new start of main that calls a new function `parse_config`, which we’ll define in *src/main.rs* for the moment.
+
+```rs
+fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let (query, filename) = parse_config(&args);
+
+    // --snip--
+}
+
+fn parse_config(args: &[String]) -> (&str, &str) {
+    let query = &args[1];
+    let filename = &args[2];
+
+    (query, filename)
+}
+```
+
+> Listing 12-5: Extracting a `parse_config` function from `main`
+
+**Grouping Configuration Values**
+
+```rs
+use std::env;
+use std::fs;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let config = parse_config(&args);
+
+    println!("Searching for {}", config.query);
+    println!("In file {}", config.filename);
+
+    let contents = fs::read_to_string(config.filename)
+        .expect("Something went wrong reading the file");
+
+    // --snip--
+}
+
+struct Config {
+    query: String,
+    filename: String,
+}
+
+fn parse_config(args: &[String]) -> Config {
+    let query = args[1].clone(); // make a full copy of the data for the Config instance to own
+    let filename = args[2].clone();
+
+    Config { query, filename }
+}
+```
+
+> Listing 12-6: Refactoring `parse_config` to return an instance of a `Config` struct
+
+**Creating a Constructor for Config**
+
+```rs
+use std::env;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let config = Config::new(&args);
+
+    // --snip--
+}
+
+struct Config {
+    query: String,
+    filename: String,
+}
+
+// --snip--
+
+impl Config {
+    fn new(args: &[String]) -> Config {
+        let query = args[1].clone();
+        let filename = args[2].clone();
+
+        Config { query, filename }
+    }
+}
+```
+
+**Fixing the Error Handling**
+
+**Improving the Error Message**
+
+
+```rs
+// --snip--
+fn new(args: &[String]) -> Config {
+    if args.len() < 3 {
+        panic!("not enough arguments");
+    }
+    // --snip--
+```
+
+> Listing 12-8: Adding a check for the number of arguments
+
+**Returning a `Result` from new Instead of Calling `panic!`**
+
+```rs
+use std::process;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let config = Config::new(&args).unwrap_or_else(|err| {
+        println!("Problem parsing arguments: {}", err);
+        process::exit(1);
+    });
+
+    // --snip--
+```
+
+> Listing 12-9: Returning a `Result` from `Config::new`
+
+**Calling `Config::new` and Handling Errors**
+
+```rs
+use std::process;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let config = Config::new(&args).unwrap_or_else(|err| {
+        println!("Problem parsing arguments: {}", err);
+        process::exit(1);
+    });
+
+    // --snip--
+```
+
+> Listing 12-10: Exiting with an error code if creating a new `Config` fails
+
+**Extracting Logic from `main`**
+
+Now that we’ve finished refactoring the configuration parsing, let’s turn to the program’s logic.
+
+Listing 12-11 shows the extracted `run` function. For now, we’re just making the small, incremental improvement of extracting the function. We’re still defining the function in *src/main.rs*.
+
+```rs
+fn main() {
+    // --snip--
+
+    println!("Searching for {}", config.query);
+    println!("In file {}", config.filename);
+
+    run(config);
+}
+
+fn run(config: Config) {
+    let contents = fs::read_to_string(config.filename)
+        .expect("Something went wrong reading the file");
+
+    println!("With text:\n{}", contents);
+}
+
+// --snip--
+```
+
+> Listing 12-11: Extracting a `run` function containing the rest of the program logic
+
+**Returning Errors from the `run` Function**
+
+With the remaining program logic separated into the `run` function, we can improve the error handling, as we did with `Config::new` in Listing 12-9.
+
+```rs
+use std::error::Error;
+
+// --snip--
+
+fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    let contents = fs::read_to_string(config.filename)?;
+
+    println!("With text:\n{}", contents);
+
+    Ok(())
+}
+```
+
+> Listing 12-12: Changing the `run` function to return `Result`
+
+We’ve made three significant changes here. First, we changed the return type of the `run` function to `Result<(), Box<dyn Error>>`. This function previously returned the unit type, `()`, and we keep that as the value returned in the `Ok` case. For the error type, we used the *trait* object `Box<dyn Error>`. We’ll cover *trait* objects in Chapter 17. For now, just know that `Box<dyn Error>` means the function will return a type that implements the `Error` trait, but we don’t have to specify what particular type the return value will be. This gives us flexibility to return error values that may be of different types in different error cases. The `dyn` keyword is short for “dynamic.”
+
+Second, we’ve removed the call to expect in favor of the `?` operator. Rather than `panic!` on an error, `?` will return the error value from the current function for the caller to handle.
+
+Third, the `run` function now returns an `Ok` value in the success case. We’ve declared the `run` function’s success type as `()` in the signature, which means we need to wrap the unit type value in the `Ok` value. This `Ok(())` syntax might look a bit strange at first, but using `()` like this is the idiomatic way to indicate that we’re calling run for its side effects only; it doesn’t return a value we need.
+
+When you run this code, it will compile but will display a warning:
+
+```rs
+warning: unused `std::result::Result` that must be used
+  --> src/main.rs:17:5
+   |
+17 |     run(config);
+   |     ^^^^^^^^^^^^
+   |
+   = note: #[warn(unused_must_use)] on by default
+   = note: this `Result` may be an `Err` variant, which should be handled
+```
+
+Rust tells us that our code ignored the `Result` value and the `Result` value might indicate that an error occurred. But we’re not checking to see whether or not there was an error, and the compiler reminds us that we probably meant to have some error-handling code here! Let’s rectify that problem now.
+
+**Handling Errors Returned from `run` in `main`**
+
+```rs
+fn main() {
+    // --snip--
+
+    println!("Searching for {}", config.query);
+    println!("In file {}", config.filename);
+
+    if let Err(e) = run(config) {
+        println!("Application error: {}", e);
+
+        process::exit(1);
+    }
+}
+```
+
+We use `if let` rather than `unwrap_or_else` to check whether run returns an Err value and call `process::exit(1)` if it does. The run function doesn’t return a value that we want to unwrap in the same way that `Config::new` returns the Config instance. Because run returns `()` in the success case, we only care about detecting an error, so we don’t need `unwrap_or_else` to return the unwrapped value because it would only be `()`.
+
+The bodies of the `if let` and the `unwrap_or_else` functions are the same in both cases: we print the error and exit.
+
+**Splitting Code into a Library Crate**
+
+Our minigrep project is looking good so far! Now we’ll split the *src/main.rs* file and put some code into the *src/lib.rs* file so we can test it and have a *src/main.rs* file with fewer responsibilities.
+
+Let’s move all the code that isn’t the main function from *src/main.rs* to *src/lib.rs*:
+
+* The `run` function definition
+* The relevant `use` statements
+* The definition of `Config`
+* The `Config::new` function definition
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
