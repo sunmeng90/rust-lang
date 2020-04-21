@@ -5202,10 +5202,163 @@ Pick three.";
 }
 ```
 
+### 12.5. Working with Environment Variables
+
+**Writing a Failing Test for the Case-Insensitive `search` Function**
+
+```rs
+#![allow(unused_variables)]
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn case_sensitive() {
+        let query = "duct";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.
+Duct tape.";
+
+        assert_eq!(
+            vec!["safe, fast, productive."],
+            search(query, contents)
+        );
+    }
+
+    #[test]
+    fn case_insensitive() {
+        let query = "rUsT";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pick three.
+Trust me.";
+
+        assert_eq!(
+            vec!["Rust:", "Trust me."],
+            search_case_insensitive(query, contents)
+        );
+    }
+}
+```
+
+> Listing 12-20: Adding a new failing test for the case-insensitive function we’re about to add
+
+**Implementing the `search_case_insensitive` Function**
 
 
+```rs
+pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    let query = query.to_lowercase();
+    let mut result: Vec<&str> = Vec::new();
+    for line in contents.lines() {
+        if line.to_lowercase().contains(&query) {
+            result.push(line);
+        }
+    }
+    result
+}
+```
+
+> Listing 12-21: Defining the `search_case_insensitive` function to lowercase the query and the line before comparing them
 
 
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+use std::error::Error;
+use std::fs::{self, File};
+use std::io::prelude::*;
+
+pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+     vec![]
+}
+
+pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+     vec![]
+}
+
+pub struct Config {
+    query: String,
+    filename: String,
+    case_sensitive: bool,
+}
+
+pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    let contents = fs::read_to_string(config.filename)?;
+
+    let results = if config.case_sensitive {
+        search(&config.query, &contents)
+    } else {
+        search_case_insensitive(&config.query, &contents)
+    };
+
+    for line in results {
+        println!("{}", line);
+    }
+
+    Ok(())
+}
+}
+```
+
+> Listing 12-22: Calling either `search` or `search_case_insensitive` based on the value in `config.case_sensitive`
+
+The functions for working with environment variables are in the `env` module in the standard library, we’ll use the `var` function from the `env` module to check for an environment variable named `CASE_INSENSITIVE`.
+
+```rs
+
+#![allow(unused_variables)]
+fn main() {
+use std::env;
+struct Config {
+    query: String,
+    filename: String,
+    case_sensitive: bool,
+}
+
+// --snip--
+
+impl Config {
+    pub fn new(args: &[String]) -> Result<Config, &'static str> {
+        if args.len() < 3 {
+            return Err("not enough arguments");
+        }
+
+        let query = args[1].clone();
+        let filename = args[2].clone();
+
+        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+
+        Ok(Config { query, filename, case_sensitive })
+    }
+}
+}
+```
+
+> Listing 12-23: Checking for an environment variable named `CASE_INSENSITIVE`
+
+
+The `env::var` function returns a `Result` that will be the successful `Ok` variant that contains the value of the environment variable if the environment variable is set. It will return the `Err` variant if the environment variable is not set.
+
+We’re using the `is_err` method on the `Result` to check whether it’s an error and therefore unset, which means it should do a case-sensitive search. If the `CASE_INSENSITIVE` environment variable is set to anything, `is_err` will return false and the program will perform a case-insensitive search. We don’t care about the value of the environment variable, just whether it’s set or unset, so we’re checking `is_err` rather than using `unwrap`, `expect`, or any of the other methods we’ve seen on `Result`.
+
+```console
+$ CASE_INSENSITIVE=1 cargo run to poem.txt
+    Finished dev [unoptimized + debuginfo] target(s) in 0.0 secs
+     Running `target/debug/minigrep to poem.txt`
+Are you nobody, too?
+How dreary to be somebody!
+To tell your name the livelong day
+To an admiring bog!
+```
+
+Excellent, we also got lines containing “To”! 
+
+### 12.6. Writing Error Messages to Standard Error Instead of Standard Output
 
 
 
