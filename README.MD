@@ -5360,15 +5360,28 @@ Excellent, we also got lines containing “To”!
 
 ### 12.6. Writing Error Messages to Standard Error Instead of Standard Output
 
+At the moment, we’re writing all of our output to the terminal using the `println!` function. Most terminals provide two kinds of output: standard output (`stdout`) for general information and standard error (`stderr`) for error messages. This distinction enables users to choose to direct the successful output of a program to a file but still print error messages to the screen.
 
+**Printing Errors to Standard Error**
 
+We’ll use the code in Listing 12-24 to change how error messages are printed. Because of the refactoring we did earlier in this chapter, all the code that prints error messages is in one function, `main`. The standard library provides the `eprintln!` macro that prints to the standard error stream, so let’s change the two places we were calling `println!` to print errors to use `eprintln!` instead.
 
+```rs
+fn main() {
+    let args: Vec<String> = env::args().collect();
 
+    let config = Config::new(&args).unwrap_or_else(|err| {
+        eprintln!("Problem parsing arguments: {}", err);
+        process::exit(1);
+    });
 
+    if let Err(e) = minigrep::run(config) {
+        eprintln!("Application error: {}", e);
 
-
-
-
+        process::exit(1);
+    }
+}
+```
 
 
 
