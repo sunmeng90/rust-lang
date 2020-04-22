@@ -52,4 +52,8 @@ members = [
     "examples/list12-13",
     "examples/list12-15",
     "examples/list12-20",
+    "examples/list13-1",
+    "examples/list13-5",
+    "examples/list13-9",
+    "examples/list13-12",
 ]
