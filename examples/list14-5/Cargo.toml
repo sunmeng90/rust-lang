@@ -1,0 +1,10 @@
+[package]
+name = "list14-5"
+version = "0.1.0"
+authors = ["Meng <sunmeng90@126.com>"]
+edition = "2018"
+description = "A sample to show how to use `pub use` to decouples crate internal organization from what we present to users."
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]

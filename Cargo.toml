@@ -59,4 +59,7 @@ members = [
     "examples/list13-13",
     "examples/list13-20",
     "examples/list13-24",
+    "examples/list14-1",
+    "examples/list14-3",
+    "examples/list14-5",
 ]
