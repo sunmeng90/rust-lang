@@ -6271,24 +6271,75 @@ fn main() {
 Note that `zip` produces only four pairs; the theoretical fifth pair `(5, None)` is never produced because `zip` returns `None` when either of its input iterators return `None`.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### 13.3. Improving Our I/O Project
+
+**Removing a `clone` Using an Iterator**
+
+```rust
+fn main() {
+    let config = Config::new(env::args()).unwrap_or_else(|err| {
+        eprintln!("Problem parsing arguments: {}", err);
+        process::exit(1);
+    });
+
+    // --snip--
+}
+```
+
+> Listing 13-25: Passing the return value of `env::args` to `Config::new`
+
+```rust
+fn main() {}
+use std::env;
+
+struct Config {
+    query: String,
+    filename: String,
+    case_sensitive: bool,
+}
+
+impl Config {
+    // Updating the signature of Config::new to expect an iterator
+    pub fn new(mut args: std::env::Args) -> Result<Config, &'static str> { 
+        args.next();
+
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+
+        let filename = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file name"),
+        };
+
+        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+
+        Ok(Config { query, filename, case_sensitive })
+    }
+}
+```
+
+> Listing 13-27: Changing the body of `Config::new` to use iterator methods
+
+**Making Code Clearer with Iterator Adaptors**
+
+```rust
+pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    contents.lines()
+        .filter(|line| line.contains(query))
+        .collect()
+}
+```
+
+
+
+
+
+
+
+
+
 
 ### 13.4. Comparing Performance: Loops vs. Iterators
 
