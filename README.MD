@@ -11,7 +11,7 @@ To declare a mutable variable, add `mut` in front of the variable name. `let mut
 **const vs immutable**  
 const are always immutable  
 const are decleared by keyword `const`  
-const may be set only to a const expression, not the result of a function call or any other value that could only be computed at runtime  
+const may be set only to a const expression, not the result of a function call or any other value that could only be computed at runtime
 
 **shadowing**  
 you can declare a **new variable** with the same name as a previous variable, and the new variable shadows the previous variable. and the new variable can have different type with the previous variable
@@ -28,7 +28,7 @@ fn main() {
 }
 ```
 
-Shadowing is different from marking a variable as mut, because we’ll get a compile-time error if we accidentally try to reassign to this variable without using the let keyword.   
+Shadowing is different from marking a variable as mut, because we’ll get a compile-time error if we accidentally try to reassign to this variable without using the let keyword.  
 The other difference between mut and shadowing is that because we’re effectively creating a new variable when we use the let keyword again, we can change the type of the value but reuse the same name.
 
 ```rs
@@ -41,7 +41,7 @@ fn main() {
 
 ### 3.2 Data Types
 
-Rust is **statically type** language,  which means that it must know the types of all variables at compile time.  
+Rust is **statically type** language, which means that it must know the types of all variables at compile time.  
 The compiler can usually infer the type of variable based on the value and how we use it. In case when many types are possible, we must add a type annotation, like this:
 
 ```rs
@@ -79,7 +79,7 @@ fn main() {
 }
 ```
 
-destructing tuple: 
+destructing tuple:
 
 ```rs
 fn main() {
@@ -91,7 +91,7 @@ fn main() {
 }
 ```
 
-access a tuple element by use period(.) follow by the index of the value:  
+access a tuple element by use period(.) follow by the index of the value:
 
 ```rs
 fn main() {
@@ -177,6 +177,7 @@ fn another_function(x: i32) {
     println!("The value of x is: {}", x);
 }
 ```
+
 The declaration of another_function has one parameter named x. The type of x is specified as i32.
 
 Function bodies are made up of a series of statements optionally ending in an expression. Statements do not return values. Therefore, you can’t assign a let statement to another variable, as the following code tries to do; you’ll get an error:
@@ -211,7 +212,7 @@ This expression:
 }
 ```
 
-is a block that, in this case, evaluates to 4. That value gets bound to y as part of the let statement. Note the x + 1 line without a semicolon at the end, which is unlike most of the lines you’ve seen so far. Expressions do not include ending semicolons. If you add a semicolon to the end of an expression, you turn it into a statement, which will then not return a value. 
+is a block that, in this case, evaluates to 4. That value gets bound to y as part of the let statement. Note the x + 1 line without a semicolon at the end, which is unlike most of the lines you’ve seen so far. Expressions do not include ending semicolons. If you add a semicolon to the end of an expression, you turn it into a statement, which will then not return a value.
 
 Functions with Return Values
 
@@ -229,7 +230,7 @@ fn main() {
 }
 ```
 
-There are no function calls, macros, or even let statements in the five function—just the number 5 by itself. That’s a perfectly valid function in Rust. Note that the function’s return type is specified too, as -> i32. The 5 in five is the function’s return value, which is why the return type is i32. 
+There are no function calls, macros, or even let statements in the five function—just the number 5 by itself. That’s a perfectly valid function in Rust. Note that the function’s return type is specified too, as -> i32. The 5 in five is the function’s return value, which is why the return type is i32.
 
 ### 3.5. Control Flow
 
@@ -267,19 +268,19 @@ fn main() {
 }
 ```
 
- This means the values that have the potential to be results from each arm of the if must be the same type
+This means the values that have the potential to be results from each arm of the if must be the same type
 
- ```rs
- fn main() {
-    let condition = true;
+```rs
+fn main() {
+   let condition = true;
 
-    let number = if condition {
-        5 // int32
-    } else {
-        "six" // string
-    };
+   let number = if condition {
+       5 // int32
+   } else {
+       "six" // string
+   };
 
-    println!("The value of number is: {}", number); //error: 
+   println!("The value of number is: {}", number); //error:
 }
 ```
 
@@ -377,7 +378,7 @@ fn main() {
 
 ## 4. Understanding Ownership
 
-Ownership is Rust’s most unique feature, and it enables Rust to make memory safety guarantees without needing a garbage collector. 
+Ownership is Rust’s most unique feature, and it enables Rust to make memory safety guarantees without needing a garbage collector.
 
 ### 4.1. What is Ownership?
 
@@ -385,26 +386,26 @@ Rust’s central feature is ownership. Although the feature is straightforward t
 
 All programs have to manage the way they use a computer’s memory while running. Some languages have garbage collection that constantly looks for no longer used memory as the program runs; in other languages, the programmer must explicitly allocate and free the memory. Rust uses a third approach: memory is managed through a system of ownership with a set of rules that the compiler checks at compile time. None of the ownership features slow down your program while it’s running.
 
->The Stack and the Heap  
+> The Stack and the Heap
 >
->Both the stack and the heap are parts of memory that are available to your code to use at runtime, but they are structured in different ways. The stack LIFO(last in, first out).  
->All data stored on the stack must have a known, fixed size. Data with an unknown size at compile time or a size that might change must be stored on the heap instead. The heap is less organized: when you put data on the heap, you request a certain amount of space. The operating system finds an empty spot in the heap that is big enough, marks it as being in use, and returns a pointer, which is the address of that location. This process is called allocating on the heap and is sometimes abbreviated as just allocating. Pushing values onto the stack is not considered allocating. Because the pointer is a known, fixed size, you can store the pointer on the stack, but when you want the actual data, you must follow the pointer.  
->Pushing to the stack is faster than allocating on the heap because the operating system never has to search for a place to store new data; that location is always at the top of the stack. Comparatively, allocating space on the heap requires more work, because the operating system must first find a big enough space to hold the data and then perform bookkeeping to prepare for the next allocation.  
->Accessing data in the heap is slower than accessing data on the stack because you have to follow a pointer to get there. A processor can do its job better if it works on data that’s close to other data (as it is on the stack) rather than farther away (as it can be on the heap). Allocating a large amount of space on the heap can also take time.  
->When your code calls a function, the values passed into the function (including, potentially, pointers to data on the heap) and the function’s local variables get pushed onto the stack. When the function is over, those values get popped off the stack.  
->Keeping track of what parts of code are using what data on the heap, minimizing the amount of duplicate data on the heap, and cleaning up unused data on the heap so you don’t run out of space are all problems that ownership addresses. Once you understand ownership, you won’t need to think about the stack and the heap very often, but knowing that managing heap data is why ownership exists can help explain why it works the way it does.
+> Both the stack and the heap are parts of memory that are available to your code to use at runtime, but they are structured in different ways. The stack LIFO(last in, first out).  
+> All data stored on the stack must have a known, fixed size. Data with an unknown size at compile time or a size that might change must be stored on the heap instead. The heap is less organized: when you put data on the heap, you request a certain amount of space. The operating system finds an empty spot in the heap that is big enough, marks it as being in use, and returns a pointer, which is the address of that location. This process is called allocating on the heap and is sometimes abbreviated as just allocating. Pushing values onto the stack is not considered allocating. Because the pointer is a known, fixed size, you can store the pointer on the stack, but when you want the actual data, you must follow the pointer.  
+> Pushing to the stack is faster than allocating on the heap because the operating system never has to search for a place to store new data; that location is always at the top of the stack. Comparatively, allocating space on the heap requires more work, because the operating system must first find a big enough space to hold the data and then perform bookkeeping to prepare for the next allocation.  
+> Accessing data in the heap is slower than accessing data on the stack because you have to follow a pointer to get there. A processor can do its job better if it works on data that’s close to other data (as it is on the stack) rather than farther away (as it can be on the heap). Allocating a large amount of space on the heap can also take time.  
+> When your code calls a function, the values passed into the function (including, potentially, pointers to data on the heap) and the function’s local variables get pushed onto the stack. When the function is over, those values get popped off the stack.  
+> Keeping track of what parts of code are using what data on the heap, minimizing the amount of duplicate data on the heap, and cleaning up unused data on the heap so you don’t run out of space are all problems that ownership addresses. Once you understand ownership, you won’t need to think about the stack and the heap very often, but knowing that managing heap data is why ownership exists can help explain why it works the way it does.
 
 Ownership Rules
 
 First, let’s take a look at the ownership rules:
 
-* Each value in Rust has a variable that’s called its owner.
-* There can only be one owner at a time.
-* When the owner goes out of scope, the value will be dropped.
+- Each value in Rust has a variable that’s called its owner.
+- There can only be one owner at a time.
+- When the owner goes out of scope, the value will be dropped.
 
 Variable Scope
 
-A scope is the range within a program for which an item is valid.  
+A scope is the range within a program for which an item is valid.
 
 ```rs
 #![allow(unused_variables)]
@@ -418,7 +419,7 @@ fn main() {
 ```
 
 The `String` type
-There are two type for string values in rust:  
+There are two type for string values in rust:
 
 1. String literals are immutable. e.g. let s = `hello world`
 2. They second type of string is `String`, This type is allocated on the heap and as such is able to store an amount of text that is unknown to us at compile time. You can create a String from a string literal using the from function, like so: `let s = String::from("hello");`
@@ -444,8 +445,8 @@ In the case of a string literal, we know the contents at compile time, so the te
 
 With the `String` type, in order to support a mutable, growable piece of text, we need to allocate an amount of memory on the heap, unknown at compile time, to hold the contents. This means:
 
-* The memory must be requested from the operating system at runtime.
-* We need a way of returning this memory to the operating system when we’re done with our String.
+- The memory must be requested from the operating system at runtime.
+- We need a way of returning this memory to the operating system when we’re done with our String.
 
 That first part is done by us: when we call `String::from`, its implementation requests the memory it needs. This is pretty much universal in programming languages.
 
@@ -479,6 +480,7 @@ fn main() {
     let y = x;
 }
 ```
+
 We can probably guess what this is doing: “bind the value 5 to x; then make a copy of the value in x and bind it to y.” We now have two variables, x and y, and both equal 5. This is indeed what is happening, **because integers are simple values with a known, fixed size, and these two 5 values are pushed onto the stack**.
 
 Now let’s look at the String version:
@@ -495,18 +497,18 @@ This looks very similar to the previous code, so we might assume that the way it
 
 Take a look at Figure 4-1 to see what is happening to String under the covers. A String is made up of three parts, shown on the left: a pointer to the memory that holds the contents of the string, a length, and a capacity. This group of data is stored on the stack. On the right is the memory on the heap that holds the contents.
 
->![Alternate text](./static/img/trpl04-01.svg)
->Figure 4-1: Representation in memory of a String holding the value "hello" bound to s1
+> ![Alternate text](./static/img/trpl04-01.svg)
+> Figure 4-1: Representation in memory of a String holding the value "hello" bound to s1
 
 When we assign s1 to s2, the String data is copied, meaning we copy the pointer, the length, and the capacity that are on the stack. **We do not copy the data on the heap that the pointer refers to**. In other words, the data representation in memory looks like Figure 4-2.
 
->![Alternate text](./static/img/trpl04-02.svg)
->Figure 4-2: Representation in memory of the variable s2 that has a copy of the pointer, length, and capacity of s1
+> ![Alternate text](./static/img/trpl04-02.svg)
+> Figure 4-2: Representation in memory of the variable s2 that has a copy of the pointer, length, and capacity of s1
 
 The representation does not look like Figure 4-3, which is what memory would look like if Rust instead copied the heap data as well. If Rust did this, the operation s2 = s1 could be very expensive in terms of runtime performance if the data on the heap were large.
 
->![Alternate text](./static/img/trpl04-03.svg)
->Figure 4-3: Another possibility for what s2 = s1 might do if Rust copied the heap data as well 
+> ![Alternate text](./static/img/trpl04-03.svg)
+> Figure 4-3: Another possibility for what s2 = s1 might do if Rust copied the heap data as well
 
 Earlier, we said that when a variable goes out of scope, Rust automatically calls the drop function and cleans up the heap memory for that variable. But Figure 4-2 shows both data pointers pointing to the same location. This is a problem: when `s2` and `s1` go out of scope, they will both try to free the same memory. This is known as a double free error and is one of the memory safety bugs we mentioned previously. Freeing memory twice can lead to memory corruption, which can potentially lead to security vulnerabilities.
 
@@ -537,14 +539,14 @@ error[E0382]: use of moved value: `s1`
 
 If you’ve heard the terms shallow copy and deep copy while working with other languages, the concept of copying the pointer, length, and capacity without copying the data probably sounds like making a shallow copy. **But because Rust also invalidates the first variable**, instead of being called a shallow copy, **it’s known as a move**. In this example, we would say that `s1` was **moved** into `s2`. So what actually happens is shown in Figure 4-4.
 
->![Alternate text](./static/img/trpl04-04.svg)
->Figure 4-4: Representation in memory after s1 has been invalidated
+> ![Alternate text](./static/img/trpl04-04.svg)
+> Figure 4-4: Representation in memory after s1 has been invalidated
 
 That solves our problem! With only `s2` valid, when it goes out of scope, it alone will free the memory, and we’re done.
 
 Ways Variables and Data Interact: Clone
 
-If we do want to deeply copy the heap data of the String, not just the stack data, we can use a common method called `clone`. 
+If we do want to deeply copy the heap data of the String, not just the stack data, we can use a common method called `clone`.
 
 ```rs
 
@@ -582,11 +584,11 @@ Rust has a special annotation called the `Copy` trait that we can place on types
 
 So what types are `Copy`? You can check the documentation for the given type to be sure, but as a general rule, any group of simple scalar values can be `Copy`, and nothing that requires allocation or is some form of resource is `Copy`. Here are some of the types that are `Copy`:
 
-* All the integer types, such as u32.
-* The Boolean type, bool, with values true and false.
-* All the floating point types, such as f64.
-* The character type, char.
-* Tuples, if they only contain types that are also Copy. For example, (i32, i32) is * Copy, but (i32, String) is not.
+- All the integer types, such as u32.
+- The Boolean type, bool, with values true and false.
+- All the floating point types, such as f64.
+- The character type, char.
+- Tuples, if they only contain types that are also Copy. For example, (i32, i32) is \* Copy, but (i32, String) is not.
 
 Ownership and Functions
 
@@ -684,7 +686,6 @@ fn calculate_length(s: String) -> (String, usize) {
 
 But this is too much ceremony and a lot of work for a concept that should be common. Luckily for us, Rust has a feature for this concept, called references.
 
-
 ### 4.2. References and Borrowing
 
 The issue with the tuple code in Listing 4-5 is that we have to return the `String` to the calling function so we can still use the String after the call to `calculate_length`, because the String was moved into `calculate_length`.
@@ -709,10 +710,10 @@ First, notice that all the tuple code in the variable declaration and the functi
 
 These ampersands are references, and they allow you to refer to some value without taking ownership of it. Figure 4-5 shows a diagram.
 
->![Alternate text](./static/img/trpl04-05.svg)
->Figure 4-5: A diagram of `&String s` pointing at String `s1`  
+> ![Alternate text](./static/img/trpl04-05.svg)
+> Figure 4-5: A diagram of `&String s` pointing at String `s1`
 
->Note: The opposite of referencing by using `&` is dereferencing, which is accomplished with the dereference operator, `*`. We’ll see some uses of the dereference operator in Chapter 8 and discuss details of dereferencing in Chapter 15.
+> Note: The opposite of referencing by using `&` is dereferencing, which is accomplished with the dereference operator, `*`. We’ll see some uses of the dereference operator in Chapter 8 and discuss details of dereferencing in Chapter 15.
 
 Let’s take a closer look at the function call here:
 
@@ -745,7 +746,7 @@ fn main() {
 
 The scope in which the variable s is valid is the same as any function parameter’s scope, but we don’t drop what the reference points to when it goes out of scope because we don’t have ownership. **When functions have references as parameters instead of the actual values, we won’t need to return the values in order to give back ownership, because we never had ownership**
 
-We call having references as function parameters *borrowing*. As in real life, if a person owns something, you can borrow it from them. When you’re done, you have to give it back.
+We call having references as function parameters _borrowing_. As in real life, if a person owns something, you can borrow it from them. When you’re done, you have to give it back.
 
 So what happens if we try to modify something we’re borrowing? Try the code in Listing 4-6. Spoiler alert: it doesn’t work!
 
@@ -763,7 +764,6 @@ fn change(some_string: &String) {
 
     Listing 4-6: Attempting to modify a borrowed value
 
-
 ```
 error[E0596]: cannot borrow immutable borrowed content `*some_string` as mutable
  --> error.rs:8:5
@@ -775,7 +775,6 @@ error[E0596]: cannot borrow immutable borrowed content `*some_string` as mutable
 ```
 
 Just as variables are immutable by default, so are references. We’re not allowed to modify something we have a reference to.
-
 
 Mutable References
 
@@ -823,11 +822,11 @@ error[E0499]: cannot borrow `s` as mutable more than once at a time
 
 This restriction allows for mutation but in a very controlled fashion. It’s something that new Rustaceans struggle with, because most languages let you mutate whenever you’d like.
 
-The benefit of having this restriction is that Rust can prevent data races at compile time. A *data race* is similar to a race condition and happens when these three behaviors occur:
+The benefit of having this restriction is that Rust can prevent data races at compile time. A _data race_ is similar to a race condition and happens when these three behaviors occur:
 
-* Two or more pointers access the same data at the same time.
-* At least one of the pointers is being used to write to the data.
-* There’s no mechanism being used to synchronize access to the data.
+- Two or more pointers access the same data at the same time.
+- At least one of the pointers is being used to write to the data.
+- There’s no mechanism being used to synchronize access to the data.
 
 Data races cause undefined behavior and can be difficult to diagnose and fix when you’re trying to track them down at runtime; Rust prevents this problem from happening because it won’t even compile code with data races!
 
@@ -966,11 +965,8 @@ The Rules of References
 
 Let’s recap what we’ve discussed about references:
 
-* At any given time, you can have either one mutable reference or any number of immutable references.
-* References must always be valid.
-
-
-
+- At any given time, you can have either one mutable reference or any number of immutable references.
+- References must always be valid.
 
 ### 4.3. The Slice Type
 
@@ -1003,7 +999,7 @@ fn main() {
 }
 ```
 
->Listing 4-8: Storing the result from calling the `first_word` function and then changing the String contents
+> Listing 4-8: Storing the result from calling the `first_word` function and then changing the String contents
 
 This program compiles without any errors and would also do so if we used `word` after calling `s.clear()`. Because `word` isn’t connected to the state of `s` at all, `word` still contains the value `5`. We could use that value `5` with the variable `s` to try to extract the first word out, but this would be a bug because the contents of `s` have changed since we saved `5` in `word`.
 
@@ -1027,8 +1023,8 @@ This is similar to taking a reference to the whole `String` but with the extra `
 
 We can create slices using a range within brackets by specifying `[starting_index..ending_index]`, where `starting_index` is the first position in the slice and `ending_index` is one more than the last position in the slice. Internally, the slice data structure stores the starting position and the length of the slice, which corresponds to ending_index minus starting_index. So in the case of `let world = &s[6..11];, world` would be a slice that contains a pointer to the 7th byte (counting from 1) of `s` with a length value of 5.
 
->![Alternate text](./static/img/trpl04-06.svg)
->Figure 4-6: String slice referring to part of a String
+> ![Alternate text](./static/img/trpl04-06.svg)
+> Figure 4-6: String slice referring to part of a String
 
 ```rs
 
@@ -1049,7 +1045,7 @@ fn main() {
 }
 ```
 
->Note: String slice range indices must occur at valid UTF-8 character boundaries. If you attempt to create a string slice in the middle of a multibyte character, your program will exit with an error. For the purposes of introducing string slices, we are assuming ASCII only in this section; a more thorough discussion of UTF-8 handling is in the “Storing UTF-8 Encoded Text with Strings” section of Chapter 8.
+> Note: String slice range indices must occur at valid UTF-8 character boundaries. If you attempt to create a string slice in the middle of a multibyte character, your program will exit with an error. For the purposes of introducing string slices, we are assuming ASCII only in this section; a more thorough discussion of UTF-8 handling is in the “Storing UTF-8 Encoded Text with Strings” section of Chapter 8.
 
 With all this information in mind, let’s rewrite `first_word` to return a slice. The type that signifies “string slice” is written as `&str`:
 
@@ -1102,7 +1098,7 @@ error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immuta
    |                                       ---- immutable borrow later used here
 ```
 
-Recall from the borrowing rules that if we have an immutable reference to something, we cannot also take a mutable reference. Because clear needs to truncate the String, it needs to get a mutable reference. Rust disallows this, and compilation fails. 
+Recall from the borrowing rules that if we have an immutable reference to something, we cannot also take a mutable reference. Because clear needs to truncate the String, it needs to get a mutable reference. Rust disallows this, and compilation fails.
 
 String Literals Are Slices
 
@@ -1125,7 +1121,7 @@ Knowing that you can take slices of literals and String values leads us to one m
 fn first_word(s: &str) -> &str {
 ```
 
->Listing 4-9: Improving the first_word function by using a string slice for the type of the s parameter
+> Listing 4-9: Improving the first_word function by using a string slice for the type of the s parameter
 
 If we have a string slice, we can pass that directly. If we have a `String`, we can pass a slice of the entire `String`. Defining a function to take a string slice instead of a reference to a `String` makes our API more general and useful without losing any functionality:
 
@@ -1171,13 +1167,11 @@ fn main() {
 }
 ```
 
-This slice has the type &[i32]. It works the same way as string slices do, by storing a reference to the first element and a length. 
-
+This slice has the type &[i32]. It works the same way as string slices do, by storing a reference to the first element and a length.
 
 Summary
 
 The concepts of ownership, borrowing, and slices ensure memory safety in Rust programs at compile time. The Rust language gives you control over your memory usage in the same way as other systems programming languages, but having the owner of data automatically clean up that data when the owner goes out of scope means you don’t have to write and debug extra code to get this control.
-
 
 ## 5. Using Structs to Structure Related Data
 
@@ -1187,7 +1181,7 @@ A struct, or structure, is a custom data type that lets you name and package tog
 
 Structs are similar to tuples. Like tuples, the pieces of a struct can be different types. Unlike with tuples, you’ll name each piece of data so it’s clear what the values mean. As a result of these names, structs are more flexible than tuples: you don’t have to rely on the order of the data to specify or access the values of an instance.
 
-To define a struct, we enter the keyword struct and name the entire struct. Then, inside curly brackets, we define the names and types of the pieces of data, which we call fields. 
+To define a struct, we enter the keyword struct and name the entire struct. Then, inside curly brackets, we define the names and types of the pieces of data, which we call fields.
 
 ```rs
 
@@ -1201,9 +1195,10 @@ fn main() {
     }
 }
 ```
+
 > Listing 5-1: A User struct definition
 
-create *instance* of struct
+create _instance_ of struct
 
 ```rs
 #![allow(unused_variables)]
@@ -1251,7 +1246,7 @@ fn main() {
 
 > Listing 5-3: Changing the value in the email field of a User instance
 
-Note that the entire instance must be mutable; Rust doesn’t allow us to mark only certain fields as mutable. 
+Note that the entire instance must be mutable; Rust doesn’t allow us to mark only certain fields as mutable.
 
 Using the Field Init Shorthand when Variables and Fields Have the Same Name
 
@@ -1289,8 +1284,7 @@ fn main() {
 
 Creating Instances From Other Instances With Struct Update Syntax
 
-It’s often useful to create a new instance of a struct that uses most of an old instance’s values but changes some. You’ll do this using *struct update syntax*.
-
+It’s often useful to create a new instance of a struct that uses most of an old instance’s values but changes some. You’ll do this using _struct update syntax_.
 
 ```rs
 #![allow(unused_variables)]
@@ -1416,7 +1410,7 @@ fn area(rectangle: &Rectangle) -> u32 {
 
 ### 5.3. Method Syntax
 
-*Methods* are similar to functions: they’re declared with the `fn` keyword and their name, they can have parameters and a return value, and they contain some code that is run when they’re called from somewhere else. However, methods are different from functions in that they’re defined within the context of a struct (or an enum or a trait object, which we cover in Chapters 6 and 17, respectively), and their first parameter is always `self`, which represents the instance of the struct the method is being called on.
+_Methods_ are similar to functions: they’re declared with the `fn` keyword and their name, they can have parameters and a return value, and they contain some code that is run when they’re called from somewhere else. However, methods are different from functions in that they’re defined within the context of a struct (or an enum or a trait object, which we cover in Chapters 6 and 17, respectively), and their first parameter is always `self`, which represents the instance of the struct the method is being called on.
 
 Defining Methods
 
@@ -1460,15 +1454,13 @@ impl Rectangle {
 
 > Listing 5-13: Defining an area method on the Rectangle struct
 
-To define the function within the context of Rectangle, we start an impl (implementation) block. Then we move the area function within the impl curly brackets and change the first (and in this case, only) parameter to be self in the signature and everywhere within the body. 
-
+To define the function within the context of Rectangle, we start an impl (implementation) block. Then we move the area function within the impl curly brackets and change the first (and in this case, only) parameter to be self in the signature and everywhere within the body.
 
 Associated Functions
 
 Another useful feature of `impl` blocks is that we’re allowed to define functions within `impl` blocks that don’t take `self` as a parameter. These are called associated functions because they’re associated with the struct. They’re still functions, not methods, because they don’t have an instance of the struct to work with. You’ve already used the `String::from` associated function.
 
 Associated functions are often used for constructors that will return a new instance of the struct.
-
 
 ```rs
 fn main() {
@@ -1507,8 +1499,7 @@ impl Rectangle {
 
 Multiple `impl` Blocks
 
-Each struct is allowed to have multiple impl blocks. 
-
+Each struct is allowed to have multiple impl blocks.
 
 ```rs
 fn main() {}
@@ -1550,7 +1541,7 @@ But structs aren’t the only way you can create custom types: let’s turn to R
 
 ## 6. Enums and Pattern Matching
 
-*Enumerations*, also referred to as *enums*. Enums allow you to define a type by enumerating its possible variants. 
+_Enumerations_, also referred to as _enums_. Enums allow you to define a type by enumerating its possible variants.
 
 ### 6.1. Defining an Enum
 
@@ -1609,7 +1600,7 @@ There’s another advantage to using an enum rather than a struct: **each varian
 #![allow(unused_variables)]
 fn main() {
     enum IpAddr {
-        V4(u8, u8, u8, u8), //each enum variant can have different types and amounts of associated data. 
+        V4(u8, u8, u8, u8), //each enum variant can have different types and amounts of associated data.
         V6(String),
     }
 
@@ -1659,10 +1650,10 @@ fn main() {
 
 This enum has four variants with different types:
 
-* Quit has no data associated with it at all.
-* Move includes an anonymous struct inside it.
-* Write includes a single String.
-* ChangeColor includes three i32 values.
+- Quit has no data associated with it at all.
+- Move includes an anonymous struct inside it.
+- Write includes a single String.
+- ChangeColor includes three i32 values.
 
 Defining an enum with variants such as the ones in Listing 6-2 is similar to defining different kinds of struct definitions, except the enum doesn’t use the struct keyword and all the variants are grouped together under the Message type. The following structs could hold the same data that the preceding enum variants hold:
 
@@ -1958,7 +1949,7 @@ Using `if let` means less typing, less indentation, and less boilerplate code. H
 
 In other words, you can think of `if let` as syntax sugar for a `match` that runs code when the value matches one pattern and then ignores all other values.
 
-We can include an `else` with an `if let`. The block of code that goes with the `else` is the same as the block of code that would go with the `_` case in the match expression that is equivalent to the `if let` and `else`. 
+We can include an `else` with an `if let`. The block of code that goes with the `else` is the same as the block of code that would go with the `_` case in the match expression that is equivalent to the `if let` and `else`.
 
 ```rs
 #![allow(unused_variables)]
@@ -2020,25 +2011,24 @@ Your Rust programs can now express concepts in your domain using structs and enu
 
 In order to provide a well-organized API to your users that is straightforward to use and only exposes exactly what your users will need, let’s now turn to Rust’s modules.
 
-
 ## 7. Managing Growing Projects with Packages, Crates, and Modules
 
 when project grows and becomes complex you may need to: grouping functionality and encapsulating implementation.
 
 A related concept is scope: the nested context in which code is written has a set of names that are defined as “in scope.” When reading, writing, and compiling code, programmers and compilers need to know whether a particular name at a particular spot refers to a variable, function, struct, enum, module, constant, or other item and what that item means. You can create scopes and change which names are in or out of scope. You can’t have two items with the same name in the same scope
 
-Rust has a number of features that allow you to manage your code’s organization, including which details are exposed, which details are private, and what names are in each scope in your programs. These features, sometimes collectively referred to as the *module system*, include:
+Rust has a number of features that allow you to manage your code’s organization, including which details are exposed, which details are private, and what names are in each scope in your programs. These features, sometimes collectively referred to as the _module system_, include:
 
-* **Packages:** A Cargo feature that lets you build, test, and share crates
-* **Crates:** A tree of modules that produces a library or executable
-* **Modules** and **use:** Let you control the organization, scope, and privacy of paths
-* **Paths:** A way of naming an item, such as a struct, function, or module
+- **Packages:** A Cargo feature that lets you build, test, and share crates
+- **Crates:** A tree of modules that produces a library or executable
+- **Modules** and **use:** Let you control the organization, scope, and privacy of paths
+- **Paths:** A way of naming an item, such as a struct, function, or module
 
 ### 7.1. Packages and Crates
 
-A crate is a binary or library. The *crate root* is a source file that the Rust compiler starts from and makes up the root module of your crate. A package is one or more crates that provide a set of functionality. A package contains a Cargo.toml file that describes how to build those crates.
+A crate is a binary or library. The _crate root_ is a source file that the Rust compiler starts from and makes up the root module of your crate. A package is one or more crates that provide a set of functionality. A package contains a Cargo.toml file that describes how to build those crates.
 
-Several rules determine what a package can contain. A package *must* contain zero or one library crates, and no more. It can contain as many binary crates as you’d like, but it must contain at least one crate (either library or binary).
+Several rules determine what a package can contain. A package _must_ contain zero or one library crates, and no more. It can contain as many binary crates as you’d like, but it must contain at least one crate (either library or binary).
 
 Let’s walk through what happens when we create a package. First, we enter the command `cargo new`:
 
@@ -2060,13 +2050,13 @@ Keeping a crate’s functionality in its own scope clarifies whether particular 
 
 ### 7.2. Defining Modules to Control Scope and Privacy
 
-In this section, we’ll talk about modules and other parts of the module system, namely *paths* that allow you to name items; the `use` keyword that brings a path into scope; and the `pub` keyword to make items public. We’ll also discuss the as keyword, external packages, and the glob operator. 
+In this section, we’ll talk about modules and other parts of the module system, namely _paths_ that allow you to name items; the `use` keyword that brings a path into scope; and the `pub` keyword to make items public. We’ll also discuss the as keyword, external packages, and the glob operator.
 
-*Modules* let us organize code within a crate into groups for readability and easy reuse. Modules also control the *privacy* of items, which is whether an item can be used by outside code (*public*) or is an internal implementation detail and not available for outside use (*private*).
+_Modules_ let us organize code within a crate into groups for readability and easy reuse. Modules also control the _privacy_ of items, which is whether an item can be used by outside code (_public_) or is an internal implementation detail and not available for outside use (_private_).
 
 Modules can hold definitions for other items, such as structs, enums, constants, traits, functions and modules.
 
-Let's take restaurant as an example, Some parts in a restaurant are referred to as *front of house* and others as *back of house*. Front of house is where customers are; this is where hosts seat customers, servers take orders and payment, and bartenders make drinks. Back of house is where the chefs and cooks work in the kitchen, dishwashers clean up, and managers do administrative work.
+Let's take restaurant as an example, Some parts in a restaurant are referred to as _front of house_ and others as _back of house_. Front of house is where customers are; this is where hosts seat customers, servers take orders and payment, and bartenders make drinks. Back of house is where the chefs and cooks work in the kitchen, dishwashers clean up, and managers do administrative work.
 
 To structure our crate in the same way that a real restaurant works, we can organize our code into nested modules. Create a new library named `restaurant` by running `cargo new --lib restaurant`; then put the code in Listing 7-1 into src/lib.rs to define some modules and function signatures.
 
@@ -2106,7 +2096,7 @@ crate  # entire module tree is rooted under the implicit module named crate.
 
 > Listing 7-2: The module tree for the code in Listing 7-1
 
-Earlier, we mentioned that `src/main.rs` and `src/lib.rs` are called crate roots. The reason for their name is that the contents of either of these two files form a module named `crate` at the root of the crate’s module structure, known as the *module tree*.
+Earlier, we mentioned that `src/main.rs` and `src/lib.rs` are called crate roots. The reason for their name is that the contents of either of these two files form a module named `crate` at the root of the crate’s module structure, known as the _module tree_.
 
 The module tree might remind you of the filesystem’s directory tree on your computer; this is a very apt comparison! Just like directories in a filesystem, you use modules to organize your code. And just like files in a directory, we need a way to find our modules.
 
@@ -2116,9 +2106,9 @@ To show Rust where to find an item in a module tree, we use a path in the same w
 
 A path can take two forms:
 
-* An *absolute path* starts from a crate root by using a crate name or a literal `crate`.
-* A *relative path* starts from the current module and uses `self`, `super`, or an identifier in the current module.
-Both absolute and relative paths are followed by one or more identifiers separated by double colons (`::`).
+- An _absolute path_ starts from a crate root by using a crate name or a literal `crate`.
+- A _relative path_ starts from the current module and uses `self`, `super`, or an identifier in the current module.
+  Both absolute and relative paths are followed by one or more identifiers separated by double colons (`::`).
 
 Let’s try to compile Listing 7-3 and find out why it won’t compile yet! The error we get is shown in Listing 7-4.
 
@@ -2144,7 +2134,7 @@ The error messages say that module `hosting` is private. In other words, we have
 
 Modules aren’t useful only for organizing your code. They also define Rust’s privacy boundary: the line that encapsulates the implementation details external code isn’t allowed to know about, call, or rely on. So, if you want to make an item like a function or struct private, you put it in a module.
 
-The way privacy works in Rust is that all items (functions, methods, structs, enums, modules, and constants) are private by default. **Items in a parent module can’t use the private items inside child modules, but items in child modules can use the items in their ancestor modules.** The reason is that child modules wrap and hide their implementation details, but the child modules can see the context in which they’re defined. 
+The way privacy works in Rust is that all items (functions, methods, structs, enums, modules, and constants) are private by default. **Items in a parent module can’t use the private items inside child modules, but items in child modules can use the items in their ancestor modules.** The reason is that child modules wrap and hide their implementation details, but the child modules can see the context in which they’re defined.
 
 But you can expose inner parts of child modules code to outer ancestor modules by using the pub keyword to make an item public.
 
@@ -2183,6 +2173,7 @@ error[E0603]: function `add_to_waitlist` is private
 12 |     front_of_house::hosting::add_to_waitlist();
    |                              ^^^^^^^^^^^^^^^
 ```
+
 > Listing 7-6: Compiler errors from building the code in Listing 7-5
 
 Adding the pub keyword in front of mod hosting makes the module public. But the contents of hosting are still private; making the module public doesn’t make its contents public. The pub keyword on a module only lets code in its ancestor modules refer to it
@@ -2229,7 +2220,6 @@ fn main() {}
 Making Structs and Enums Public
 
 We can also use `pub` to designate structs and enums as public, but there are a few extra details. If we use `pub` before a struct definition, we make the struct public, but the struct’s fields will still be private. We can make each field public or not on a case-by-case basis.
-
 
 ```rs
 #![allow(unused_variables)]
@@ -2313,7 +2303,7 @@ fn main() {}
 
 > Listing 7-11: Bringing a module into scope with `use`
 
-Adding use and a path in a scope is similar to creating a symbolic link in the filesystem. 
+Adding use and a path in a scope is similar to creating a symbolic link in the filesystem.
 
 Creating Idiomatic `use` Paths
 
@@ -2350,6 +2340,7 @@ fn main() {
     map.insert(1, 2);
 }
 ```
+
 > Listing 7-14: Bringing `HashMap` into scope in an idiomatic way
 
 Providing New Names with the `as` Keyword
@@ -2378,7 +2369,7 @@ fn main() {
 
 Re-exporting Names with `pub use`
 
-When we bring a name into scope with the `use` keyword, the name available in the new scope is private. To enable the code that calls our code to refer to that name as if it had been defined in that code’s scope, we can combine `pub` and `use`. This technique is called *re-exporting* because we’re bringing an item into scope but also making that item available for others to bring into their scope.
+When we bring a name into scope with the `use` keyword, the name available in the new scope is private. To enable the code that calls our code to refer to that name as if it had been defined in that code’s scope, we can combine `pub` and `use`. This technique is called _re-exporting_ because we’re bringing an item into scope but also making that item available for others to bring into their scope.
 
 ```rs
 mod front_of_house {
@@ -2405,7 +2396,7 @@ Re-exporting is useful when the internal structure of your code is different fro
 
 Using External Packages
 
-add external package dependency in *Cargo.toml*:  
+add external package dependency in _Cargo.toml_:
 
 ```toml
 [dependencies]
@@ -2414,7 +2405,7 @@ rand = "0.5.5"
 
 Adding rand as a dependency in Cargo.toml tells Cargo to download the rand package and any dependencies from crates.io and make rand available to our project.
 
-Then, to bring `rand` definitions into the scope of our package, we added a `use` line starting with the name of the package, `rand`, and listed the items we wanted to bring into scope. 
+Then, to bring `rand` definitions into the scope of our package, we added a `use` line starting with the name of the package, `rand`, and listed the items we wanted to bring into scope.
 
 ```rs
 use rand::Rng;
@@ -2423,7 +2414,7 @@ fn main() {
 }
 ```
 
-Note that the standard library (`std`) is also a crate that’s external to our package. Because the standard library is shipped with the Rust language, we don’t need to change *Cargo.toml* to include `std`. But we do need to refer to it with `use` to bring items from there into our package’s scope. 
+Note that the standard library (`std`) is also a crate that’s external to our package. Because the standard library is shipped with the Rust language, we don’t need to change _Cargo.toml_ to include `std`. But we do need to refer to it with `use` to bring items from there into our package’s scope.
 
 Using Nested Paths to Clean Up Large `use` Lists
 
@@ -2482,7 +2473,7 @@ pub fn eat_at_restaurant() {
 }
 ```
 
-> Listing 7-21: Declaring the `front_of_house` module whose body will be in *src/front_of_house.rs*
+> Listing 7-21: Declaring the `front_of_house` module whose body will be in _src/front_of_house.rs_
 
 And src/front_of_house.rs gets the definitions from the body of the front_of_house module, as shown in Listing 7-22.
 
@@ -2495,9 +2486,10 @@ fn main() {
     }
 }
 ```
-> Listing 7-22: Definitions inside the `front_of_house` module in *src/front_of_house.rs*
 
-Using a semicolon after `mod front_of_house` rather than using a block tells Rust to load the contents of the module from another file with the same name as the module. 
+> Listing 7-22: Definitions inside the `front_of_house` module in _src/front_of_house.rs_
+
+Using a semicolon after `mod front_of_house` rather than using a block tells Rust to load the contents of the module from another file with the same name as the module.
 
 The `mod` keyword declares modules, and Rust looks in a file with the same name as the module for the code that goes into that module.
 
@@ -2507,13 +2499,13 @@ Rust lets you split a package into multiple crates and a crate into modules so y
 
 ## 8. Common Collections
 
-* A vector allows you to store a variable number of values next to each other.
-* A string is a collection of characters. We’ve mentioned the String type previously, but in this chapter we’ll talk about it in depth.
-* A hash map allows you to associate a value with a particular key. It’s a particular implementation of the more general data structure called a map.
+- A vector allows you to store a variable number of values next to each other.
+- A string is a collection of characters. We’ve mentioned the String type previously, but in this chapter we’ll talk about it in depth.
+- A hash map allows you to associate a value with a particular key. It’s a particular implementation of the more general data structure called a map.
 
 ### 8.1. Storing Lists of Values with Vectors
 
-`Vec<T>`, also known as a vector allows you to store more than one value in a single data structure that puts all the values next to each other in memory. Vectors can only store values of the same type. 
+`Vec<T>`, also known as a vector allows you to store more than one value in a single data structure that puts all the values next to each other in memory. Vectors can only store values of the same type.
 
 Creating a New Vector
 
@@ -2568,6 +2560,7 @@ fn main() {
     } // <- v goes out of scope and is freed here
 }
 ```
+
 > Listing 8-4: Showing where the vector and its elements are dropped
 
 When the vector gets dropped, all of its contents are also dropped, meaning those integers it holds will be cleaned up. This may seem like a straightforward point but can get a bit more complicated when you start to introduce references to the elements of the vector.
@@ -2588,17 +2581,18 @@ fn main() {
     }
 }
 ```
+
 > Listing 8-5: Using indexing syntax or the get method to access an item in a vector
 
 Vectors are indexed by number, starting at zero
 
-* by using & and [], which gives us a reference
-* by using the get method with the index passed as an argument, which gives us an Option<&T>
+- by using & and [], which gives us a reference
+- by using the get method with the index passed as an argument, which gives us an Option<&T>
 
 When access a non-existent element from vector:
 
-* &[] will cause panic
-* get will return None
+- &[] will cause panic
+- get will return None
 
 ```rs
 #![allow(unused_variables)]
@@ -2642,7 +2636,7 @@ error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immuta
   |                                          ----- immutable borrow later used here
 ```
 
-The code in Listing 8-7 might look like it should work: why should a reference to the first element care about what changes at the end of the vector? This error is due to the way vectors work: adding a new element onto the end of the vector might require allocating new memory and copying the old elements to the new space, if there isn’t enough room to put all the elements next to each other where the vector currently is. In that case, the reference to the first element would be pointing to deallocated memory. 
+The code in Listing 8-7 might look like it should work: why should a reference to the first element care about what changes at the end of the vector? This error is due to the way vectors work: adding a new element onto the end of the vector might require allocating new memory and copying the old elements to the new space, if there isn’t enough room to put all the elements next to each other where the vector currently is. In that case, the reference to the first element would be pointing to deallocated memory.
 
 Iterating over the Values in a Vector
 
@@ -2673,11 +2667,11 @@ fn main() {
 
 > Listing 8-9: Iterating over mutable references to elements in a vector
 
-To change the value that the mutable reference refers to, we have to use the dereference operator (`*`) to get to the value in i before we can use the `+=` operator. 
+To change the value that the mutable reference refers to, we have to use the dereference operator (`*`) to get to the value in i before we can use the `+=` operator.
 
 Using an Enum to Store Multiple Types
 
-Vectors can only store values that are the same type. When we want to save elements of a different type in a vector, we can define an enum whose variants will hold the different value types, and then all the variants will be considered the same type. 
+Vectors can only store values that are the same type. When we want to save elements of a different type in a vector, we can define an enum whose variants will hold the different value types, and then all the variants will be considered the same type.
 
 ```rs
 
@@ -2699,25 +2693,25 @@ fn main() {
 
 > Listing 8-10: Defining an `enum` to store values of different types in one vector
 
-
 Rust needs to know what types will be in the vector at compile time so it knows exactly how much memory on the heap will be needed to store each element. A secondary advantage is that we can be explicit about what types are allowed in this vector. If Rust allowed a vector to hold any type, there would be a chance that one or more of the types would cause errors with the operations performed on the elements of the vector. Using an enum plus a `match` expression means that Rust will ensure at compile time that every possible case is handled, as discussed in Chapter 6.
 
 When you’re writing a program, if you don’t know the exhaustive set of types the program will get at runtime to store in a vector, the enum technique won’t work. Instead, you can use a trait object, which we’ll cover in Chapter 17.
 
 ### 8.2. Storing UTF-8 Encoded Text with Strings
 
- Rust has only one string type in the core language, which is the string slice `str` that is usually seen in its borrowed form `&str`.
+Rust has only one string type in the core language, which is the string slice `str` that is usually seen in its borrowed form `&str`.
 
- The `String` type, which is provided by Rust’s standard library rather than coded into the core language, is a growable, mutable, owned, UTF-8 encoded string type. When Rustaceans refer to “strings” in Rust, they usually mean the `String` and the string slice `&str` types, not just one of those types.
+The `String` type, which is provided by Rust’s standard library rather than coded into the core language, is a growable, mutable, owned, UTF-8 encoded string type. When Rustaceans refer to “strings” in Rust, they usually mean the `String` and the string slice `&str` types, not just one of those types.
 
 Creating a New String
 
 ```rs
 #![allow(unused_variables)]
 fn main() {
-    let mut s = String::new(); //creates a new empty string called s, which we can then load data into. 
+    let mut s = String::new(); //creates a new empty string called s, which we can then load data into.
 }
 ```
+
 > Listing 8-11: Creating a new, empty `String`
 
 ```rs
@@ -2732,6 +2726,7 @@ fn main() {
     let s = "initial contents".to_string();
 }
 ```
+
 > Listing 8-12: Using the `to_string` method to create a `String` from a string literal
 
 Updating a String
@@ -2752,7 +2747,7 @@ fn main() {
 
 > Listing 8-16: Using a string slice after appending its contents to a `String`
 
-the `push` method takes a single character as parameter and adds it to `String`. 
+the `push` method takes a single character as parameter and adds it to `String`.
 
 ```rs
 #![allow(unused_variables)]
@@ -2774,6 +2769,7 @@ fn main() {
     let s3 = s1 + &s2; // note s1 has been moved here and can no longer be used
 }
 ```
+
 > Listing 8-18: Using the `+` operator to combine two `String` values into a new `String` value
 
 The `+` operator uses the `add` method, whose signature looks something like this:
@@ -2817,7 +2813,7 @@ let h = s1[0];
 
 Internal Representation
 
-A `String` is a wrapper over a `Vec<u8>`. 
+A `String` is a wrapper over a `Vec<u8>`.
 
 ```rs
 #![allow(unused_variables)]
@@ -2897,7 +2893,7 @@ fn main() {
 
 > Listing 8-20: Creating a new hash map and inserting some keys and values
 
-Another way of constructing a hash map is by using the `collect` method on a vector of tuples, where each tuple consists of a key and its value. The `collect` method gathers data into a number of collection types, including `HashMap`. 
+Another way of constructing a hash map is by using the `collect` method on a vector of tuples, where each tuple consists of a key and its value. The `collect` method gathers data into a number of collection types, including `HashMap`.
 
 ```rs
 
@@ -3046,21 +3042,21 @@ fn main() {
 
 Hashing Functions
 
-By default, `HashMap` uses a “cryptographically strong”[1] hashing function that can provide resistance to Denial of Service (DoS) attacks. This is not the fastest hashing algorithm available, but the trade-off for better security that comes with the drop in performance is worth it. If you profile your code and find that the default hash function is too slow for your purposes, you can switch to another function by specifying a different hasher. A *hasher* is a type that implements the `BuildHasher` trait.
+By default, `HashMap` uses a “cryptographically strong”[1] hashing function that can provide resistance to Denial of Service (DoS) attacks. This is not the fastest hashing algorithm available, but the trade-off for better security that comes with the drop in performance is worth it. If you profile your code and find that the default hash function is too slow for your purposes, you can switch to another function by specifying a different hasher. A _hasher_ is a type that implements the `BuildHasher` trait.
 
 [1] https://www.131002.net/siphash/siphash.pdf
 
 ## 9. Error Handling
 
-Rust’s commitment to reliability extends to error handling. 
+Rust’s commitment to reliability extends to error handling.
 
 Rust groups errors into two major categories: `recoverable` and `unrecoverable` errors. For a recoverable error, such as a file not found error, it’s reasonable to report the problem to the user and retry the operation. Unrecoverable errors are always symptoms of bugs, like trying to access a location beyond the end of an array.
 
-Rust has the type Result<T, E> for recoverable errors and the panic! macro that stops execution when the program encounters an unrecoverable error. 
+Rust has the type Result<T, E> for recoverable errors and the panic! macro that stops execution when the program encounters an unrecoverable error.
 
 ### 9.1. Unrecoverable Errors with panic!
 
-When the panic! macro executes, your program will print a failure message, unwind and clean up the stack, and then quit. 
+When the panic! macro executes, your program will print a failure message, unwind and clean up the stack, and then quit.
 
 ```rs
 fn main() {
@@ -3089,7 +3085,7 @@ fn main() {
 
 > Listing 9-1: Attempting to access an element beyond the end of a vector, which will cause a call to `panic!`
 
-A *backtrace* is a list of all the functions that have been called to get to this point. 
+A _backtrace_ is a list of all the functions that have been called to get to this point.
 
 ```sh
 $ RUST_BACKTRACE=1 cargo run
@@ -3129,7 +3125,6 @@ fn main() {
 
 > Listing 9-4: Using a `match` expression to handle the Result variants that might be returned
 
-
 **Matching on Different Errors**
 
 If the function can report different errors, we can have a inner match in the `Err` block
@@ -3154,7 +3149,7 @@ fn main() {
 }
 ```
 
-The type of the value that `File::open` returns inside the Err variant is `io::Error`, which is a struct provided by the standard library. This struct has a method kind that we can call to get an `io::ErrorKind` value. The enum `io::ErrorKind` is provided by the standard library and has variants representing the different kinds of errors that might result from an io operation. 
+The type of the value that `File::open` returns inside the Err variant is `io::Error`, which is a struct provided by the standard library. This struct has a method kind that we can call to get an `io::ErrorKind` value. The enum `io::ErrorKind` is provided by the standard library and has variants representing the different kinds of errors that might result from an io operation.
 
 **Shortcuts for Panic on Error: `unwrap` and `expect`**
 
@@ -3180,7 +3175,7 @@ fn main() {
 
 **Propagating Errors**
 
-When you’re writing a function whose implementation calls something that might fail, instead of handling the error within this function, you can return the error to the calling code so that it can decide what to do. This is known as *propagating* the error and gives more control to the calling code
+When you’re writing a function whose implementation calls something that might fail, instead of handling the error within this function, you can return the error to the calling code so that it can decide what to do. This is known as _propagating_ the error and gives more control to the calling code
 
 For example, Listing 9-6 shows a function that reads a username from a file. If the file doesn’t exist or can’t be read, this function will return those errors to the code that called this function.
 
@@ -3212,7 +3207,7 @@ fn main() {
 
 > Listing 9-6: A function that returns errors to the calling code using `match`
 
- Let’s look at the return type of the function first: `Result<String, io::Error>`. This means the function is returning a value of the type `Result<T, E> `. If this function succeeds without any problems, the code that calls this function will receive an `Ok` value that holds a String—-the username that this function read from the file. If this function encounters any problems, the code that calls this function will receive an `Err` value that holds an instance of `io::Error` that contains more information about what the problems were. 
+Let’s look at the return type of the function first: `Result<String, io::Error>`. This means the function is returning a value of the type `Result<T, E>`. If this function succeeds without any problems, the code that calls this function will receive an `Ok` value that holds a String—-the username that this function read from the file. If this function encounters any problems, the code that calls this function will receive an `Err` value that holds an instance of `io::Error` that contains more information about what the problems were.
 
 This pattern of propagating errors is so common in Rust that Rust provides the question mark operator `?` to make this easier.
 
@@ -3261,7 +3256,6 @@ fn main() {
 
 > Listing 9-8: Chaining method calls after the `?` operator
 
-
 ```rs
 #![allow(unused_variables)]
 fn main() {
@@ -3280,7 +3274,7 @@ fn main() {
 
 The `?` operator can be used in functions that have a return type of `Result`, because it is defined to work in the same way as the `match` expression we defined in Listing 9-6. The part of the match that requires a return type of `Result` is return `Err(e)`, so the return type of the function can be a `Result` to be compatible with this `return`.
 
- We’re only allowed to use the `?` operator in a function that returns `Result` or `Option` or another type that implements `std::ops::Try`
+We’re only allowed to use the `?` operator in a function that returns `Result` or `Option` or another type that implements `std::ops::Try`
 
 ```rs
 use std::fs::File;
@@ -3296,11 +3290,11 @@ So how do you decide when you should call `panic!` and when you should return `R
 
 **Guidelines for Error Handling**
 
-It’s advisable to have your code panic when it’s possible that your code could end up in a *bad state*. In this context, a bad state is when some assumption, guarantee, contract, or invariant has been broken, such as when invalid values, contradictory values, or missing values are passed to your code—plus one or more of the following:
+It’s advisable to have your code panic when it’s possible that your code could end up in a _bad state_. In this context, a bad state is when some assumption, guarantee, contract, or invariant has been broken, such as when invalid values, contradictory values, or missing values are passed to your code—plus one or more of the following:
 
-* The bad state is not something that’s expected to happen occasionally.
-* Your code after this point needs to rely on not being in this bad state.
-* There’s not a good way to encode this information in the types you use.
+- The bad state is not something that’s expected to happen occasionally.
+- Your code after this point needs to rely on not being in this bad state.
+- There’s not a good way to encode this information in the types you use.
 
 If someone calls your code and passes in values that don’t make sense, the best choice might be to call `panic!` and alert the person using your library to the bug in their code so they can fix it during development. Similarly, `panic!` is often appropriate if you’re calling external code that is out of your control and it returns an invalid state that you have no way of fixing.
 
@@ -3327,7 +3321,7 @@ loop {
 }
 ```
 
-We can make a new type and put the validations in a function to create an instance of the type rather than repeating the validations everywhere. 
+We can make a new type and put the validations in a function to create an instance of the type rather than repeating the validations everywhere.
 
 ```rs
 #![allow(unused_variables)]
@@ -3356,17 +3350,17 @@ fn main() {
 
 Summary
 
-Rust’s error handling features are designed to help you write more robust code. The panic! macro signals that your program is in a state it can’t handle and lets you tell the process to stop instead of trying to proceed with invalid or incorrect values. The Result enum uses Rust’s type system to indicate that operations might fail in a way that your code could recover from. You can use Result to tell code that calls your code that it needs to handle potential success or failure as well. 
+Rust’s error handling features are designed to help you write more robust code. The panic! macro signals that your program is in a state it can’t handle and lets you tell the process to stop instead of trying to proceed with invalid or incorrect values. The Result enum uses Rust’s type system to indicate that operations might fail in a way that your code could recover from. You can use Result to tell code that calls your code that it needs to handle potential success or failure as well.
 
 ## 10. Generic Types, Traits, and Lifetimes
 
 ### 10.1. Generic Data Types
 
-We can use generics to create definitions for items like function signatures or structs, which we can then use with many different concrete data types. 
+We can use generics to create definitions for items like function signatures or structs, which we can then use with many different concrete data types.
 
 **In Function Definitions**
 
-When defining a function that uses generics, we place the generics in the signature of the function where we would usually specify the data types of the parameters and return value. 
+When defining a function that uses generics, we place the generics in the signature of the function where we would usually specify the data types of the parameters and return value.
 
 ```rs
 fn largest<T>(list: &[T]) -> T { // T is generic type for parameter and return value
@@ -3395,7 +3389,6 @@ fn main() {
 ```
 
 > Listing 10-5: A definition of the largest function that uses generic type parameters but doesn’t compile yet
-
 
 **In Struct Definitions**
 
@@ -3473,7 +3466,7 @@ fn main() {
 
 By declaring T as a generic type after impl, Rust can identify that the type in the angle brackets in Point is a generic type rather than a concrete type.
 
-Generic type parameters in a struct definition aren’t always the same as those you use in that struct’s method signatures. For example, Listing 10-11 defines the method `mixup` on the `Point<T, U>` struct from Listing 10-8. The method takes another `Point` as a parameter, which might have different types from the `self Point` we’re calling `mixup` on. The method creates a new Point instance with the `x` value from the `self Point` (of type `T`) and the `y` value from the passed-in `Point` (of type `W`). 
+Generic type parameters in a struct definition aren’t always the same as those you use in that struct’s method signatures. For example, Listing 10-11 defines the method `mixup` on the `Point<T, U>` struct from Listing 10-8. The method takes another `Point` as a parameter, which might have different types from the `self Point` we’re calling `mixup` on. The method creates a new Point instance with the `x` value from the `self Point` (of type `T`) and the `y` value from the passed-in `Point` (of type `W`).
 
 ```rs
 struct Point<T, U> {
@@ -3504,7 +3497,7 @@ fn main() {
 
 **Performance of Code Using Generics**
 
-Using generic will have no extra performance cost at runtime in Rust. Rust will turn generic code to specific code by filling in the concrete types at compile time. This process is called *Monomorphization *
+Using generic will have no extra performance cost at runtime in Rust. Rust will turn generic code to specific code by filling in the concrete types at compile time. This process is called _Monomorphization _
 
 ### 10.2. Traits: Defining Shared Behavior
 
@@ -3571,7 +3564,7 @@ fn main() {
 
 > Listing 10-13: Implementing the `Summary` trait on the `NewsArticle` and `Tweet` types
 
-Implementing a trait on a type is similar to implementing regular methods. The difference is that after `impl`, we put the trait name that we want to implement, then use the `for` keyword, and then specify the name of the type we want to implement the trait for. 
+Implementing a trait on a type is similar to implementing regular methods. The difference is that after `impl`, we put the trait name that we want to implement, then use the `for` keyword, and then specify the name of the type we want to implement the trait for.
 
 After implementing the trait, we can call the methods on instances of `NewsArticle` and `Tweet` in the same way we call regular methods, like this:
 
@@ -3586,7 +3579,7 @@ let tweet = Tweet {
 println!("1 new tweet: {}", tweet.summarize());
 ```
 
-One restriction to note with trait implementations is that we can implement a trait on a type only if either the trait or the type is local to our crate. That is we can’t implement external traits on external types. This restriction is part of a property of programs called *coherence*, and more specifically the *orphan rule*, so named because the parent type is not present. This rule ensures that other people’s code can’t break your code and vice versa. Without the rule, two crates could implement the same trait for the same type, and Rust wouldn’t know which implementation to use.
+One restriction to note with trait implementations is that we can implement a trait on a type only if either the trait or the type is local to our crate. That is we can’t implement external traits on external types. This restriction is part of a property of programs called _coherence_, and more specifically the _orphan rule_, so named because the parent type is not present. This rule ensures that other people’s code can’t break your code and vice versa. Without the rule, two crates could implement the same trait for the same type, and Rust wouldn’t know which implementation to use.
 
 **Default Implementations**
 
@@ -3640,11 +3633,11 @@ pub fn notify(item: impl Summary) { // a method that accept a trait as parameter
 }
 ```
 
-Instead of a concrete type for the `item` parameter, we specify the `impl` keyword and the trait name. This parameter accepts any type that implements the specified trait. 
+Instead of a concrete type for the `item` parameter, we specify the `impl` keyword and the trait name. This parameter accepts any type that implements the specified trait.
 
 **Trait Bound Syntax**
 
-The `impl Trait` syntax works for straightforward cases but is actually syntax sugar for a longer form, which is called a *trait bound*; it looks like this:
+The `impl Trait` syntax works for straightforward cases but is actually syntax sugar for a longer form, which is called a _trait bound_; it looks like this:
 
 ```rs
 pub fn notify<T: Summary>(item: T) {
@@ -3652,7 +3645,7 @@ pub fn notify<T: Summary>(item: T) {
 }
 ```
 
-This longer form is equivalent to the example in the previous section but is more verbose. 
+This longer form is equivalent to the example in the previous section but is more verbose.
 
 **Specifying Multiple Trait Bounds with the `+` Syntax**
 
@@ -3675,6 +3668,7 @@ Using too many trait bounds has its downsides. Each generic has its own trait bo
 ```rs
 fn some_function<T: Display + Clone, U: Clone + Debug>(t: T, u: U) -> i32 {
 ```
+
 we can use a `where` clause, like this:
 
 ```rs
@@ -3744,7 +3738,7 @@ error[E0369]: binary operation `>` cannot be applied to type `T`
   = note: an implementation of `std::cmp::PartialOrd` might be missing for `T`
 ```
 
-In the body of `largest` we wanted to compare two values of type `T` using the greater than (`>`) operator. Because that operator is defined as a default method on the standard library trait `std::cmp::PartialOrd`, we need to specify `PartialOrd` in the trait bounds for `T` so the largest function can work on slices of any type that we can compare. 
+In the body of `largest` we wanted to compare two values of type `T` using the greater than (`>`) operator. Because that operator is defined as a default method on the standard library trait `std::cmp::PartialOrd`, we need to specify `PartialOrd` in the trait bounds for `T` so the largest function can work on slices of any type that we can compare.
 
 ```rs
 fn largest<T: PartialOrd>(list: &[T]) -> T {
@@ -3844,7 +3838,7 @@ fn main() {
 
 > Listing 10-16: Conditionally implement methods on a generic type depending on trait bounds
 
-We can also conditionally implement a trait for any type that implements another trait. Implementations of a trait on any type that satisfies the trait bounds are called *blanket implementations* and are extensively used in the Rust standard library. For example, the standard library implements the `ToString` trait on any type that implements the `Display` trait. The `impl` block in the standard library looks similar to this code:
+We can also conditionally implement a trait for any type that implements another trait. Implementations of a trait on any type that satisfies the trait bounds are called _blanket implementations_ and are extensively used in the Rust standard library. For example, the standard library implements the `ToString` trait on any type that implements the `Display` trait. The `impl` block in the standard library looks similar to this code:
 
 ```rs
 impl<T: Display> ToString for T {
@@ -3852,17 +3846,17 @@ impl<T: Display> ToString for T {
 }
 ```
 
-Because the standard library has this blanket implementation, we can call the `to_string` method defined by the ToString trait on any type that implements the `Display` trait. 
+Because the standard library has this blanket implementation, we can call the `to_string` method defined by the ToString trait on any type that implements the `Display` trait.
 
-Traits and trait bounds let us write code that uses generic type parameters to reduce duplication but also specify to the compiler that we want the generic type to have particular behavior. The compiler can then use the trait bound information to check that all the concrete types used with our code provide the correct behavior. 
+Traits and trait bounds let us write code that uses generic type parameters to reduce duplication but also specify to the compiler that we want the generic type to have particular behavior. The compiler can then use the trait bound information to check that all the concrete types used with our code provide the correct behavior.
 
-Another kind of generic that we’ve already been using is called *lifetimes*. Rather than ensuring that a type has the behavior we want, lifetimes ensure that references are valid as long as we need them to be. Let’s look at how lifetimes do that.
+Another kind of generic that we’ve already been using is called _lifetimes_. Rather than ensuring that a type has the behavior we want, lifetimes ensure that references are valid as long as we need them to be. Let’s look at how lifetimes do that.
 
 ### 10.3. Validating References with Lifetimes
 
 Every reference in Rust has a lifetime, which is the scope for which that reference is valid. Most of the time, lifetimes are implicit and inferred, just like most of the time, types are inferred. We must annotate types when multiple types are possible. In a similar way, we must annotate lifetimes when the lifetimes of references could be related in a few different ways. Rust requires us to annotate the relationships using generic lifetime parameters to ensure the actual references used at runtime will definitely be valid.
 
-The concept of lifetimes is somewhat different from tools in other programming languages, arguably making lifetimes Rust’s most distinctive feature. 
+The concept of lifetimes is somewhat different from tools in other programming languages, arguably making lifetimes Rust’s most distinctive feature.
 
 **Preventing Dangling References with Lifetimes**
 
@@ -3900,7 +3894,7 @@ error[E0597]: `x` does not live long enough
 
 **The Borrow Checker**
 
-The Rust compiler has a *borrow checker* that compares scopes to determine whether all borrows are valid. Listing 10-18 shows the same code as Listing 10-17 but with annotations showing the lifetimes of the variables.
+The Rust compiler has a _borrow checker_ that compares scopes to determine whether all borrows are valid. Listing 10-18 shows the same code as Listing 10-17 but with annotations showing the lifetimes of the variables.
 
 ```rs
 {
@@ -4138,7 +4132,6 @@ Ultimately, lifetime syntax is about connecting the lifetimes of various paramet
 
 So far, we’ve only defined structs to hold owned types. It’s possible for structs to hold references, but in that case we would need to add a lifetime annotation on every reference in the struct’s definition.
 
-
 ```rs
 struct ImportantExcerpt<'a> {
     part: &'a str,
@@ -4190,17 +4183,17 @@ fn first_word<'a>(s: &'a str) -> &'a str {
 
 After writing a lot of Rust code, the Rust team found that Rust programmers were entering the same lifetime annotations over and over in particular situations. These situations were predictable and followed a few deterministic patterns. The developers programmed these patterns into the compiler’s code so the borrow checker could infer the lifetimes in these situations and wouldn’t need explicit annotations.
 
-The patterns programmed into Rust’s analysis of references are called the *lifetime elision rules*. 
+The patterns programmed into Rust’s analysis of references are called the _lifetime elision rules_.
 
 The elision rules don’t provide full inference. If Rust deterministically applies the rules but there is still ambiguity as to what lifetimes the references have, the compiler won’t guess what the lifetime of the remaining references should be. In this case, instead of guessing, the compiler will give you an error that you can resolve by adding the lifetime annotations that specify how the references relate to each other.
 
-Lifetimes on function or method parameters are called *input lifetimes*, and lifetimes on return values are called *output lifetimes*.
+Lifetimes on function or method parameters are called _input lifetimes_, and lifetimes on return values are called _output lifetimes_.
 
 **The compiler uses three rules to figure out what lifetimes references have when there aren’t explicit annotations.** The first rule applies to input lifetimes, and the second and third rules apply to output lifetimes. If the compiler gets to the end of the three rules and there are still references for which it can’t figure out lifetimes, the compiler will stop with an error. These rules apply to `fn` definitions as well as `impl` blocks.
 
 1.  The first rule is that each parameter that is a reference gets its own lifetime parameter. In other words, a function with one parameter gets one lifetime parameter: `fn foo<'a>(x: &'a i32)`; a function with two parameters gets two separate lifetime parameters: `fn foo<'a, 'b>(x: &'a i32, y: &'b i32)`; and so on.
-2. The second rule is if there is exactly one input lifetime parameter, that lifetime is assigned to all output lifetime parameters: `fn foo<'a>(x: &'a i32) -> &'a i32`.
-3. The third rule is if there are multiple input lifetime parameters, but one of them is `&self` or `&mut` self because this is a method, the lifetime of `self` is assigned to all output lifetime parameters. This third rule makes methods much nicer to read and write because fewer symbols are necessary.
+2.  The second rule is if there is exactly one input lifetime parameter, that lifetime is assigned to all output lifetime parameters: `fn foo<'a>(x: &'a i32) -> &'a i32`.
+3.  The third rule is if there are multiple input lifetime parameters, but one of them is `&self` or `&mut` self because this is a method, the lifetime of `self` is assigned to all output lifetime parameters. This third rule makes methods much nicer to read and write because fewer symbols are necessary.
 
 **Lifetime Annotations in Method Definitions**
 
@@ -4296,8 +4289,6 @@ Generic type parameters let you apply the code to different types. Traits and tr
 
 ### 11.1. How to Write Tests
 
-
-
 ```rs
 fn main() {}
 
@@ -4354,7 +4345,6 @@ mod tests {
 ```
 
 Because the `tests` module is an inner module, we need to bring the code under test in the outer module into the scope of the inner module. We use a glob here so anything we define in the outer module is available to this `tests` module.
-
 
 Testing Equality with the `assert_eq!` and `assert_ne!` Macros
 
@@ -4416,7 +4406,7 @@ mod tests {
 
 > Listing 11-8: Testing that a condition will cause a `panic!`
 
-Tests that use `should_panic` can be imprecise because they only indicate that the code has caused some panic. A `should_panic` test would pass even if the test panics for a different reason from the one we were expecting to happen. To make `should_panic` tests more precise, we can add an optional `expected` parameter to the `should_panic` attribute. The test harness will make sure that the failure message contains the provided text. 
+Tests that use `should_panic` can be imprecise because they only indicate that the code has caused some panic. A `should_panic` test would pass even if the test panics for a different reason from the one we were expecting to happen. To make `should_panic` tests more precise, we can add an optional `expected` parameter to the `should_panic` attribute. The test harness will make sure that the failure message contains the provided text.
 
 ```rs
 fn main() {}
@@ -4597,7 +4587,7 @@ The `expensive_test` function is listed as ignored. If we want to run only the i
 
 ### 11.3. Test Organization
 
- The Rust community thinks about tests in terms of two main categories: unit tests and integration tests. Unit tests are small and more focused, testing one module in isolation at a time, and can test private interfaces. Integration tests are entirely external to your library and use your code in the same way any other external code would, using only the public interface and potentially exercising multiple modules per test.
+The Rust community thinks about tests in terms of two main categories: unit tests and integration tests. Unit tests are small and more focused, testing one module in isolation at a time, and can test private interfaces. Integration tests are entirely external to your library and use your code in the same way any other external code would, using only the public interface and potentially exercising multiple modules per test.
 
 **Unit Tests**
 
@@ -4639,11 +4629,11 @@ Note that the `internal_adder` function is not marked as `pub`, but because test
 
 **Integration Tests**
 
-In Rust, integration tests are entirely external to your library. They use your library in the same way any other code would, which means they can only call functions that are part of your library’s public API. Their purpose is to test whether many parts of your library work together correctly. 
+In Rust, integration tests are entirely external to your library. They use your library in the same way any other code would, which means they can only call functions that are part of your library’s public API. Their purpose is to test whether many parts of your library work together correctly.
 
-**The *tests* Directory**
+**The _tests_ Directory**
 
-We create a tests directory at the top level of our project directory, next to *src*. Cargo knows to look for integration test files in this directory. 
+We create a tests directory at the top level of our project directory, next to _src_. Cargo knows to look for integration test files in this directory.
 
 Filename: tests/integration_test.rs
 
@@ -4660,7 +4650,7 @@ fn it_adds_two() {
 
 We’ve added `use adder` at the top of the code, which we didn’t need in the unit tests. The reason is that each file in the `tests` directory is a separate crate, so we need to bring our library into each test crate’s scope.
 
-We don’t need to annotate any code in *tests/integration_test.rs* with `#[cfg(test)]`. Cargo treats the `tests` directory specially and compiles files in this directory only when we run `cargo test`.
+We don’t need to annotate any code in _tests/integration_test.rs_ with `#[cfg(test)]`. Cargo treats the `tests` directory specially and compiles files in this directory only when we run `cargo test`.
 
 ```sh
 $ cargo test
@@ -4689,7 +4679,7 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 
 The three sections of output include the unit tests, the integration test, and the doc tests. The first section for the unit tests
 
-The integration tests section starts with the line Running target/debug/deps/integration_test-ce99bcc2479f4607 (the hash at the end of your output will be different). 
+The integration tests section starts with the line Running target/debug/deps/integration_test-ce99bcc2479f4607 (the hash at the end of your output will be different).
 
 Doc-tests
 
@@ -4697,9 +4687,9 @@ Doc-tests
 
 As you add more integration tests, you might want to make more than one file in the tests directory to help organize them; for example, you can group the test functions by the functionality they’re testing.
 
-Treating each integration test file as its own crate is useful to create separate scopes that are more like the way end users will be using your crate. However, this means files in the *tests* directory don’t share the same behavior as files in *src* do
+Treating each integration test file as its own crate is useful to create separate scopes that are more like the way end users will be using your crate. However, this means files in the _tests_ directory don’t share the same behavior as files in _src_ do
 
-The different behavior of files in the tests directory is most noticeable when you have a set of helper functions that would be useful in multiple integration test files and you try to follow the steps in the “Separating Modules into Different Files” section of Chapter 7 to extract them into a common module. For example, if we create *tests/common.rs* and place a function named `setup` in it, we can add some code to `setup` that we want to call from multiple test functions in multiple test files:
+The different behavior of files in the tests directory is most noticeable when you have a set of helper functions that would be useful in multiple integration test files and you try to follow the steps in the “Separating Modules into Different Files” section of Chapter 7 to extract them into a common module. For example, if we create _tests/common.rs_ and place a function named `setup` in it, we can add some code to `setup` that we want to call from multiple test functions in multiple test files:
 
 Filename: tests/common.rs
 
@@ -4710,7 +4700,7 @@ pub fn setup() {
 }
 ```
 
-When we run the tests again, we’ll see a new section in the test output for the *common.rs* file, even though this file doesn’t contain any test functions nor did we call the `setup` function from anywhere:
+When we run the tests again, we’ll see a new section in the test output for the _common.rs_ file, even though this file doesn’t contain any test functions nor did we call the `setup` function from anywhere:
 
 ```sh
 running 1 test
@@ -4740,13 +4730,13 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 
 Having `common` appear in the test results with `running 0 tests` displayed for it is not what we wanted. We just wanted to share some code with the other integration test files.
 
-To avoid having `common` appear in the test output, instead of creating *tests/common.rs*, we’ll create tests/common/mod.rs. This is an alternate naming convention that Rust also understands. Naming the file this way tells Rust not to treat the `common` module as an integration test file. When we move the setup function code into *tests/common/mod.rs* and delete the *tests/common.rs* file, the section in the test output will no longer appear. Files in subdirectories of the tests directory don’t get compiled as separate crates or have sections in the test output.
+To avoid having `common` appear in the test output, instead of creating _tests/common.rs_, we’ll create tests/common/mod.rs. This is an alternate naming convention that Rust also understands. Naming the file this way tells Rust not to treat the `common` module as an integration test file. When we move the setup function code into _tests/common/mod.rs_ and delete the _tests/common.rs_ file, the section in the test output will no longer appear. Files in subdirectories of the tests directory don’t get compiled as separate crates or have sections in the test output.
 
 **Integration Tests for Binary Crates**
 
-If our project is a binary crate that only contains a *src/main.rs* file and doesn’t have a *src/lib.rs* file, we can’t create integration tests in the tests directory and bring functions defined in the *src/main.rs* file into scope with a `use` statement. Only library crates expose functions that other crates can use; binary crates are meant to be run on their own.
+If our project is a binary crate that only contains a _src/main.rs_ file and doesn’t have a _src/lib.rs_ file, we can’t create integration tests in the tests directory and bring functions defined in the _src/main.rs_ file into scope with a `use` statement. Only library crates expose functions that other crates can use; binary crates are meant to be run on their own.
 
-This is one of the reasons Rust projects that provide a binary have a straightforward* src/main.rs* file that calls logic that lives in the src/lib.rs file. Using that structure, integration tests can test the library crate with `use` to make the important functionality available. If the important functionality works, the small amount of code in the *src/main.rs* file will work as well, and that small amount of code doesn’t need to be tested.
+This is one of the reasons Rust projects that provide a binary have a straightforward* src/main.rs* file that calls logic that lives in the src/lib.rs file. Using that structure, integration tests can test the library crate with `use` to make the important functionality available. If the important functionality works, the small amount of code in the _src/main.rs_ file will work as well, and that small amount of code doesn’t need to be tested.
 
 ## 12. An I/O Project: Building a Command Line Program
 
@@ -4810,24 +4800,24 @@ fn main() {
 
 **Separation of Concerns for Binary Projects**
 
- the Rust community has developed a process to use as a guideline for splitting the separate concerns of a binary program when main starts getting large. The process has the following steps:
+the Rust community has developed a process to use as a guideline for splitting the separate concerns of a binary program when main starts getting large. The process has the following steps:
 
-* Split your program into a main.rs and a lib.rs and move your program’s logic to lib.rs.
-* As long as your command line parsing logic is small, it can remain in main.rs.
-* When the command line parsing logic starts getting complicated, extract it from main.rs and move it to lib.rs.
+- Split your program into a main.rs and a lib.rs and move your program’s logic to lib.rs.
+- As long as your command line parsing logic is small, it can remain in main.rs.
+- When the command line parsing logic starts getting complicated, extract it from main.rs and move it to lib.rs.
 
 The responsibilities that remain in the `main` function after this process should be limited to the following:
 
-* Calling the command line parsing logic with the argument values
-* Setting up any other configuration
-* Calling a run function in lib.rs
-* Handling the error if run returns an error
+- Calling the command line parsing logic with the argument values
+- Setting up any other configuration
+- Calling a run function in lib.rs
+- Handling the error if run returns an error
 
-This pattern is about separating concerns: *main.rs* handles running the program, and *lib.rs* handles all the logic of the task at hand.
+This pattern is about separating concerns: _main.rs_ handles running the program, and _lib.rs_ handles all the logic of the task at hand.
 
 **Extracting the Argument Parser**
 
-We’ll extract the functionality for parsing arguments into a function that `main` will call to prepare for moving the command line parsing logic to *src/lib.rs.*. Listing 12-5 shows the new start of main that calls a new function `parse_config`, which we’ll define in *src/main.rs* for the moment.
+We’ll extract the functionality for parsing arguments into a function that `main` will call to prepare for moving the command line parsing logic to _src/lib.rs._. Listing 12-5 shows the new start of main that calls a new function `parse_config`, which we’ll define in _src/main.rs_ for the moment.
 
 ```rs
 fn main() {
@@ -4917,7 +4907,6 @@ impl Config {
 
 **Improving the Error Message**
 
-
 ```rs
 // --snip--
 fn new(args: &[String]) -> Config {
@@ -4969,7 +4958,7 @@ fn main() {
 
 Now that we’ve finished refactoring the configuration parsing, let’s turn to the program’s logic.
 
-Listing 12-11 shows the extracted `run` function. For now, we’re just making the small, incremental improvement of extracting the function. We’re still defining the function in *src/main.rs*.
+Listing 12-11 shows the extracted `run` function. For now, we’re just making the small, incremental improvement of extracting the function. We’re still defining the function in _src/main.rs_.
 
 ```rs
 fn main() {
@@ -5013,7 +5002,7 @@ fn run(config: Config) -> Result<(), Box<dyn Error>> {
 
 > Listing 12-12: Changing the `run` function to return `Result`
 
-We’ve made three significant changes here. First, we changed the return type of the `run` function to `Result<(), Box<dyn Error>>`. This function previously returned the unit type, `()`, and we keep that as the value returned in the `Ok` case. For the error type, we used the *trait* object `Box<dyn Error>`. We’ll cover *trait* objects in Chapter 17. For now, just know that `Box<dyn Error>` means the function will return a type that implements the `Error` trait, but we don’t have to specify what particular type the return value will be. This gives us flexibility to return error values that may be of different types in different error cases. The `dyn` keyword is short for “dynamic.”
+We’ve made three significant changes here. First, we changed the return type of the `run` function to `Result<(), Box<dyn Error>>`. This function previously returned the unit type, `()`, and we keep that as the value returned in the `Ok` case. For the error type, we used the _trait_ object `Box<dyn Error>`. We’ll cover _trait_ objects in Chapter 17. For now, just know that `Box<dyn Error>` means the function will return a type that implements the `Error` trait, but we don’t have to specify what particular type the return value will be. This gives us flexibility to return error values that may be of different types in different error cases. The `dyn` keyword is short for “dynamic.”
 
 Second, we’ve removed the call to expect in favor of the `?` operator. Rather than `panic!` on an error, `?` will return the error value from the current function for the caller to handle.
 
@@ -5057,14 +5046,14 @@ The bodies of the `if let` and the `unwrap_or_else` functions are the same in bo
 
 **Splitting Code into a Library Crate**
 
-Our minigrep project is looking good so far! Now we’ll split the *src/main.rs* file and put some code into the *src/lib.rs* file so we can test it and have a *src/main.rs* file with fewer responsibilities.
+Our minigrep project is looking good so far! Now we’ll split the _src/main.rs_ file and put some code into the _src/lib.rs_ file so we can test it and have a _src/main.rs_ file with fewer responsibilities.
 
-Let’s move all the code that isn’t the main function from *src/main.rs* to *src/lib.rs*:
+Let’s move all the code that isn’t the main function from _src/main.rs_ to _src/lib.rs_:
 
-* The `run` function definition
-* The relevant `use` statements
-* The definition of `Config`
-* The `Config::new` function definition
+- The `run` function definition
+- The relevant `use` statements
+- The definition of `Config`
+- The `Config::new` function definition
 
 ### 12.4. Developing the Library’s Functionality with Test Driven Development
 
@@ -5107,11 +5096,11 @@ Because `contents` is the argument that contains all of our text and we want to 
 
 Currently, our test is failing because we always return an empty vector. To fix that and implement search, our program needs to follow these steps:
 
-* Iterate through each line of the contents.
-* Check whether the line contains our query string.
-* If it does, add it to the list of values we’re returning.
-* If it doesn’t, do nothing.
-* Return the list of results that match.
+- Iterate through each line of the contents.
+- Check whether the line contains our query string.
+- If it does, add it to the list of values we’re returning.
+- If it doesn’t, do nothing.
+- Return the list of results that match.
 
 ```rs
 #![allow(unused_variables)]
@@ -5137,7 +5126,6 @@ fn main() {
     }
 }
 ```
-
 
 ```rs
 #![allow(unused_variables)]
@@ -5248,7 +5236,6 @@ Trust me.";
 
 **Implementing the `search_case_insensitive` Function**
 
-
 ```rs
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let query = query.to_lowercase();
@@ -5263,7 +5250,6 @@ pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a st
 ```
 
 > Listing 12-21: Defining the `search_case_insensitive` function to lowercase the query and the line before comparing them
-
 
 ```rs
 
@@ -5341,7 +5327,6 @@ impl Config {
 
 > Listing 12-23: Checking for an environment variable named `CASE_INSENSITIVE`
 
-
 The `env::var` function returns a `Result` that will be the successful `Ok` variant that contains the value of the environment variable if the environment variable is set. It will return the `Err` variant if the environment variable is not set.
 
 We’re using the `is_err` method on the `Result` to check whether it’s an error and therefore unset, which means it should do a case-sensitive search. If the `CASE_INSENSITIVE` environment variable is set to anything, `is_err` will return false and the program will perform a case-insensitive search. We don’t care about the value of the environment variable, just whether it’s set or unset, so we’re checking `is_err` rather than using `unwrap`, `expect`, or any of the other methods we’ve seen on `Result`.
@@ -5356,7 +5341,7 @@ To tell your name the livelong day
 To an admiring bog!
 ```
 
-Excellent, we also got lines containing “To”! 
+Excellent, we also got lines containing “To”!
 
 ### 12.6. Writing Error Messages to Standard Error Instead of Standard Output
 
@@ -5387,14 +5372,14 @@ fn main() {
 
 ## 13. Functional Language Features: Iterators and Closures
 
-Rust’s design has taken inspiration from many existing languages and techniques, and one significant influence is *functional programming*. Programming in a functional style often includes using functions as values by passing them in arguments, returning them from other functions, assigning them to variables for later execution, and so forth.
+Rust’s design has taken inspiration from many existing languages and techniques, and one significant influence is _functional programming_. Programming in a functional style often includes using functions as values by passing them in arguments, returning them from other functions, assigning them to variables for later execution, and so forth.
 
 we’ll cover:
 
-* *Closures*, a function-like construct you can store in a variable
-* *Iterators*, a way of processing a series of elements
-* How to use these two features to improve the I/O project in Chapter 12
-* The performance of these two features (Spoiler alert: they’re faster than you might think!)
+- _Closures_, a function-like construct you can store in a variable
+- _Iterators_, a way of processing a series of elements
+- How to use these two features to improve the I/O project in Chapter 12
+- The performance of these two features (Spoiler alert: they’re faster than you might think!)
 
 Other Rust features, such as pattern matching and enums, which we’ve covered in other chapters, are influenced by the functional style as well. Mastering closures and iterators is an important part of writing idiomatic, fast Rust code, so we’ll devote this entire chapter to them.
 
@@ -5426,15 +5411,14 @@ fn main() {
 
 > Listing 13-1: A function to stand in for a hypothetical calculation that takes about 2 seconds to run
 
-
 Next is the main function, because the interaction with the app’s frontend isn’t relevant to the use of closures, we’ll hardcode values representing inputs to our program and print the outputs.
 
 The required inputs are these:
 
-* An intensity number from the user, which is specified when they request a workout to indicate whether they want a low-intensity workout or a high-intensity workout
-* A random number that will generate some variety in the workout plans
+- An intensity number from the user, which is specified when they request a workout to indicate whether they want a low-intensity workout or a high-intensity workout
+- A random number that will generate some variety in the workout plans
 
-The output will be the recommended workout plan. 
+The output will be the recommended workout plan.
 
 ```rs
 fn main() {
@@ -5452,7 +5436,7 @@ fn generate_workout(intensity: u32, random_number: u32) {}
 
 > Listing 13-2: A main function with hardcoded values to simulate user input and random number generation
 
-We’ve hardcoded the variable `simulated_user_specified_value` as 10 and the variable `simulated_random_number` as 7 for simplicity’s sake; 
+We’ve hardcoded the variable `simulated_user_specified_value` as 10 and the variable `simulated_random_number` as 7 for simplicity’s sake;
 
 Now that we have the context, let’s get to the algorithm. The function `generate_workout` in Listing 13-3 contains the business logic of the app that we’re most concerned with in this example. The rest of the code changes in this example will be made to this function.
 
@@ -5500,7 +5484,7 @@ The desired behavior of the `generate_workout` function is to first check whethe
 
 If the user wants a high-intensity workout, there’s some additional logic: if the value of the random number generated by the app happens to be 3, the app will recommend a break and hydration. If not, the user will get a number of minutes of running based on the complex algorithm.
 
-This code works the way the business wants it to now, but  we want to refactor this code so it calls the `simulated_expensive_calculation` function only once. We also want to cut the place where we’re currently unnecessarily calling the function twice without adding any other calls to that function in the process. 
+This code works the way the business wants it to now, but we want to refactor this code so it calls the `simulated_expensive_calculation` function only once. We also want to cut the place where we’re currently unnecessarily calling the function twice without adding any other calls to that function in the process.
 
 **Refactoring Using Functions**
 
@@ -5548,11 +5532,11 @@ fn main() {
 
 This change unifies all the calls to `simulated_expensive_calculation` and solves the problem of the first `if` block unnecessarily calling the function twice. Unfortunately, we’re now calling this function and waiting for the result in all cases, which includes the inner `if` block that doesn’t use the result value at all.
 
-We want to define code in one place in our program, but only execute that code where we actually need the result. This is a use case for *closures*!
+We want to define code in one place in our program, but only execute that code where we actually need the result. This is a use case for _closures_!
 
 **Refactoring with Closures to Store Code**
 
-Instead of always calling the `simulated_expensive_calculation` function before the `if` blocks, we can define a closure and store the *closure* in a variable rather than storing the result of the function call, as shown in Listing 13-5. We can actually move the whole body of `simulated_expensive_calculation` within the closure we’re introducing here.
+Instead of always calling the `simulated_expensive_calculation` function before the `if` blocks, we can define a closure and store the _closure_ in a variable rather than storing the result of the function call, as shown in Listing 13-5. We can actually move the whole body of `simulated_expensive_calculation` within the closure we’re introducing here.
 
 ```rs
 #![allow(unused_variables)]
@@ -5577,7 +5561,7 @@ After the parameters, we place curly brackets that hold the body of the closure�
 
 Note that this `let` statement means `expensive_closure` contains the definition of an anonymous function, not the resulting value of calling the anonymous function. Recall that we’re using a closure because we want to define the code to call at one point, store that code, and call it at a later point; the code we want to call is now stored in `expensive_closure`.
 
- We call a closure like we do a function: we specify the variable name that holds the closure definition and follow it with parentheses containing the argument values we want to use, as shown in Listing 13-6.
+We call a closure like we do a function: we specify the variable name that holds the closure definition and follow it with parentheses containing the argument values we want to use, as shown in Listing 13-6.
 
 ```rs
 
@@ -5657,7 +5641,7 @@ let add_one_v4 = |x|               x + 1  ;
 
 The first line shows a function definition, and the second line shows a fully annotated closure definition. The third line removes the type annotations from the closure definition, and the fourth line removes the brackets, which are optional because the closure body has only one expression. These are all valid definitions that will produce the same behavior when they’re called.
 
-Closure definitions will have one **concrete type** inferred for **each of their parameters and for their return value**. For instance, Listing 13-8 shows the definition of a short closure that just returns the value it receives as a parameter.  Note that we haven’t added any type annotations to the definition: if we then try to call the closure twice, using a String as an argument the first time and a u32 the second time, we’ll get an error ❌.
+Closure definitions will have one **concrete type** inferred for **each of their parameters and for their return value**. For instance, Listing 13-8 shows the definition of a short closure that just returns the value it receives as a parameter. Note that we haven’t added any type annotations to the definition: if we then try to call the closure twice, using a String as an argument the first time and a u32 the second time, we’ll get an error ❌.
 
 ```rs
 let example_closure = |x| x;
@@ -5689,11 +5673,11 @@ The first time we call `example_closure` with the `String` value, the compiler i
 
 Let’s return to our workout generation app. In Listing 13-6, our code was still calling the expensive calculation closure more times than it needed to. One option to solve this issue is to save the result of the expensive closure in a variable for reuse and use the variable in each place we need the result, instead of calling the closure again. However, this method could result in a lot of repeated code.
 
-Fortunately, another solution is available to us. We can create a struct that will hold the closure and the resulting value of calling the closure. The struct will execute the closure only if we need the resulting value, and it will cache the resulting value so the rest of our code doesn’t have to be responsible for saving and reusing the result. You may know this pattern as *memoization* or *lazy evaluation*.
+Fortunately, another solution is available to us. We can create a struct that will hold the closure and the resulting value of calling the closure. The struct will execute the closure only if we need the resulting value, and it will cache the resulting value so the rest of our code doesn’t have to be responsible for saving and reusing the result. You may know this pattern as _memoization_ or _lazy evaluation_.
 
 To make a struct that holds a closure, we need to specify the type of the closure, because a struct definition needs to know the types of each of its fields. Each closure instance has its own unique anonymous type: that is, even if two closures have the same signature, their types are still considered different. To define structs, enums, or function parameters that use closures, we use generics and trait bounds, as we discussed in Chapter 10.
 
-The `Fn` traits are provided by the standard library. All closures implement at least one of the traits: `Fn`, `FnMut`, or `FnOnce`.  In this example, we can use the `Fn` trait.
+The `Fn` traits are provided by the standard library. All closures implement at least one of the traits: `Fn`, `FnMut`, or `FnOnce`. In this example, we can use the `Fn` trait.
 
 We add types to the `Fn` trait bound to represent the types of the parameters and return values the closures must have to match this trait bound. In this case, our closure has a parameter of type u32 and returns a `u32`, so the trait bound we specify is `Fn(u32) -> u32`.
 
@@ -5828,9 +5812,9 @@ fn main() {
 
 Instead of saving the closure in a variable directly, we save a new instance of `Cacher` that holds the closure. Then, in each place we want the result, we call the `value` method on the `Cacher` instance. We can call the `value` method as many times as we want, or not call it at all, and the expensive calculation will be run a maximum of once.
 
- The `Cacher` takes care of the logic necessary to ensure we aren’t calling the expensive calculation more than we need to so `generate_workout` can focus on the business logic.
+The `Cacher` takes care of the logic necessary to ensure we aren’t calling the expensive calculation more than we need to so `generate_workout` can focus on the business logic.
 
-**`Limitations of the `Cacher` Implementation`**
+**`Limitations of the`Cacher`Implementation`**
 
 there are two problems with the current implementation of Cacher that would make reusing it in different contexts difficult.
 
@@ -5878,13 +5862,13 @@ Here, even though `x` is not one of the parameters of `equal_to_x`, the `equal_t
 
 We can’t do the same with functions
 
-When a closure captures a value from its environment, it uses memory to store the values for use in the closure body. This use of memory is overhead that we don’t want to pay in more common cases where we want to execute code that doesn’t capture its environment. 
+When a closure captures a value from its environment, it uses memory to store the values for use in the closure body. This use of memory is overhead that we don’t want to pay in more common cases where we want to execute code that doesn’t capture its environment.
 
 Closures can capture values from their environment in three ways, which directly map to the three ways a function can take a parameter: taking ownership, borrowing mutably, and borrowing immutably. These are encoded in the three Fn traits as follows:
 
-* `FnOnce` consumes the variables it captures from its enclosing scope, known as the closure’s environment. To consume the captured variables, the closure must take ownership of these variables and move them into the closure when it is defined. The Once part of the name represents the fact that the closure can’t take ownership of the same variables more than once, so it can be called only once.
-* `FnMut` can change the environment because it mutably borrows values.
-* `Fn` borrows values from the environment immutably.
+- `FnOnce` consumes the variables it captures from its enclosing scope, known as the closure’s environment. To consume the captured variables, the closure must take ownership of these variables and move them into the closure when it is defined. The Once part of the name represents the fact that the closure can’t take ownership of the same variables more than once, so it can be called only once.
+- `FnMut` can change the environment because it mutably borrows values.
+- `Fn` borrows values from the environment immutably.
 
 **When you create a closure, Rust infers which trait to use based on how the closure uses the values from the environment. All closures implement `FnOnce` because they can all be called at least once. Closures that don’t move the captured variables also implement `FnMut`, and closures that don’t need mutable access to the captured variables also implement `Fn`.**
 
@@ -5904,7 +5888,7 @@ fn main() {
 
     assert!(equal_to_x(y));
 }
-``` 
+```
 
 We receive the following error:
 
@@ -5924,13 +5908,11 @@ error[E0382]: use of moved value: `x`
 
 The `x` value is moved into the closure when the closure is defined, because we added the `move` keyword. The closure then has ownership of `x`, and main isn’t allowed to use `x` anymore in the `println!` statement. Removing `println!` will fix this example.
 
-
-
 ### 13.2. Processing a Series of Items with Iterators
 
 The iterator pattern allows you to perform some task on a sequence of items in turn. An iterator is responsible for the logic of iterating over each item and determining when the sequence has finished. When you use iterators, you don’t have to reimplement that logic yourself.
 
-In Rust, iterators are *lazy*, meaning they have no effect until you call methods that consume the iterator to use it up. 
+In Rust, iterators are _lazy_, meaning they have no effect until you call methods that consume the iterator to use it up.
 
 ```rs
 #![allow(unused_variables)]
@@ -5944,6 +5926,7 @@ fn main() {
     }
 }
 ```
+
 > Listing 13-13: Creating an iterator
 
 The `Iterator` Trait and the `next` Method
@@ -5963,11 +5946,11 @@ fn main() {
 }
 ```
 
-Notice this definition uses some new syntax: type Item and Self::Item, which are defining an associated type with this trait. 
+Notice this definition uses some new syntax: type Item and Self::Item, which are defining an associated type with this trait.
 
 The `next` method, which returns one item of the iterator at a time wrapped in `Some` and, when iteration is over, returns `None`.
 
-We can call the `next` method on iterators directly; 
+We can call the `next` method on iterators directly;
 
 ```rs
 #![allow(unused_variables)]
@@ -5994,10 +5977,9 @@ Also note that the values we get from the calls to `next` are immutable referenc
 
 **Methods that Consume the Iterator**
 
-
 The `Iterator` trait has a number of different methods with default implementations provided by the standard library; Some of these methods call the `next` method in their definition, which is why you’re required to implement the `next` method when implementing the `Iterator` trait.
 
-Methods that call `next` are called *consuming adaptors*, because calling them uses up the iterator. One example is the `sum` method, which takes ownership of the iterator and iterates through the items by repeatedly calling `next`, thus consuming the iterator. As it iterates through, it adds each item to a running total and returns the total when iteration is complete.
+Methods that call `next` are called _consuming adaptors_, because calling them uses up the iterator. One example is the `sum` method, which takes ownership of the iterator and iterates through the items by repeatedly calling `next`, thus consuming the iterator. As it iterates through, it adds each item to a running total and returns the total when iteration is complete.
 
 ```rs
 
@@ -6022,7 +6004,7 @@ We aren’t allowed to use `v1_iter` after the call to `sum` because sum takes o
 
 **Methods that Produce Other Iterators**
 
-Other methods defined on the `Iterator` trait, known as *iterator adaptors*, allow you to change iterators into different kinds of iterators. You can chain multiple calls to iterator adaptors to perform complex actions in a readable way. But because all iterators are lazy, you have to call one of the consuming adaptor methods to get results from calls to iterator adaptors.
+Other methods defined on the `Iterator` trait, known as _iterator adaptors_, allow you to change iterators into different kinds of iterators. You can chain multiple calls to iterator adaptors to perform complex actions in a readable way. But because all iterators are lazy, you have to call one of the consuming adaptor methods to get results from calls to iterator adaptors.
 
 Listing 13-17 shows an example of calling the iterator adaptor method `map`, which takes a closure to call on each item to produce a new iterator. The closure here creates a new iterator in which each item from the vector has been incremented by 1. However, this code produces a warning:
 
@@ -6053,7 +6035,6 @@ and do nothing unless consumed
 The code in Listing 13-17 doesn’t do anything; the closure we’ve specified never gets called. The warning reminds us why: iterator adaptors are lazy, and we need to consume the iterator here.
 
 To fix this and consume the iterator, we’ll use the `collect` method, which we used in Chapter 12 with `env::args` in Listing 12-1. This method consumes the iterator and collects the resulting values into a collection data type.
-
 
 ```rs
 
@@ -6180,7 +6161,7 @@ We want our iterator to add 1 to the current state, so we initialized `count` to
 
 **Using Our `Counter` Iterator’s `next` Method**
 
-Once we’ve implemented the `Iterator` trait, we have an iterator! 
+Once we’ve implemented the `Iterator` trait, we have an iterator!
 
 ```rs
 
@@ -6270,7 +6251,6 @@ fn main() {
 
 Note that `zip` produces only four pairs; the theoretical fifth pair `(5, None)` is never produced because `zip` returns `None` when either of its input iterators return `None`.
 
-
 ### 13.3. Improving Our I/O Project
 
 **Removing a `clone` Using an Iterator**
@@ -6300,7 +6280,7 @@ struct Config {
 
 impl Config {
     // Updating the signature of Config::new to expect an iterator
-    pub fn new(mut args: std::env::Args) -> Result<Config, &'static str> { 
+    pub fn new(mut args: std::env::Args) -> Result<Config, &'static str> {
         args.next();
 
         let query = match args.next() {
@@ -6334,7 +6314,7 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
 
 ### 13.4. Comparing Performance: Loops vs. Iterators
 
-We ran a benchmark by loading the entire contents of *The Adventures of Sherlock Holmes* by Sir Arthur Conan Doyle into a `String` and looking for the word the in the contents. Here are the results of the benchmark on the version of `search` using the `for` loop and the version using iterators:
+We ran a benchmark by loading the entire contents of _The Adventures of Sherlock Holmes_ by Sir Arthur Conan Doyle into a `String` and looking for the word the in the contents. Here are the results of the benchmark on the version of `search` using the `for` loop and the version using iterators:
 
 ```console
 test bench_search_for  ... bench:  19,620,300 ns/iter (+/- 915,700)
@@ -6343,12 +6323,12 @@ test bench_search_iter ... bench:  19,234,900 ns/iter (+/- 657,200)
 
 The iterator version was slightly faster! We won’t explain the benchmark code here, because the point is not to prove that the two versions are equivalent but to get a general sense of how these two implementations compare performance-wise.
 
-The point is this: in rust, iterators, although a high-level abstraction, get compiled down to roughly the same code as if you’d 
-written the lower-level code yourself. Iterators are one of Rust’s *zero-cost abstractions*, by which we mean using the 
-abstraction imposes no additional runtime overhead. This is analogous to how Bjarne Stroustrup, the original designer 
+The point is this: in rust, iterators, although a high-level abstraction, get compiled down to roughly the same code as if you’d
+written the lower-level code yourself. Iterators are one of Rust’s _zero-cost abstractions_, by which we mean using the
+abstraction imposes no additional runtime overhead. This is analogous to how Bjarne Stroustrup, the original designer
 and implementor of C++, defines zero-overhead in “Foundations of C++” (2012):
 
-> In general, C++ implementations obey the zero-overhead principle: What you don’t use, you don’t pay for. And further: 
+> In general, C++ implementations obey the zero-overhead principle: What you don’t use, you don’t pay for. And further:
 > What you do use, you couldn’t hand code any better.
 
 As another example, the following code is taken from an audio decoder. The decoding algorithm uses the linear prediction mathematical operation to estimate future values based on a linear function of the previous samples. This code uses an iterator chain to do some math on three variables in scope: a `buffer` slice of data, an array of 12 `coefficients`, and an amount by which to shift data in `qlp_shift`. We’ve declared the variables within this example but not given them any values; although this code doesn’t have much meaning outside of its context, it’s still a concise, real-world example of how Rust translates high-level ideas to low-level code.
@@ -6370,30 +6350,29 @@ for i in 12..buffer.len() {
 
 To calculate the value of `prediction`, this code iterates through each of the 12 values in `coefficients` and uses the `zip` method to pair the coefficient values with the previous 12 values in `buffer`. Then, for each pair, we multiply the values together, sum all the results, and shift the bits in the sum `qlp_shift` bits to the right.
 
-Calculations in applications like audio decoders often prioritize performance most highly. Here, we’re creating an iterator, using two adaptors, and then consuming the value. What assembly code would this Rust code compile to? Well, as of this writing, it compiles down to the same assembly you’d write by hand. There’s no loop at all corresponding to the iteration over the values in `coefficients`: Rust knows that there are 12 iterations, so it “unrolls” the loop. *Unrolling* is an optimization that removes the overhead of the loop controlling code and instead generates repetitive code for each iteration of the loop.
+Calculations in applications like audio decoders often prioritize performance most highly. Here, we’re creating an iterator, using two adaptors, and then consuming the value. What assembly code would this Rust code compile to? Well, as of this writing, it compiles down to the same assembly you’d write by hand. There’s no loop at all corresponding to the iteration over the values in `coefficients`: Rust knows that there are 12 iterations, so it “unrolls” the loop. _Unrolling_ is an optimization that removes the overhead of the loop controlling code and instead generates repetitive code for each iteration of the loop.
 
 All of the coefficients get stored in registers, which means accessing the values is very fast. There are no bounds checks on the array access at runtime. All these optimizations that Rust is able to apply make the resulting code extremely efficient. Now that you know this, you can use iterators and closures without fear! They make code seem like it’s higher level but don’t impose a runtime performance penalty for doing so.
 
 **Summary**
 
-Closures and iterators are Rust features inspired by functional programming language ideas. They contribute to Rust’s 
-capability to clearly express high-level ideas at low-level performance. The implementations of closures and iterators 
+Closures and iterators are Rust features inspired by functional programming language ideas. They contribute to Rust’s
+capability to clearly express high-level ideas at low-level performance. The implementations of closures and iterators
 are such that runtime performance is not affected. This is part of Rust’s goal to strive to provide zero-cost abstractions.
-
 
 ## 14. More about Cargo and Crates.io
 
 So far we’ve used only the most basic features of Cargo to build, run, and test our code, but it can do a lot more. In this chapter, we’ll discuss some of its other, more advanced features to show you how to do the following:
 
-* Customize your build through release profiles
-* Publish libraries on crates.io
-* Organize large projects with workspaces
-* Install binaries from crates.io
-* Extend Cargo using custom commands
+- Customize your build through release profiles
+- Publish libraries on crates.io
+- Organize large projects with workspaces
+- Install binaries from crates.io
+- Extend Cargo using custom commands
 
 ### 14.1. Customizing Builds with Release Profiles
 
-In Rust, *release profiles* are predefined and customizable profiles with different configurations that allow a programmer to have more control over various options for compiling code. Each profile is configured independently of the others.
+In Rust, _release profiles_ are predefined and customizable profiles with different configurations that allow a programmer to have more control over various options for compiling code. Each profile is configured independently of the others.
 
 Cargo has two main profiles: the 1 profile Cargo uses when you run `cargo build` and the `release` profile Cargo uses when you run `cargo build --release`. The `dev` profile is defined with good defaults for development, and the `release` profile has good defaults for release builds.
 
@@ -6418,7 +6397,6 @@ opt-level = 3
 
 The `opt-level` setting controls the number of optimizations Rust will apply to your code, with a range of 0 to 3. Applying more optimizations extends compiling time, so if you’re in development and compiling your code often, you’ll want faster compiling even if the resulting code runs slower.
 
-
 ### 14.2. Publishing a Crate to Crates.io
 
 We’ve used packages from crates.io as dependencies of our project, but you can also share your code with other people by publishing your own packages. The crate registry at crates.io distributes the source code of your packages, so it primarily hosts code that is open source.
@@ -6429,7 +6407,7 @@ Accurately documenting your packages will help other users know how and when to 
 
 Documentation comments use three slashes, `///`, instead of two and support Markdown notation for formatting the text. Place documentation comments just before the item they’re documenting. Listing 14-1 shows documentation comments for an `add_one` function in a crate named `my_crate`:
 
-```rs
+````rs
 /// Adds one to the number given.
 ///
 /// # Examples
@@ -6443,11 +6421,11 @@ Documentation comments use three slashes, `///`, instead of two and support Mark
 pub fn add_one(x: i32) -> i32 {
     x + 1
 }
-```
+````
 
 > Listing 14-1: A documentation comment for a function
 
-Here, we give a description of what the `add_one` function does, start a section with the heading `Examples`, and then provide code that demonstrates how to use the `add_one` function. We can generate the HTML documentation from this documentation comment by running `cargo doc`. This command runs the `rustdoc` tool distributed with Rust and puts the generated HTML documentation in the *target/doc* directory.
+Here, we give a description of what the `add_one` function does, start a section with the heading `Examples`, and then provide code that demonstrates how to use the `add_one` function. We can generate the HTML documentation from this documentation comment by running `cargo doc`. This command runs the `rustdoc` tool distributed with Rust and puts the generated HTML documentation in the _target/doc_ directory.
 
 For convenience, running `cargo doc --open` will build the HTML for your current crate’s documentation (as well as the documentation for all of your crate’s dependencies) and open the result in a web browser. Navigate to the `add_one` function and you’ll see how the text in the documentation comments is rendered, as shown in Figure 14-1:
 
@@ -6459,19 +6437,19 @@ For convenience, running `cargo doc --open` will build the HTML for your current
 
 Here are some other sections that crate authors commonly use in their documentation:
 
-* **Panics:** The scenarios in which the function being documented could panic. Callers of the function who don’t want their programs to panic should make sure they don’t call the function in these situations.
-* **Errors:** If the function returns a `Result`, describing the kinds of errors that might occur and what conditions might cause those errors to be returned can be helpful to callers so they can write code to handle the different kinds of errors in different ways.
-* **Safety:** If the function is `unsafe` to call (we discuss unsafety in Chapter 19), there should be a section explaining why the function is unsafe and covering the invariants that the function expects callers to uphold.
+- **Panics:** The scenarios in which the function being documented could panic. Callers of the function who don’t want their programs to panic should make sure they don’t call the function in these situations.
+- **Errors:** If the function returns a `Result`, describing the kinds of errors that might occur and what conditions might cause those errors to be returned can be helpful to callers so they can write code to handle the different kinds of errors in different ways.
+- **Safety:** If the function is `unsafe` to call (we discuss unsafety in Chapter 19), there should be a section explaining why the function is unsafe and covering the invariants that the function expects callers to uphold.
 
 **Documentation Comments as Tests**
 
-Adding example code blocks in your documentation comments can help demonstrate how to use your library, and doing so has an additional bonus: running `cargo test` will run the code examples in your documentation as tests! Nothing is better than documentation with examples. But nothing is worse than examples that don’t work because the code has changed since the documentation was written. 
+Adding example code blocks in your documentation comments can help demonstrate how to use your library, and doing so has an additional bonus: running `cargo test` will run the code examples in your documentation as tests! Nothing is better than documentation with examples. But nothing is worse than examples that don’t work because the code has changed since the documentation was written.
 
 **Commenting Contained Items**
 
-Another style of doc comment, `//!`, adds documentation to the item that contains the comments rather than adding documentation to the items following the comments. We typically use these doc comments inside the crate root file (*src/lib.rs* by convention) or inside a module to document the crate or the module as a whole.
+Another style of doc comment, `//!`, adds documentation to the item that contains the comments rather than adding documentation to the items following the comments. We typically use these doc comments inside the crate root file (_src/lib.rs_ by convention) or inside a module to document the crate or the module as a whole.
 *
-For example, if we want to add documentation that describes the purpose of the `my_crate` crate that contains the `add_one` function, we can add documentation comments that start with `//!` to the beginning of the *src/lib.rs* file, as shown in Listing 14-2:
+For example, if we want to add documentation that describes the purpose of the `my_crate` crate that contains the `add_one` function, we can add documentation comments that start with `//!` to the beginning of the *src/lib.rs\* file, as shown in Listing 14-2:
 
 ```rs
 //! # My Crate
@@ -6485,10 +6463,10 @@ For example, if we want to add documentation that describes the purpose of the `
 
 > Listing 14-2: Documentation for the `my_crate` crate as a whole
 
-Notice there isn’t any code after the last line that begins with `//!`. Because we started the comments with `//!` instead of `///`, we’re documenting the item that contains this comment rather than an item that follows this comment. In this case, the item that contains this comment is the *src/lib.rs* file, which is the crate root. These comments describe the entire crate.
+Notice there isn’t any code after the last line that begins with `//!`. Because we started the comments with `//!` instead of `///`, we’re documenting the item that contains this comment rather than an item that follows this comment. In this case, the item that contains this comment is the _src/lib.rs_ file, which is the crate root. These comments describe the entire crate.
 
 > The item(create/module) that contains the comments: usually the crate file/module section which contain the comment that describe general purpose of the create and module
-> The items(functions) following the comments: a function which follows its comment  
+> The items(functions) following the comments: a function which follows its comment
 
 When we run `cargo doc --open`, these comments will display on the front page of the documentation for `my_crate` above the list of public items in the crate, as shown in Figure 14-2:
 
@@ -6620,11 +6598,11 @@ Before you can publish any crates, you need to create an account on crates.io an
 $ cargo login abcdefghijklmnopqrstuvwxyz012345
 ```
 
-This command will inform Cargo of your API token and store it locally in ~/.cargo/credentials. Note that this token is a secret: do not share it with anyone else. 
+This command will inform Cargo of your API token and store it locally in ~/.cargo/credentials. Note that this token is a secret: do not share it with anyone else.
 
 **Adding Metadata to a New Crate**
 
-Before publishing, you’ll need to add some metadata to your crate by adding it to the `[package]` section of the crate’s *Cargo.toml* file.
+Before publishing, you’ll need to add some metadata to your crate by adding it to the `[package]` section of the crate’s _Cargo.toml_ file.
 
 Your crate will need a unique name on crates.io. Other info like a description and license which are required so people will know what your crate does and under what terms they can use it.
 
@@ -6652,7 +6630,7 @@ license = "MIT OR Apache-2.0"
 
 Now that you’ve created an account, saved your API token, chosen a name for your crate, and specified the required metadata, you’re ready to publish! Publishing a crate uploads a specific version to crates.io for others to use.
 
-Be careful when publishing a crate because a publish is *permanent*. The version can never be overwritten, and the code cannot be deleted. One major goal of crates.io is to act as a permanent archive of code so that builds of all projects that depend on crates from crates.io will continue to work. Allowing version deletions would make fulfilling that goal impossible. However, there is no limit to the number of crate versions you can publish.
+Be careful when publishing a crate because a publish is _permanent_. The version can never be overwritten, and the code cannot be deleted. One major goal of crates.io is to act as a permanent archive of code so that builds of all projects that depend on crates from crates.io will continue to work. Allowing version deletions would make fulfilling that goal impossible. However, there is no limit to the number of crate versions you can publish.
 
 Run the `cargo publish` command again. It should succeed now:
 
@@ -6674,9 +6652,9 @@ When you’ve made changes to your crate and are ready to release a new `version
 
 **Removing Versions from Crates.io with cargo yank**
 
-Although you can’t remove previous versions of a crate, you can prevent any future projects from adding them as a new dependency. This is useful when a crate version is broken for one reason or another. In such situations, Cargo supports *yanking* a crate version.
+Although you can’t remove previous versions of a crate, you can prevent any future projects from adding them as a new dependency. This is useful when a crate version is broken for one reason or another. In such situations, Cargo supports _yanking_ a crate version.
 
-Yanking a version prevents new projects from starting to depend on that version while allowing all existing projects that depend on it to continue to download and depend on that version. Essentially, a yank means that all projects with a *Cargo.lock* will not break, and any future *Cargo.lock* files generated will not use the yanked version.
+Yanking a version prevents new projects from starting to depend on that version while allowing all existing projects that depend on it to continue to download and depend on that version. Essentially, a yank means that all projects with a _Cargo.lock_ will not break, and any future _Cargo.lock_ files generated will not use the yanked version.
 
 To yank a version of a crate, run `cargo yank` and specify which version you want to yank:
 
@@ -6690,15 +6668,15 @@ By adding --undo to the command, you can also undo a yank and allow projects to 
 $ cargo yank --vers 1.0.1 --undo
 ```
 
-A yank *does not* delete any code. For example, the yank feature is not intended for deleting accidentally uploaded secrets. If that happens, you must reset those secrets immediately.
+A yank _does not_ delete any code. For example, the yank feature is not intended for deleting accidentally uploaded secrets. If that happens, you must reset those secrets immediately.
 
 ### 14.3. Cargo Workspaces
 
-In Chapter 12, we built a package that included a binary crate and a library crate. As your project develops, you might find that the library crate continues to get bigger and you want to split up your package further into multiple library crates. In this situation, Cargo offers a feature called *workspaces* that can help manage multiple related packages that are developed in tandem.
+In Chapter 12, we built a package that included a binary crate and a library crate. As your project develops, you might find that the library crate continues to get bigger and you want to split up your package further into multiple library crates. In this situation, Cargo offers a feature called _workspaces_ that can help manage multiple related packages that are developed in tandem.
 
 **Creating a Workspace**
 
-A *workspace* is a set of packages that share the same *Cargo.lock* and output directory. 
+A _workspace_ is a set of packages that share the same _Cargo.lock_ and output directory.
 
 There are multiple ways to structure a workspace; we’re going to show one common way. We’ll have a workspace containing a binary and two libraries. The binary, which will provide the main functionality, will depend on the two libraries. One library will provide an `add_one` function, and a second library an `add_two` function. These three crates will be part of the same workspace. We’ll start by creating a new directory for the workspace:
 
@@ -6707,7 +6685,7 @@ $ mkdir add
 $ cd add
 ```
 
-Next, in the add directory, we create the *Cargo.toml* file that will configure the entire workspace. This file won’t have a `[package]` section or the metadata we’ve seen in other *Cargo.toml* files. Instead, it will start with a `[workspace]` section that will allow us to add members to the workspace by specifying the path to our binary crate; in this case, that path is adder:
+Next, in the add directory, we create the _Cargo.toml_ file that will configure the entire workspace. This file won’t have a `[package]` section or the metadata we’ve seen in other _Cargo.toml_ files. Instead, it will start with a `[workspace]` section that will allow us to add members to the workspace by specifying the path to our binary crate; in this case, that path is adder:
 
 ```conf
 [workspace]
@@ -6736,7 +6714,7 @@ At this point, we can build the workspace by running cargo build. The files in y
 └── target
 ```
 
-The workspace has one *target* directory at the top level for the compiled artifacts to be placed into; the `adder` crate doesn’t have its own target directory. Even if we were to run `cargo build` from inside the *adder* directory, the compiled artifacts would still end up in *add/target* rather than *add/adder/target*. Cargo structures the *target* directory in a workspace like this because the crates in a workspace are meant to depend on each other. If each crate had its own *target* directory, each crate would have to recompile each of the other crates in the workspace to have the artifacts in its own *target* directory. By sharing one *target* directory, the crates can avoid unnecessary rebuilding.
+The workspace has one _target_ directory at the top level for the compiled artifacts to be placed into; the `adder` crate doesn’t have its own target directory. Even if we were to run `cargo build` from inside the _adder_ directory, the compiled artifacts would still end up in _add/target_ rather than _add/adder/target_. Cargo structures the _target_ directory in a workspace like this because the crates in a workspace are meant to depend on each other. If each crate had its own _target_ directory, each crate would have to recompile each of the other crates in the workspace to have the artifacts in its own _target_ directory. By sharing one _target_ directory, the crates can avoid unnecessary rebuilding.
 
 **Creating the Second Crate in the Workspace**
 
@@ -6774,7 +6752,7 @@ Your add directory should now have these directories and files:
 └── target
 ```
 
-In the *add-one/src/lib.rs* file, let’s add an `add_one` function:
+In the _add-one/src/lib.rs_ file, let’s add an `add_one` function:
 
 ```rs
 pub fn add_one(x: i32) -> i32 {
@@ -6782,7 +6760,7 @@ pub fn add_one(x: i32) -> i32 {
 }
 ```
 
-Now that we have a library crate in the workspace, we can have the binary crate `adder` depend on the library crate `add-one`. First, we’ll need to add a path dependency on `add-one` to *adder/Cargo.toml.*
+Now that we have a library crate in the workspace, we can have the binary crate `adder` depend on the library crate `add-one`. First, we’ll need to add a path dependency on `add-one` to _adder/Cargo.toml._
 
 ```conf
 [dependencies]
@@ -6792,7 +6770,7 @@ add-one = { path = "../add-one" }
 
 Cargo doesn’t assume that crates in a workspace will depend on each other, so we need to be explicit about the dependency relationships between the crates.
 
-Next, let’s use the `add_one` function from the `add-one` crate in the `adder` crate. Open the *adder/src/main.rs* file and add a use line at the top to bring the new `add-one` library crate into scope. Then change the `main` function to call the `add_one` function, as in Listing 14-7.
+Next, let’s use the `add_one` function from the `add-one` crate in the `adder` crate. Open the _adder/src/main.rs_ file and add a use line at the top to bring the new `add-one` library crate into scope. Then change the `main` function to call the `add_one` function, as in Listing 14-7.
 
 ```rs
 use add_one;
@@ -6823,15 +6801,15 @@ $ cargo run -p adder
 Hello, world! 10 plus one is 11!
 ```
 
-This runs the code in *adder/src/main.rs*, which depends on the `add-one` crate.
+This runs the code in _adder/src/main.rs_, which depends on the `add-one` crate.
 
 **Depending on an External Crate in a Workspace**
 
-Notice that the workspace has only one *Cargo.lock* file at the top level of the workspace rather than having a *Cargo.lock* in each crate’s directory. This ensures that all crates are using the same version of all dependencies. Making all crates in the workspace use the same dependencies means the crates in the workspace will always be compatible with each other. 
+Notice that the workspace has only one _Cargo.lock_ file at the top level of the workspace rather than having a _Cargo.lock_ in each crate’s directory. This ensures that all crates are using the same version of all dependencies. Making all crates in the workspace use the same dependencies means the crates in the workspace will always be compatible with each other.
 
 We can now add use rand; to the *add-one/src/lib.r*s file, and building the whole workspace by running `cargo build` in the add directory will bring in and compile the `rand` crate:
 
-```bash$ 
+```bash$
 cargo build
     Updating crates.io index
   Downloaded rand v0.5.5
@@ -6842,7 +6820,7 @@ cargo build
     Finished dev [unoptimized + debuginfo] target(s) in 10.18 secs
 ```
 
-The top-level *Cargo.lock* now contains information about the dependency of `add-one` on `rand`. However, even though `rand` is used somewhere in the workspace, we can’t use it in other crates in the workspace unless we add `rand` to their *Cargo.toml* files as well. For example, if we add `use rand;` to the *adder/src/main.rs* file for the adder crate, we’ll get an error:
+The top-level _Cargo.lock_ now contains information about the dependency of `add-one` on `rand`. However, even though `rand` is used somewhere in the workspace, we can’t use it in other crates in the workspace unless we add `rand` to their _Cargo.toml_ files as well. For example, if we add `use rand;` to the _adder/src/main.rs_ file for the adder crate, we’ll get an error:
 
 ```bash
 $ cargo build
@@ -6854,7 +6832,7 @@ issue #27703)
 1 | use rand;
 ```
 
-To fix this, edit the *Cargo.toml* file for the `adder` crate and indicate that rand is a dependency for that crate as well. 
+To fix this, edit the _Cargo.toml_ file for the `adder` crate and indicate that rand is a dependency for that crate as well.
 
 Using the same version of `rand` across the workspace saves space because we won’t have multiple copies and ensures that the crates in the workspace will be compatible with each other.
 
@@ -6880,7 +6858,7 @@ mod tests {
 }
 ```
 
-Now run `cargo test` in the top-level *add* directory:
+Now run `cargo test` in the top-level _add_ directory:
 
 ```bash
 $ cargo test
@@ -6936,9 +6914,9 @@ As your project grows, consider using a workspace: it’s easier to understand s
 
 ### 14.4. Installing Binaries from Crates.io with cargo install
 
-The cargo install command allows you to install and use binary crates locally. it’s meant to be a convenient way for Rust developers to install tools that others have shared on crates.io. Note that you can only install packages that have binary targets. A *binary target *is the runnable program that is created if the crate has a *src/main.rs* file or another file specified as a binary, as opposed to a library target that isn’t runnable on its own but is suitable for including within other programs. 
+The cargo install command allows you to install and use binary crates locally. it’s meant to be a convenient way for Rust developers to install tools that others have shared on crates.io. Note that you can only install packages that have binary targets. A *binary target *is the runnable program that is created if the crate has a _src/main.rs_ file or another file specified as a binary, as opposed to a library target that isn’t runnable on its own but is suitable for including within other programs.
 
-All binaries installed with `cargo install` are stored in the installation root’s *bin* folder. If you installed Rust using *rustup.rs* and don’t have any custom configurations, this directory will be *$HOME/.cargo/bin*. Ensure that directory is in your `$PATH` to be able to run programs you’ve installed with `cargo install`.
+All binaries installed with `cargo install` are stored in the installation root’s _bin_ folder. If you installed Rust using _rustup.rs_ and don’t have any custom configurations, this directory will be _\$HOME/.cargo/bin_. Ensure that directory is in your `$PATH` to be able to run programs you’ve installed with `cargo install`.
 
 For example, in Chapter 12 we mentioned that there’s a Rust implementation of the grep tool called `ripgrep` for searching files. If we want to install `ripgrep`, we can run the following:
 
@@ -6962,36 +6940,35 @@ Cargo is designed so you can extend it with new subcommands without having to mo
 
 Sharing code with Cargo and crates.io is part of what makes the Rust ecosystem useful for many different tasks. Rust’s standard library is small and stable, but crates are easy to share, use, and improve on a timeline different from that of the language. Don’t be shy about sharing code that’s useful to you on crates.io; it’s likely that it will be useful to someone else as well!
 
-
 ## 15. Smart Pointers
 
-A *pointer* is a general concept for a variable that contains an address in memory. This address refers to, or “points at,” some other data. The most common kind of pointer in Rust is a reference. References are indicated by the `&` symbol and borrow the value they point to. They don’t have any special capabilities other than referring to data. Also, they don’t have any overhead and are the kind of pointer we use most often.
+A _pointer_ is a general concept for a variable that contains an address in memory. This address refers to, or “points at,” some other data. The most common kind of pointer in Rust is a reference. References are indicated by the `&` symbol and borrow the value they point to. They don’t have any special capabilities other than referring to data. Also, they don’t have any overhead and are the kind of pointer we use most often.
 
-*Smart pointers*, on the other hand, are data structures that not only act like a pointer but also have additional metadata and capabilities. The concept of smart pointers isn’t unique to Rust: smart pointers originated in C++ 
+_Smart pointers_, on the other hand, are data structures that not only act like a pointer but also have additional metadata and capabilities. The concept of smart pointers isn’t unique to Rust: smart pointers originated in C++
 
-In Rust, which uses the concept of ownership and borrowing, an additional difference between references and smart pointers is that references are pointers that only borrow data; in contrast, in many cases, smart pointers *own* the data they point to.
+In Rust, which uses the concept of ownership and borrowing, an additional difference between references and smart pointers is that references are pointers that only borrow data; in contrast, in many cases, smart pointers _own_ the data they point to.
 
 Smart pointers are usually implemented using structs. The characteristic that distinguishes a smart pointer from an ordinary struct is that smart pointers implement the `Deref` and `Drop` traits. The `Deref` trait allows an instance of the smart pointer struct to behave like a reference so you can write code that works with either references or smart pointers. The `Drop` trait allows you to customize the code that is run when an instance of the smart pointer goes out of scope.
 
 Given that the smart pointer pattern is a general design pattern used frequently in Rust, We’ll cover the most common smart pointers in the standard library:
 
-* `Box<T>` for allocating values on the heap
-* `Rc<T>`, a reference counting type that enables multiple ownership
-* `Ref<T>` and `RefMut<T>`, accessed through `RefCell<T>`, a type that enforces the borrowing rules at runtime instead of compile time
+- `Box<T>` for allocating values on the heap
+- `Rc<T>`, a reference counting type that enables multiple ownership
+- `Ref<T>` and `RefMut<T>`, accessed through `RefCell<T>`, a type that enforces the borrowing rules at runtime instead of compile time
 
-In addition, we’ll cover the *interior mutability* pattern where an immutable type exposes an API for mutating an interior value. We’ll also discuss *reference cycles*: how they can leak memory and how to prevent them.
+In addition, we’ll cover the _interior mutability_ pattern where an immutable type exposes an API for mutating an interior value. We’ll also discuss _reference cycles_: how they can leak memory and how to prevent them.
 
 ### 15.1. Using Box to Point to Data on the Heap
 
-The most straightforward smart pointer is a *box*, whose type is written `Box<T>`. Boxes allow you to store data on the heap rather than the stack. What remains on the stack is the pointer to the heap data. 
+The most straightforward smart pointer is a _box_, whose type is written `Box<T>`. Boxes allow you to store data on the heap rather than the stack. What remains on the stack is the pointer to the heap data.
 
 Boxes don’t have performance overhead, other than storing their data on the heap instead of on the stack. But they don’t have many extra capabilities either. You’ll use them most often in these situations:
 
-* When you have a type whose size can’t be known at compile time and you want to use a value of that type in a context that requires an exact size
-* When you have a large amount of data and you want to transfer ownership but ensure the data won’t be copied when you do so
-* When you want to own a value and you care only that it’s a type that implements a particular trait rather than being of a specific type
+- When you have a type whose size can’t be known at compile time and you want to use a value of that type in a context that requires an exact size
+- When you have a large amount of data and you want to transfer ownership but ensure the data won’t be copied when you do so
+- When you want to own a value and you care only that it’s a type that implements a particular trait rather than being of a specific type
 
-We’ll demonstrate the first situation in the “Enabling Recursive Types with Boxes” section. In the second case, transferring ownership of a large amount of data can take a long time because the data is copied around on the stack. To improve performance in this situation, we can store the large amount of data on the heap in a box. Then, only the small amount of pointer data is copied around on the stack, while the data it references stays in one place on the heap. The third case is known as a *trait object*, and Chapter 17 devotes an entire section, “Using Trait Objects That Allow for Values of Different Types,” just to that topic. So what you learn here you’ll apply again in Chapter 17!
+We’ll demonstrate the first situation in the “Enabling Recursive Types with Boxes” section. In the second case, transferring ownership of a large amount of data can take a long time because the data is copied around on the stack. To improve performance in this situation, we can store the large amount of data on the heap in a box. Then, only the small amount of pointer data is copied around on the stack, while the data it references stays in one place on the heap. The third case is known as a _trait object_, and Chapter 17 devotes an entire section, “Using Trait Objects That Allow for Values of Different Types,” just to that topic. So what you learn here you’ll apply again in Chapter 17!
 
 Using a `Box<T>` to Store Data on the Heap
 
@@ -7008,19 +6985,19 @@ We define the variable `b` to have the value of a `Box` that points to the value
 
 **Enabling Recursive Types with Boxes**
 
-At compile time, Rust needs to know how much space a type takes up. One type whose size can’t be known at compile time is a *recursive type*, where a value can have as part of itself another value of the same type. Because this nesting of values could theoretically continue infinitely, Rust doesn’t know how much space a value of a recursive type needs. However, boxes have a known size, so by inserting a box in a recursive type definition, you can have recursive types.
+At compile time, Rust needs to know how much space a type takes up. One type whose size can’t be known at compile time is a _recursive type_, where a value can have as part of itself another value of the same type. Because this nesting of values could theoretically continue infinitely, Rust doesn’t know how much space a value of a recursive type needs. However, boxes have a known size, so by inserting a box in a recursive type definition, you can have recursive types.
 
-Let’s explore the *cons list*, which is a data type common in functional programming languages, as an example of a recursive type. 
+Let’s explore the _cons list_, which is a data type common in functional programming languages, as an example of a recursive type.
 
 **More Information About the Cons List**
 
-A *cons list* is a data structure that comes from the Lisp programming language and its dialects. In Lisp, the `cons` function (short for “construct function”) constructs a new pair from its two arguments, which usually are a single value and another pair. These pairs containing pairs form a list.
+A _cons list_ is a data structure that comes from the Lisp programming language and its dialects. In Lisp, the `cons` function (short for “construct function”) constructs a new pair from its two arguments, which usually are a single value and another pair. These pairs containing pairs form a list.
 
 The cons function concept has made its way into more general functional programming jargon: “to cons x onto y” informally means to construct a new container instance by putting the element x at the start of this new container, followed by the container y.
 
 Each item in a cons list contains two elements: the value of the current item and the next item. The last item in the list contains only a value called `Nil` without a next item. A `cons` list is produced by recursively calling the cons function. The canonical name to denote the base case of the recursion is `Nil`.
 
-Although functional programming languages use cons lists frequently, the cons list isn’t a commonly used data structure in Rust. Most of the time when you have a list of items in Rust, `Vec<T>` is a better choice to use. 
+Although functional programming languages use cons lists frequently, the cons list isn’t a commonly used data structure in Rust. Most of the time when you have a list of items in Rust, `Vec<T>` is a better choice to use.
 
 Listing 15-2 contains an enum definition for a cons list. Note that this code won’t compile yet because the `List` type doesn’t have a known size, which we’ll demonstrate.
 
@@ -7100,7 +7077,7 @@ Rust can’t figure out how much space to allocate for recursively defined types
 
 In this suggestion, “indirection” means that instead of storing a value directly, we’ll change the data structure to store the value indirectly by storing a pointer to the value instead.
 
-**Because a `Box<T>` is a pointer, Rust always knows how much space a `Box<T> `needs: a pointer’s size doesn’t change based on the amount of data it’s pointing to.** This means we can put a `Box<T>` inside the `Cons` variant instead of another `List` value directly. The `Box<T>` will point to the next `List` value that will be on the heap rather than inside the `Cons` variant. Conceptually, we still have a list, created with lists “holding” other lists, but this implementation is now more like placing the items next to one another rather than inside one another.
+**Because a `Box<T>` is a pointer, Rust always knows how much space a `Box<T>`needs: a pointer’s size doesn’t change based on the amount of data it’s pointing to.** This means we can put a `Box<T>` inside the `Cons` variant instead of another `List` value directly. The `Box<T>` will point to the next `List` value that will be on the heap rather than inside the `Cons` variant. Conceptually, we still have a list, created with lists “holding” other lists, but this implementation is now more like placing the items next to one another rather than inside one another.
 
 We can change the definition of the `List` enum in Listing 15-2 and the usage of the `List` in Listing 15-3 to the code in Listing 15-5, which will compile:
 
@@ -7132,9 +7109,9 @@ The `Box<T>` type is a smart pointer because it implements the `Deref` trait, wh
 
 ### 15.2. Treating Smart Pointers Like Regular References with the `Deref` Trait
 
-Implementing the Deref trait allows you to customize the behavior of the *dereference operator*, `*`. By implementing `Deref` in such a way that a smart pointer can be treated like a regular reference, you can write code that operates on references and use that code with smart pointers too.
+Implementing the Deref trait allows you to customize the behavior of the _dereference operator_, `*`. By implementing `Deref` in such a way that a smart pointer can be treated like a regular reference, you can write code that operates on references and use that code with smart pointers too.
 
- We’ll explore how implementing the `Deref` trait makes it possible for smart pointers to work in ways similar to references. Then we’ll look at Rust’s *deref coercio*n feature and how it lets us work with either references or smart pointers.
+We’ll explore how implementing the `Deref` trait makes it possible for smart pointers to work in ways similar to references. Then we’ll look at Rust’s *deref coercio*n feature and how it lets us work with either references or smart pointers.
 
 **Following the Pointer to the Value with the Dereference Operator**
 
@@ -7152,7 +7129,7 @@ fn main() {
 
 > Listing 15-6: Using the dereference operator to follow a reference to an `i32` value
 
-The variable `x` holds an `i32` value, `5`. We set y equal to a reference to `x`. We can assert that `x` is equal to `5`. However, if we want to make an assertion about the value in `y`, we have to use `*y` to follow the reference to the value it’s pointing to (hence *dereference*). Once we dereference y, we have access to the integer value y is pointing to that we can compare with `5`.
+The variable `x` holds an `i32` value, `5`. We set y equal to a reference to `x`. We can assert that `x` is equal to `5`. However, if we want to make an assertion about the value in `y`, we have to use `*y` to follow the reference to the value it’s pointing to (hence _dereference_). Once we dereference y, we have access to the integer value y is pointing to that we can compare with `5`.
 
 If we tried to write `assert_eq!(5, y);` instead, we would get this compilation error:
 
@@ -7194,7 +7171,7 @@ fn main() {
 
 > Listing 15-7: Using the dereference operator on a `Box<i32>`
 
-The only difference between Listing 15-7 and Listing 15-6 is that here we set `y` to be an instance of a box pointing to the value in `x` rather than a reference pointing to the value of `x`. In the last assertion, we can use the dereference operator to follow the box’s pointer in the same way that we did when y was a reference. 
+The only difference between Listing 15-7 and Listing 15-6 is that here we set `y` to be an instance of a box pointing to the value in `x` rather than a reference pointing to the value of `x`. In the last assertion, we can use the dereference operator to follow the box’s pointer in the same way that we did when y was a reference.
 
 **Defining Our Own Smart Pointer**
 
@@ -7216,7 +7193,7 @@ fn main() {}
 
 > Listing 15-8: Defining a `MyBox<T>` type
 
-Let’s try adding the main function in Listing 15-7 to Listing 15-8 and changing it to use the `MyBox<T>` type we’ve defined instead of `Box<T>`. 
+Let’s try adding the main function in Listing 15-7 to Listing 15-8 and changing it to use the `MyBox<T>` type we’ve defined instead of `Box<T>`.
 
 ```rs
 struct MyBox<T>(T);
@@ -7311,11 +7288,11 @@ Rust substitutes the `*` operator with a call to the `deref` method and then a p
 
 **The reason the `deref` method returns a reference to a value, and that the plain dereference outside the parentheses in `*(y.deref())` is still necessary, is the ownership system. If the `deref` method returned the value directly instead of a reference to the value, the value would be moved out of `self`. We don’t want to take ownership of the inner value inside `MyBox<T>` in this case or in most cases where we use the dereference operator.**
 
-Note that **the `*` operator is replaced with a call to the `deref` method and then a call to the `*` operator just once, each time we use a `*` in our code.** Because the substitution of the * operator does not recurse infinitely, we end up with data of type `i32`, which matches the `5` in `assert_eq!` in Listing 15-9.
+Note that **the `*` operator is replaced with a call to the `deref` method and then a call to the `*` operator just once, each time we use a `*` in our code.** Because the substitution of the \* operator does not recurse infinitely, we end up with data of type `i32`, which matches the `5` in `assert_eq!` in Listing 15-9.
 
 **Implicit Deref Coercions with Functions and Methods**
 
-*Deref coercion* is a convenience that Rust performs on arguments to functions and methods. `Deref` coercion works only on types that implement the `Deref` trait. `Deref` coercion converts such a type into a reference to another type. For example, deref coercion can convert `&String` to `&str` because String implements the `Deref` trait such that it returns `str`. `Deref` coercion happens automatically when we pass a reference to a particular type’s value as an argument to a function or method that doesn’t match the parameter type in the function or method definition. A sequence of calls to the `deref` method converts the type we provided into the type the parameter needs.
+_Deref coercion_ is a convenience that Rust performs on arguments to functions and methods. `Deref` coercion works only on types that implement the `Deref` trait. `Deref` coercion converts such a type into a reference to another type. For example, deref coercion can convert `&String` to `&str` because String implements the `Deref` trait such that it returns `str`. `Deref` coercion happens automatically when we pass a reference to a particular type’s value as an argument to a function or method that doesn’t match the parameter type in the function or method definition. A sequence of calls to the `deref` method converts the type we provided into the type the parameter needs.
 
 Deref coercion was added to Rust so that programmers writing function and method calls don’t need to add as many explicit references and dereferences with `&` and `*`. The deref coercion feature also lets us write more code that can work for either references or smart pointers.
 
@@ -7366,7 +7343,7 @@ fn main() {
 
 Here we’re calling the `hello` function with the argument `&m`, which is a reference to a `MyBox<String>` value. Because we implemented the `Deref` trait on `MyBox<T>` in Listing 15-10, Rust can turn &`MyBox<String>` into `&String` by calling `deref`. The standard library provides an implementation of `Deref` on String that returns a string slice, and this is in the API documentation for `Deref`. Rust calls `deref` again to turn the `&String` into `&str`, which matches the hello function’s definition.
 
-If Rust didn’t implement deref coercion, we would have to write the code in Listing 15-13 instead of the code in Listing 15-12 to call `hello` with a value of type `&MyBox<String>`. 
+If Rust didn’t implement deref coercion, we would have to write the code in Listing 15-13 instead of the code in Listing 15-12 to call `hello` with a value of type `&MyBox<String>`.
 
 ```rs
 use std::ops::Deref;
@@ -7409,9 +7386,9 @@ Similar to how you use the `Deref` trait to override the `*` operator on immutab
 
 Rust does deref coercion when it finds types and trait implementations in three cases:
 
-* From `&T` to `&U` when `T: Deref<Target=U>`
-* From `&mut T` to `&mut U` when `T: DerefMut<Target=U>`
-* From `&mut T` to `&U` when `T: Deref<Target=U>`
+- From `&T` to `&U` when `T: Deref<Target=U>`
+- From `&mut T` to `&mut U` when `T: DerefMut<Target=U>`
+- From `&mut T` to `&U` when `T: Deref<Target=U>`
 
 The first two cases are the same except for mutability. The first case states that if you have a `&T`, and `T` implements `Deref` to some type `U`, you can get a `&U` transparently. The second case states that the same deref coercion happens for mutable references.
 
@@ -7425,7 +7402,7 @@ In some languages, the programmer must call code to free memory or resources eve
 
 Specify the code to run when a value goes out of scope by implementing the `Drop` trait. The `Drop` trait requires you to implement one method named `drop` that takes a mutable reference to `self`.
 
-`CustomSmartPointer` example will print `Dropping CustomSmartPointer!` when the instance goes out of scope. 
+`CustomSmartPointer` example will print `Dropping CustomSmartPointer!` when the instance goes out of scope.
 
 ```rs
 struct CustomSmartPointer {
@@ -7511,7 +7488,7 @@ error: could not compile `drop-example`.
 To learn more, run the command again with --verbose.
 ```
 
-This error message states that we’re not allowed to explicitly call drop. The error message uses the term *destructor*, which is the general programming term for a function that cleans up an instance. A *destructor* is analogous to a constructor, which creates an instance. The drop function in Rust is one particular destructor.
+This error message states that we’re not allowed to explicitly call drop. The error message uses the term _destructor_, which is the general programming term for a function that cleans up an instance. A _destructor_ is analogous to a constructor, which creates an instance. The drop function in Rust is one particular destructor.
 
 Rust doesn’t let us call `drop` explicitly because Rust would still automatically call `drop` on the value at the end of `main`. This would be a *double fre*e error because Rust would be trying to clean up the same value twice.
 
@@ -7562,9 +7539,9 @@ You also don’t have to worry about problems resulting from accidentally cleani
 
 In the majority of cases, ownership is clear: you know exactly which variable owns a given value. However, there are cases when a single value might have multiple owners. For example, in graph data structures, multiple edges might point to the same node, and that node is conceptually owned by all of the edges that point to it. A node shouldn’t be cleaned up unless it doesn’t have any edges pointing to it.
 
-To enable multiple ownership, Rust has a type called `Rc<T>`, which is an abbreviation for *reference counting*. The `Rc<T>` type keeps track of the number of references to a value which determines whether or not a value is still in use. If there are zero references to a value, the value can be cleaned up without any references becoming invalid.
+To enable multiple ownership, Rust has a type called `Rc<T>`, which is an abbreviation for _reference counting_. The `Rc<T>` type keeps track of the number of references to a value which determines whether or not a value is still in use. If there are zero references to a value, the value can be cleaned up without any references becoming invalid.
 
-We use the `Rc<T`> type when we want to allocate some data on the heap for multiple parts of our program to read and we can’t determine at compile time which part will finish using the data last. 
+We use the `Rc<T`> type when we want to allocate some data on the heap for multiple parts of our program to read and we can’t determine at compile time which part will finish using the data last.
 
 Note that `Rc<T>` is only for use in single-threaded scenarios. When we discuss concurrency in Chapter 16, we’ll cover how to do reference counting in multithreaded programs.
 
@@ -7572,7 +7549,7 @@ Note that `Rc<T>` is only for use in single-threaded scenarios. When we discuss 
 
 we’ll create two lists that both share ownership of a third list. Conceptually, this looks similar to Figure 15-3:
 
->![Alternate text](./static/img/trpl04-01.svg)
+> ![Alternate text](./static/img/trpl04-01.svg)
 > Figure 15-3: Two lists, `b` and `c`, sharing ownership of a third list, `a`
 
 We’ll create list a that contains `5` and then `10`. Then we’ll make two more lists: `b` that starts with `3` and `c` that starts with `4`. Both `b` and `c` lists will then continue on to the first a list containing `5` and `10`. In other words, both lists will share the first list containing `5` and `10`.
@@ -7593,6 +7570,7 @@ fn main() {
     let c = Cons(4, Box::new(a));
 }
 ```
+
 > Listing 15-17: Demonstrating we’re not allowed to have two lists using `Box<T>` that try to share ownership of a third list
 
 When we compile this code, we get this error:
@@ -7644,7 +7622,7 @@ fn main() {
 
 we create the list holding 5 and 10 and store it in a new `Rc<List>` in `a`. Then when we create `b` and `c`, we call the `Rc::clone` function and pass a reference to the `Rc<List>` in a as an argument.
 
-We could have called `a.clone()` rather than `Rc::clone(&a)`, but Rust’s convention is to use `Rc::clone` in this case. **The implementation of `Rc::clone` doesn’t make a deep copy of all the data like most types’ implementations of `clone` do. The call to `Rc::clone` only increments the reference count, which doesn’t take much time.** Deep copies of data can take a lot of time. By using `Rc::clone` for reference counting, we can visually distinguish between the deep-copy kinds of clones and the kinds of clones that increase the reference count. 
+We could have called `a.clone()` rather than `Rc::clone(&a)`, but Rust’s convention is to use `Rc::clone` in this case. **The implementation of `Rc::clone` doesn’t make a deep copy of all the data like most types’ implementations of `clone` do. The call to `Rc::clone` only increments the reference count, which doesn’t take much time.** Deep copies of data can take a lot of time. By using `Rc::clone` for reference counting, we can visually distinguish between the deep-copy kinds of clones and the kinds of clones that increase the reference count.
 
 **Cloning an `Rc<T>` Increases the Reference Count**
 
@@ -7691,30 +7669,504 @@ We can see that the `Rc<List>` in `a` has an initial reference count of 1; then 
 
 What we can’t see in this example is that when `b` and then `a` go out of scope at the end of `main`, the count is then 0, and the `Rc<List>` is cleaned up completely at that point. Using `Rc<T>` allows a single value to have multiple owners, and the count ensures that the value remains valid as long as any of the owners still exist.
 
-Via **immutable references**, `Rc<T>` allows you to share data between multiple parts of your program for **reading only**. 
-
-
-
-
-
-
-
-
-
-
-
-
+Via **immutable references**, `Rc<T>` allows you to share data between multiple parts of your program for **reading only**.
 
 ### 15.5. RefCell and the Interior Mutability Pattern
+
+_Interior mutability_ is a design pattern in Rust that allows you to mutate data even when there are immutable references to that data; normally, this action is disallowed by the borrowing rules. To mutate data, the pattern uses `unsafe` code inside a data structure to bend Rust’s usual rules that govern mutation and borrowing. We can use types that use the interior mutability pattern when we can ensure that the borrowing rules will be followed at runtime, even though the compiler can’t guarantee that. The `unsafe` code involved is then wrapped in a safe API, and the outer type is still immutable.
+
+Let’s explore this concept by looking at the `RefCell<T>` type that follows the interior mutability pattern.
+
+**Enforcing Borrowing Rules at Runtime with `RefCell<T>`**
+
+Unlike `Rc<T>`, the `RefCell<T>` type represents single ownership over the data it holds. So, what makes `RefCell<T>` different from a type like `Box<T>`? Recall the borrowing rules you learned in Chapter 4:
+
+- At any given time, you can have either (but not both of) one mutable reference or any number of immutable references.
+- References must always be valid.
+
+With references and Box<T>, the borrowing rules’ invariants are enforced at compile time. With RefCell<T>, these invariants are enforced at runtime. With references, if you break these rules, you’ll get a compiler error. With RefCell<T>, if you break these rules, your program will panic and exit.
+
+The advantage of checking the borrowing rules at runtime instead is that certain memory-safe scenarios are then allowed, whereas they are disallowed by the compile-time checks. Static analysis, like the Rust compiler, is inherently conservative. Some properties of code are impossible to detect by analyzing the code: the most famous example is the Halting Problem, which is beyond the scope of this book but is an interesting topic to research.
+
+Because some analysis is impossible, if the Rust compiler can’t be sure the code complies with the ownership rules, it might reject a correct program; in this way, it’s conservative. If Rust accepted an incorrect program, users wouldn’t be able to trust in the guarantees Rust makes. However, if Rust rejects a correct program, the programmer will be inconvenienced, but nothing catastrophic can occur. The `RefCell<T>` type is useful when you’re sure your code follows the borrowing rules but the compiler is unable to understand and guarantee that.
+
+Similar to `Rc<T>`, `RefCell<T>` is only for use in single-threaded scenarios and will give you a compile-time error if you try using it in a multithreaded context.
+
+Here is a recap of the reasons to choose `Box<T>`, `Rc<T>`, or `RefCell<T>`:
+
+- `Rc<T>` enables multiple owners of the same data; `Box<T>` and `RefCell<T>` have single owners.
+- `Box<T>` allows immutable or mutable borrows checked at compile time; `Rc<T>` allows only immutable borrows checked at compile time; `RefCell<T>` allows immutable or mutable borrows checked at runtime.
+- Because `RefCell<T>` allows mutable borrows checked at runtime, you can mutate the value inside the `RefCell<T>` even when the `RefCell<T>` is immutable.
+
+Mutating the value inside an immutable value is the _interior mutability_ pattern.
+
+**Interior Mutability: A Mutable Borrow to an Immutable Value**
+
+A consequence of the borrowing rules is that when you have an immutable value, you can’t borrow it mutably. For example, this code won’t compile: ❌
+
+```rs
+fn main() {
+    let x = 5;
+    let y = &mut x;
+}
+```
+
+If you tried to compile this code, you’d get the following error:
+
+```bash
+$ cargo run
+   Compiling borrowing v0.1.0 (file:///projects/borrowing)
+error[E0596]: cannot borrow `x` as mutable, as it is not declared as mutable
+ --> src/main.rs:3:13
+  |
+2 |     let x = 5;
+  |         - help: consider changing this to be mutable: `mut x`
+3 |     let y = &mut x;
+  |             ^^^^^^ cannot borrow as mutable
+
+error: aborting due to previous error
+
+For more information about this error, try `rustc --explain E0596`.
+error: could not compile `borrowing`.
+
+To learn more, run the command again with --verbose.
+```
+
+However, there are situations in which it would be useful for a value to mutate itself in its methods but appear immutable to other code. Code outside the value’s methods would not be able to mutate the value. Using `RefCell<T>` is one way to get the ability to have interior mutability. But `RefCell<T>` doesn’t get around the borrowing rules completely: the borrow checker in the compiler allows this interior mutability, and the borrowing rules are checked at runtime instead. If you violate the rules, you’ll get a `panic!` instead of a compiler error.
+
+**A Use Case for Interior Mutability: Mock Objects**
+
+A _test double_ is the general programming concept for a type used in place of another type during testing. _Mock objects_ are specific types of _test doubles_ that record what happens during a test so you can assert that the correct actions took place.
+
+Rust doesn’t have objects in the same sense as other languages have objects, and Rust doesn’t have mock object functionality built into the standard library as some other languages do. However, you can definitely create a struct that will serve the same purposes as a mock object.
+
+Here’s the scenario we’ll test: we’ll create a library that tracks a value against a maximum value and sends messages based on how close to the maximum value the current value is. This library could be used to keep track of a user’s quota for the number of API calls they’re allowed to make, for example.
+
+```rs
+#![allow(unused_variables)]
+fn main() {
+    pub trait Messenger {
+        fn send(&self, msg: &str);
+    }
+
+    pub struct LimitTracker<'a, T: Messenger> {
+        messenger: &'a T,
+        value: usize,
+        max: usize,
+    }
+
+    impl<'a, T> LimitTracker<'a, T>
+    where
+        T: Messenger,
+    {
+        pub fn new(messenger: &T, max: usize) -> LimitTracker<T> {
+            LimitTracker {
+                messenger,
+                value: 0,
+                max,
+            }
+        }
+
+        pub fn set_value(&mut self, value: usize) {
+            self.value = value;
+
+            let percentage_of_max = self.value as f64 / self.max as f64;
+
+            if percentage_of_max >= 1.0 {
+                self.messenger.send("Error: You are over your quota!");
+            } else if percentage_of_max >= 0.9 {
+                self.messenger
+                    .send("Urgent warning: You've used up over 90% of your quota!");
+            } else if percentage_of_max >= 0.75 {
+                self.messenger
+                    .send("Warning: You've used up over 75% of your quota!");
+            }
+        }
+    }
+}
+```
+
+> Listing 15-20: A library to keep track of how close a value is to a maximum value and warn when the value is at certain levels
+
+One important part of this code is that the `Messenger` trait has one method called `send` that takes an immutable reference to `self` and the text of the message. This is the interface our mock object needs to have. The other important part is that we want to test the behavior of the `set_value` method on the `LimitTracker`. We can change what we pass in for the value parameter, but `set_value` doesn’t return anything for us to make assertions on. We want to be able to say that if we create a `LimitTracker` with something that implements the `Messenger` trait and a particular value for `max`, when we pass different numbers for `value`, the messenger is told to send the appropriate messages.
+
+We need a mock object that, instead of sending an email or text message when we call `send`, will only keep track of the messages it’s told to send. We can create a new instance of the mock object, create a `LimitTracker` that uses the mock object, call the set_value method on `LimitTracker`, and then check that the mock object has the messages we expect. Listing 15-21 shows an attempt to implement a mock object to do just that, but the borrow checker won’t allow it:
+
+```rs
+pub trait Messenger {
+    fn send(&self, msg: &str);
+}
+
+pub struct LimitTracker<'a, T: Messenger> {
+    messenger: &'a T,
+    value: usize,
+    max: usize,
+}
+
+impl<'a, T> LimitTracker<'a, T>
+where
+    T: Messenger,
+{
+    pub fn new(messenger: &T, max: usize) -> LimitTracker<T> {
+        LimitTracker {
+            messenger,
+            value: 0,
+            max,
+        }
+    }
+
+    pub fn set_value(&mut self, value: usize) {
+        self.value = value;
+
+        let percentage_of_max = self.value as f64 / self.max as f64;
+
+        if percentage_of_max >= 1.0 {
+            self.messenger.send("Error: You are over your quota!");
+        } else if percentage_of_max >= 0.9 {
+            self.messenger
+                .send("Urgent warning: You've used up over 90% of your quota!");
+        } else if percentage_of_max >= 0.75 {
+            self.messenger
+                .send("Warning: You've used up over 75% of your quota!");
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    struct MockMessenger {
+        sent_messages: Vec<String>,
+    }
+
+    impl MockMessenger {
+        fn new() -> MockMessenger {
+            MockMessenger {
+                sent_messages: vec![],
+            }
+        }
+    }
+
+    impl Messenger for MockMessenger {
+        fn send(&self, message: &str) { // &self immutable reference
+            self.sent_messages.push(String::from(message));
+        }
+    }
+
+    #[test]
+    fn it_sends_an_over_75_percent_warning_message() {
+        let mock_messenger = MockMessenger::new();
+        let mut limit_tracker = LimitTracker::new(&mock_messenger, 100);
+
+        limit_tracker.set_value(80);
+
+        assert_eq!(mock_messenger.sent_messages.len(), 1);
+    }
+}
+```
+
+> Listing 15-21: An attempt to implement a `MockMessenger` that isn’t allowed by the borrow checker
+
+This test code defines a `MockMessenger` struct that has a `sent_messages` field with a `Vec` of `String` values to keep track of the messages it’s told to send. We then implement the `Messenger` trait for `MockMessenger` so we can give a `MockMessenger` to a `LimitTracker`. In the definition of the `send` method, we take the message passed in as a parameter and store it in the `MockMessenger` list of `sent_messages`.
+
+In the test, we’re testing what happens when the `LimitTracker` is told to set `value` to something that is more than 75 percent of the `max` value. First, we create a new `MockMessenger`, which will start with an empty list of messages. Then we create a new `LimitTracker` and give it a reference to the new `MockMessenger` and a `max` value of 100. We call the `set_value` method on the `LimitTracker` with a value of 80, which is more than 75 percent of 100. Then we assert that the list of messages that the `MockMessenger` is keeping track of should now have one message in it.
+
+However, there’s one problem with this test, as shown here:
+
+```bash
+$ cargo test
+   Compiling limit-tracker v0.1.0 (file:///projects/limit-tracker)
+error[E0596]: cannot borrow `self.sent_messages` as mutable, as it is behind a `&` reference
+  --> src/lib.rs:58:13
+   |
+57 |         fn send(&self, message: &str) {
+   |                 ----- help: consider changing this to be a mutable reference: `&mut self`
+58 |             self.sent_messages.push(String::from(message));
+   |             ^^^^^^^^^^^^^^^^^^ `self` is a `&` reference, so the data it refers to cannot be borrowed as mutable
+
+error: aborting due to previous error
+
+For more information about this error, try `rustc --explain E0596`.
+error: could not compile `limit-tracker`.
+
+To learn more, run the command again with --verbose.
+```
+
+We can’t modify the `MockMessenger` to keep track of the messages, because the `send` method takes an immutable reference to self. We also can’t take the suggestion from the error text to use &mut `self` instead, because then the signature of `send` wouldn’t match the signature in the `Messenger` trait definition.
+
+This is a situation in which interior mutability can help! We’ll store the `sent_messages` within a `RefCell<T>`, and then the send message will be able to modify `sent_messages` to store the messages we’ve seen.
+
+```rs
+pub trait Messenger {
+    fn send(&self, msg: &str);
+}
+
+pub struct LimitTracker<'a, T: Messenger> {
+    messenger: &'a T,
+    value: usize,
+    max: usize,
+}
+
+impl<'a, T> LimitTracker<'a, T>
+where
+    T: Messenger,
+{
+    pub fn new(messenger: &T, max: usize) -> LimitTracker<T> {
+        LimitTracker {
+            messenger,
+            value: 0,
+            max,
+        }
+    }
+
+    pub fn set_value(&mut self, value: usize) {
+        self.value = value;
+
+        let percentage_of_max = self.value as f64 / self.max as f64;
+
+        if percentage_of_max >= 1.0 {
+            self.messenger.send("Error: You are over your quota!");
+        } else if percentage_of_max >= 0.9 {
+            self.messenger
+                .send("Urgent warning: You've used up over 90% of your quota!");
+        } else if percentage_of_max >= 0.75 {
+            self.messenger
+                .send("Warning: You've used up over 75% of your quota!");
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::cell::RefCell;
+
+    struct MockMessenger {
+        sent_messages: RefCell<Vec<String>>, // RefCell
+    }
+
+    impl MockMessenger {
+        fn new() -> MockMessenger {
+            MockMessenger {
+                sent_messages: RefCell::new(vec![]),
+            }
+        }
+    }
+
+    impl Messenger for MockMessenger {
+        fn send(&self, message: &str) { // &self immutable reference
+            self.sent_messages.borrow_mut().push(String::from(message)); // get a mutable reference to the value inside the RefCell<Vec<String>>
+        }
+    }
+
+    #[test]
+    fn it_sends_an_over_75_percent_warning_message() {
+        // --snip--
+        let mock_messenger = MockMessenger::new();
+        let mut limit_tracker = LimitTracker::new(&mock_messenger, 100);
+
+        limit_tracker.set_value(80);
+
+        assert_eq!(mock_messenger.sent_messages.borrow().len(), 1); // get an immutable reference to the vector
+    }
+}
+
+fn main() {}
+```
+
+> Listing 15-22: Using `RefCell<T>` to mutate an inner value while the outer value is considered immutable
+
+The `sent_messages` field is now of type `RefCell<Vec<String>>` instead of `Vec<String>`. In the `new` function, we create a new `RefCell<Vec<String>>` instance around the empty vector.
+
+For the implementation of the `send` method, **the first parameter is still an immutable borrow of `self`,** which matches the trait definition. **We call `borrow_mut` on the `RefCell<Vec<String>>` in `self`.`sent_messages` to get a mutable reference to the value inside the `RefCell<Vec<String>>`,** which is the vector. Then we can call `push` on the mutable reference to the vector to keep track of the messages sent during the test.
+
+The last change we have to make is in the assertion: to see how many items are in the inner vector, we call `borrow` on the `RefCell<Vec<String>>` to get an immutable reference to the vector.
+
+**Keeping Track of Borrows at Runtime with `RefCell<T>`**
+
+When creating immutable and mutable references, we use the `&` and `&mut` syntax, respectively. With `RefCell<T`>, we use the borrow and `borrow_mut` methods, which are part of the safe API that belongs to `RefCell<T>`. The `borrow` method returns the smart pointer type `Ref<T>`, and `borrow_mut` returns the smart pointer type `RefMut<T>`. Both types implement `Deref`, so we can treat them like regular references.
+
+The `RefCell<T>` keeps track of how many `Ref<T>` and `RefMut<T>` smart pointers are currently active. Every time we call `borrow`, the `RefCell<T>` increases its count of how many immutable borrows are active. When a `Ref<T>` value goes out of scope, the count of immutable borrows goes down by one. Just like the compile-time borrowing rules, `RefCell<T>` lets us have many immutable borrows or one mutable borrow at any point in time.
+
+If we try to violate these rules, rather than getting a compiler error as we would with references, the implementation of `RefCell<T>` will panic at runtime. Listing 15-23 shows a modification of the implementation of `send` in Listing 15-22. We’re deliberately trying to create two mutable borrows active for the same scope to illustrate that `RefCell<T>` prevents us from doing this at runtime.
+
+```rs
+pub trait Messenger {
+    fn send(&self, msg: &str);
+}
+
+pub struct LimitTracker<'a, T: Messenger> {
+    messenger: &'a T,
+    value: usize,
+    max: usize,
+}
+
+impl<'a, T> LimitTracker<'a, T>
+where
+    T: Messenger,
+{
+    pub fn new(messenger: &T, max: usize) -> LimitTracker<T> {
+        LimitTracker {
+            messenger,
+            value: 0,
+            max,
+        }
+    }
+
+    pub fn set_value(&mut self, value: usize) {
+        self.value = value;
+
+        let percentage_of_max = self.value as f64 / self.max as f64;
+
+        if percentage_of_max >= 1.0 {
+            self.messenger.send("Error: You are over your quota!");
+        } else if percentage_of_max >= 0.9 {
+            self.messenger
+                .send("Urgent warning: You've used up over 90% of your quota!");
+        } else if percentage_of_max >= 0.75 {
+            self.messenger
+                .send("Warning: You've used up over 75% of your quota!");
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::cell::RefCell;
+
+    struct MockMessenger {
+        sent_messages: RefCell<Vec<String>>,
+    }
+
+    impl MockMessenger {
+        fn new() -> MockMessenger {
+            MockMessenger {
+                sent_messages: RefCell::new(vec![]),
+            }
+        }
+    }
+
+    impl Messenger for MockMessenger {
+        fn send(&self, message: &str) {
+            let mut one_borrow = self.sent_messages.borrow_mut(); // a mutable borrow
+            let mut two_borrow = self.sent_messages.borrow_mut(); // another mutable borrow. error: 'already borrowed: BorrowMutError'
+
+            one_borrow.push(String::from(message));
+            two_borrow.push(String::from(message));
+        }
+    }
+
+    #[test]
+    fn it_sends_an_over_75_percent_warning_message() {
+        let mock_messenger = MockMessenger::new();
+        let mut limit_tracker = LimitTracker::new(&mock_messenger, 100);
+
+        limit_tracker.set_value(80);
+
+        assert_eq!(mock_messenger.sent_messages.borrow().len(), 1);
+    }
+}
+```
+
+> Listing 15-23: Creating two mutable references in the same scope to see that `RefCell<T>` will panic
+
+We create a variable `one_borrow` for the `RefMut<T>` smart pointer returned from `borrow_mut`. Then we create another mutable borrow in the same way in the variable `two_borrow`. This makes two mutable references in the same scope, which isn’t allowed.
+
+```bash
+$ cargo test
+   Compiling limit-tracker v0.1.0 (file:///projects/limit-tracker)
+    Finished test [unoptimized + debuginfo] target(s) in 0.91s
+     Running target/debug/deps/limit_tracker-d1b2637139dca6ca
+
+running 1 test
+test tests::it_sends_an_over_75_percent_warning_message ... FAILED
+
+failures:
+
+---- tests::it_sends_an_over_75_percent_warning_message stdout ----
+thread 'main' panicked at 'already borrowed: BorrowMutError', src/libcore/result.rs:1188:5
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace.
+
+
+failures:
+    tests::it_sends_an_over_75_percent_warning_message
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out
+
+error: test failed, to rerun pass '--lib'
+```
+
+Notice that the code panicked with the message already borrowed: `BorrowMutError`. This is how `RefCell<T>` handles violations of the borrowing rules at runtime.
+
+Catching borrowing errors at runtime rather than compile time means that you would find a mistake in your code later in the development process and possibly not until your code was deployed to production. Also, your code would incur a small runtime performance penalty as a result of keeping track of the borrows at runtime rather than compile time. However, using `RefCell<T>` makes it possible to write a mock object that can modify itself to keep track of the messages it has seen while you’re using it in a context where only immutable values are allowed.
+
+**Having Multiple Owners of Mutable Data by Combining `Rc<T>` and `RefCell<T>`**
+
+A common way to use `RefCell<T>` is in combination with `Rc<T>`. Recall that `Rc<T>` lets you have multiple owners of some data, but it only gives immutable access to that data. If you have an `Rc<T>` that holds a `RefCell<T>`, you can get a value that can have multiple owners and that you can mutate!
+
+For example, recall the cons list example in Listing 15-18 where we used `Rc<T>` to allow multiple lists to share ownership of another list. Because `Rc<T>` holds only immutable values, we can’t change any of the values in the list once we’ve created them. Let’s add in `RefCell<T>` to gain the ability to change the values in the lists. Listing 15-24 shows that by using a `RefCell<T>` in the `Cons` definition, we can modify the value stored in all the lists:
+
+```rs
+#[derive(Debug)]
+enum List {
+    Cons(Rc<RefCell<i32>>, Rc<List>),
+    Nil,
+}
+
+use crate::List::{Cons, Nil};
+use std::cell::RefCell;
+use std::rc::Rc;
+
+fn main() {
+    let value = Rc::new(RefCell::new(5));
+
+    let a = Rc::new(Cons(Rc::clone(&value), Rc::new(Nil)));
+
+    let b = Cons(Rc::new(RefCell::new(6)), Rc::clone(&a));
+    let c = Cons(Rc::new(RefCell::new(10)), Rc::clone(&a));
+
+    *value.borrow_mut() += 10;
+
+    println!("a after = {:?}", a);
+    println!("b after = {:?}", b);
+    println!("c after = {:?}", c);
+}
+```
+
+> Listing 15-24: Using `Rc<RefCell<i32>>` to create a `List` that we can mutate
+
+We create a value that is an instance of `Rc<RefCell<i32>>` and store it in a variable named value so we can access it directly later. Then we create a `List` in `a` with a `Cons` variant that holds value. We need to clone value so both `a` and `value` have ownership of the inner `5` value rather than transferring ownership from `value` to `a` or having `a` borrow from `value`.
+
+We wrap the list a in an `Rc<T>` so when we create lists `b` and `c`, they can both refer to `a`, which is what we did in Listing 15-18.
+
+After we’ve created the lists in `a`, `b`, and `c`, we add 10 to the value in `value`. We do this by calling `borrow_mut` on `value`, which uses the automatic dereferencing feature to dereference the `Rc<T>` to the inner `RefCell<T>` value. The `borrow_mut` method returns a `RefMut<T>` smart pointer, and we use the dereference operator on it and change the inner value.
+
+When we print `a`, `b`, and `c`, we can see that they all have the modified value of `15` rather than `5`:
+
+
+```bash
+$ cargo run
+   Compiling cons-list v0.1.0 (file:///projects/cons-list)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.63s
+     Running `target/debug/cons-list`
+a after = Cons(RefCell { value: 15 }, Nil)
+b after = Cons(RefCell { value: 6 }, Cons(RefCell { value: 15 }, Nil))
+c after = Cons(RefCell { value: 10 }, Cons(RefCell { value: 15 }, Nil))
+```
+
+This technique is pretty neat! By using `RefCell<T>`, we have an outwardly immutable `List` value. But we can use the methods on `RefCell<T>` that provide access to its interior mutability so we can modify our data when we need to. The runtime checks of the borrowing rules protect us from data races, and it’s sometimes worth trading a bit of speed for this flexibility in our data structures.
+
+The standard library has other types that provide interior mutability, such as `Cell<T>`, which is similar except that instead of giving references to the inner value, the value is copied in and out of the `Cell<T>.` There’s also `Mutex<T>`, which offers interior mutability that’s safe to use across threads; 
+
 
 ### 15.6. Reference Cycles Can Leak Memory
 
 ## Q & A
 
-
 1. How to organize code:  
-When the code base is getting larger, you might need to work with multiple crates on the same project. Rust supports this via Workspaces, run example by: `(cd examples/hello && cargo run)`
-
+   When the code base is getting larger, you might need to work with multiple crates on the same project. Rust supports this via Workspaces, run example by: `(cd examples/hello && cargo run)`
 
 Refs:
 https://doc.rust-lang.org/book/title-page.html
