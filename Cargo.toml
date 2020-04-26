@@ -78,4 +78,8 @@ members = [
     "examples/list16-3",
     "examples/list16-8",
     "examples/list16-10",
+    "examples/list16-12",
+    "examples/list16-13",
+    "examples/list16-14",
+    "examples/list16-15",
 ]
