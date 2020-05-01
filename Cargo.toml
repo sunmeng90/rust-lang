@@ -93,4 +93,8 @@ members = [
     "examples/list18-17",
     "examples/list18-26",
     "examples/list18-29",
+    "examples/list19-1",
+    "examples/list19-4",
+    "examples/list19-9",
+    "examples/list19-11",
 ]
