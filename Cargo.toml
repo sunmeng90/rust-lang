@@ -97,4 +97,10 @@ members = [
     "examples/list19-4",
     "examples/list19-9",
     "examples/list19-11",
+    "examples/list19-14",
+    "examples/list19-15",
+    "examples/list19-16",
+    "examples/list19-19",
+    "examples/list19-22",
+    "examples/list19-23",
 ]
