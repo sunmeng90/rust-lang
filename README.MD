@@ -16,7 +16,7 @@ const may be set only to a const expression, not the result of a function call o
 **shadowing**  
 you can declare a **new variable** with the same name as a previous variable, and the new variable shadows the previous variable. and the new variable can have different type with the previous variable
 
-```rs
+```rust
 fn main() {
     let x = 5;
 
@@ -31,7 +31,7 @@ fn main() {
 Shadowing is different from marking a variable as mut, because we’ll get a compile-time error if we accidentally try to reassign to this variable without using the let keyword.  
 The other difference between mut and shadowing is that because we’re effectively creating a new variable when we use the let keyword again, we can change the type of the value but reuse the same name.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let spaces = "   ";
@@ -44,7 +44,7 @@ fn main() {
 Rust is **statically type** language, which means that it must know the types of all variables at compile time.  
 The compiler can usually infer the type of variable based on the value and how we use it. In case when many types are possible, we must add a type annotation, like this:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let guess: u32 = "42".parse().expect("Not a number!");
@@ -55,7 +55,7 @@ fn main() {
 
 A scalar type represents a single value. Rust has four primary scalar types: integers, floating-point numbers, Booleans, and characters.
 
-```rs
+```rust
 fn main() {
     let c = 'z';
     let z = 'ℤ';
@@ -73,7 +73,7 @@ Compound types can group multiple values into one type. Rust has two primitive c
 
 A tuple is a general way of grouping together a number of values with **a variety of types** into one compound type. Tuples have **a fixed length**: once declared, they cannot grow or shrink in size.
 
-```rs
+```rust
 fn main() {
     let tup: (i32, f64, u8) = (500, 6.4, 1);
 }
@@ -81,7 +81,7 @@ fn main() {
 
 destructing tuple:
 
-```rs
+```rust
 fn main() {
     let tup = (500, 6.4, 1);
 
@@ -93,7 +93,7 @@ fn main() {
 
 access a tuple element by use period(.) follow by the index of the value:
 
-```rs
+```rust
 fn main() {
     let x: (i32, f64, u8) = (500, 6.4, 1);
 
@@ -109,7 +109,7 @@ fn main() {
 
 Another way to have a collection of multiple values is with an array. Unlike a tuple, every element of an array must have the same type. Arrays in Rust are different from arrays in some other languages because arrays in Rust have a fixed length, like tuples.
 
-```rs
+```rust
 fn main() {
     let a = [1, 2, 3, 4, 5];
 }
@@ -117,7 +117,7 @@ fn main() {
 
 declare a array with type and length
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let a: [i32; 5] = [1, 2, 3, 4, 5];
@@ -128,7 +128,7 @@ Here, `i32` is the type of each element. After the semicolon, the number 5 indic
 
 declare a array that contain the same value for each element
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
 let a = [3; 5];
@@ -141,7 +141,7 @@ The array named a will contain 5 elements that will all be set to the value 3 in
 
 Array index start with 0 in rust
 
-```rs
+```rust
 fn main() {
     let a = [1, 2, 3, 4, 5];
 
@@ -154,7 +154,7 @@ fn main() {
 
 In rust, keyword `fn` are used to declare a new function. Rust code uses snake case as the conventional style for function and variable names. In snake case, all letters are lowercase and underscores separate words.
 
-```rs
+```rust
 fn main() {
     println!("Hello, world!");
 
@@ -168,7 +168,7 @@ fn another_function() {
 
 function parameters
 
-```rs
+```rust
 fn main() {
     another_function(5);
 }
@@ -182,7 +182,7 @@ The declaration of another_function has one parameter named x. The type of x is 
 
 Function bodies are made up of a series of statements optionally ending in an expression. Statements do not return values. Therefore, you can’t assign a let statement to another variable, as the following code tries to do; you’ll get an error:
 
-```rs
+```rust
 fn main() {
     let x = (let y = 6);
 }
@@ -190,7 +190,7 @@ fn main() {
 
 Calling a function is an expression. Calling a macro is an expression. **The block that we use to create new scopes, {}, is an expression**, for example:
 
-```rs
+```rust
 fn main() {
     let x = 5;
 
@@ -205,7 +205,7 @@ fn main() {
 
 This expression:
 
-```rs
+```rust
 {
     let x = 3;
     x + 1
@@ -218,7 +218,7 @@ Functions with Return Values
 
 Functions can return values to the code that calls them. We don’t name return values, but we do declare their type after an arrow (->). In Rust, the return value of the function is synonymous with the value of the final expression in the block of the body of a function. You can return early from a function by using the return keyword and specifying a value, but most functions return the last expression implicitly. Here’s an example of a function that returns a value:
 
-```rs
+```rust
 fn five() -> i32 {
     5
 }
@@ -236,7 +236,7 @@ There are no function calls, macros, or even let statements in the five function
 
 #### 3.5.1 if
 
-```rs
+```rust
 fn main() {
     let number = 6;
 
@@ -255,7 +255,7 @@ fn main() {
 Using if in a let Statement  
 Because if is an expression, we can use it on the right side of a let statement
 
-```rs
+```rust
 fn main() {
     let condition = true;
     let number = if condition {
@@ -270,7 +270,7 @@ fn main() {
 
 This means the values that have the potential to be results from each arm of the if must be the same type
 
-```rs
+```rust
 fn main() {
    let condition = true;
 
@@ -288,7 +288,7 @@ When we try to compile this code, we’ll get an error:x:. The if and else arms 
 
 #### 3.5.2 loop
 
-```rs
+```rust
 fn main() {
     loop {
         println!("again!");
@@ -300,7 +300,7 @@ Returning Values from Loops
 
 One of the uses of a loop is to retry an operation you know might fail, such as checking whether a thread has completed its job. However, you might need to pass the result of that operation to the rest of your code. To do this, you can add the value you want returned after the break expression you use to stop the loop; that value will be returned out of the loop so you can use it, as shown here:
 
-```rs
+```rust
 fn main() {
     let mut counter = 0;
 
@@ -320,7 +320,7 @@ after `break` the loop, we use a semicolon to end the statement that assigns the
 
 Conditional Loops with while
 
-```rs
+```rust
 fn main() {
     let mut number = 3;
 
@@ -338,7 +338,7 @@ Looping Through a Collection with for
 
 You could use the while construct to loop over the elements of a collection
 
-```rs
+```rust
 fn main() {
     let a = [10, 20, 30, 40, 50];
     let mut index = 0;
@@ -355,7 +355,7 @@ this approach is error prone, we could cause the program to panic if the index l
 
 As a more concise alternative, you can use a `for` loop and execute some code for each item in a collection.
 
-```rs
+```rust
 fn main() {
     let a = [10, 20, 30, 40, 50];
 
@@ -367,7 +367,7 @@ fn main() {
 
 The safety and conciseness of `for` loops make them the most commonly used loop construct in Rust, Even in situations in which you want to run some code a certain number of times, most Rustaceans would use a for loop. The way to do that would be to use a Range, which is a type provided by the standard library that generates all numbers in sequence starting from one number and ending before another number.
 
-```rs
+```rust
 fn main() {
     for number in (1..4).rev() {
         println!("{}!", number);
@@ -407,7 +407,7 @@ Variable Scope
 
 A scope is the range within a program for which an item is valid.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     {                      // s is not valid here, it’s not yet declared
@@ -426,7 +426,7 @@ There are two type for string values in rust:
 
 The second type of String can be mutated:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let mut s = String::from("hello");
@@ -454,7 +454,7 @@ However, the second part is different. In languages with a garbage collector (GC
 
 Rust takes a different path: the memory is automatically returned once the variable that owns it goes out of scope. Here’s a string created by `String` instead of a string literal:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -473,7 +473,7 @@ Ways Variables and Data Interact: Move
 
 Multiple variables can interact with the same data in different ways in Rust
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let x = 5;
@@ -485,7 +485,7 @@ We can probably guess what this is doing: “bind the value 5 to x; then make a 
 
 Now let’s look at the String version:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let s1 = String::from("hello");
@@ -514,7 +514,7 @@ Earlier, we said that when a variable goes out of scope, Rust automatically call
 
 To ensure memory safety, there’s one more detail to what happens in this situation in Rust. **Instead of trying to copy the allocated memory, Rust considers `s1` to no longer be valid and, therefore, Rust doesn’t need to free anything when `s1` goes out of scope**. Check out what happens when you try to use `s1` after `s2` is created; it won’t work:
 
-```rs
+```rust
 let s1 = String::from("hello");
 let s2 = s1;
 
@@ -548,7 +548,7 @@ Ways Variables and Data Interact: Clone
 
 If we do want to deeply copy the heap data of the String, not just the stack data, we can use a common method called `clone`.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -565,7 +565,7 @@ Stack-Only Data: Copy
 
 There’s another wrinkle we haven’t talked about yet. This code using integers, part of which was shown in Listing 4-2, works and is valid:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -594,7 +594,7 @@ Ownership and Functions
 
 The semantics for passing a value to a function are similar to those for assigning a value to a variable. Passing a variable to a function will move or copy, just as assignment does. Listing 4-3 has an example with some annotations showing where variables go into and out of scope.
 
-```rs
+```rust
 fn main() {
     let s = String::from("hello");  // s comes into scope
 
@@ -626,7 +626,7 @@ Return Values and Scope
 
 Returning values can also transfer ownership. Listing 4-4 is an example with similar annotations to those in Listing 4-3.
 
-```rs
+```rust
 fn main() {
     let s1 = gives_ownership();         // gives_ownership moves its return
                                         // value into s1
@@ -666,7 +666,7 @@ Taking ownership and then returning ownership with every function is a bit tedio
 
 It’s possible to return multiple values using a tuple, as shown in Listing 4-5.
 
-```rs
+```rust
 fn main() {
     let s1 = String::from("hello");
 
@@ -692,7 +692,7 @@ The issue with the tuple code in Listing 4-5 is that we have to return the `Stri
 
 Here is how you would define and use a `calculate_length` function that has a reference to an object as a parameter instead of taking ownership of the value:
 
-```rs
+```rust
 fn main() {
     let s1 = String::from("hello");
 
@@ -717,7 +717,7 @@ These ampersands are references, and they allow you to refer to some value witho
 
 Let’s take a closer look at the function call here:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -734,7 +734,7 @@ The `&s1` syntax lets us create a reference that refers to the value of s1 but d
 
 Likewise, the signature of the function uses `&` to indicate that the type of the parameter s is a reference. Let’s add some explanatory annotations:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     fn calculate_length(s: &String) -> usize { // s is a reference to a String
@@ -750,7 +750,7 @@ We call having references as function parameters _borrowing_. As in real life, i
 
 So what happens if we try to modify something we’re borrowing? Try the code in Listing 4-6. Spoiler alert: it doesn’t work!
 
-```rs
+```rust
 fn main() {
     let s = String::from("hello");
 
@@ -780,7 +780,7 @@ Mutable References
 
 We can fix the error in the code from Listing 4-6 with just a small tweak:
 
-```rs
+```rust
 fn main() {
     let mut s = String::from("hello");
 
@@ -796,7 +796,7 @@ First, we had to change s to be mut. Then we had to create a mutable reference w
 
 But mutable references have one big restriction: you can have only one mutable reference to a particular piece of data in a particular scope. This code will fail:
 
-```rs
+```rust
 let mut s = String::from("hello");
 
 let r1 = &mut s;
@@ -832,7 +832,7 @@ Data races cause undefined behavior and can be difficult to diagnose and fix whe
 
 As always, we can use curly brackets to create a new scope, allowing for multiple mutable references, just not simultaneous ones:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -849,7 +849,7 @@ fn main() {
 
 A similar rule exists for combining mutable and immutable references. This code results in an error:
 
-```rs
+```rust
 let mut s = String::from("hello");
 
 let r1 = &s; // no problem
@@ -879,7 +879,7 @@ Whew! We also cannot have a mutable reference while we have an immutable one. Us
 
 Note that a reference’s scope starts from where it is introduced and continues through the last time that reference is used. For instance, this code will compile because the last usage of the immutable references occurs before the mutable reference is introduced:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let mut s = String::from("hello");
@@ -905,7 +905,7 @@ In languages with pointers, it’s easy to erroneously create a dangling pointer
 
 Let’s try to create a dangling reference, which Rust will prevent with a compile-time error:
 
-```rs
+```rust
 fn main() {
     let reference_to_nothing = dangle();
 }
@@ -933,7 +933,7 @@ error[E0106]: missing lifetime specifier
 
 Let’s take a closer look at exactly what’s happening at each stage of our dangle code:
 
-```rs
+```rust
 fn dangle() -> &String { // dangle returns a reference to a String
 
     let s = String::from("hello"); // s is a new String
@@ -947,7 +947,7 @@ Because s is created inside dangle, when the code of dangle is finished, s will 
 
 The solution here is to return the String directly:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -974,7 +974,7 @@ Another data type that does not have ownership is the slice. Slices let you refe
 
 Image we have a function `first_word` that find the first word in a string, and return the index of first blank in the string.
 
-```rs
+```rust
 fn first_word(s: &String) -> usize { // use &String, becuase we don't want the ownership of the passing in string
     let bytes = s.as_bytes();
 
@@ -1009,7 +1009,7 @@ String Slices
 
 A string slice is a reference to part of a `String`, and it looks like this:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let s = String::from("hello world");
@@ -1026,7 +1026,7 @@ We can create slices using a range within brackets by specifying `[starting_inde
 > ![Alternate text](./static/img/trpl04-06.svg)
 > Figure 4-6: String slice referring to part of a String
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -1049,7 +1049,7 @@ fn main() {
 
 With all this information in mind, let’s rewrite `first_word` to return a slice. The type that signifies “string slice” is written as `&str`:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     fn first_word(s: &String) -> &str {
@@ -1070,7 +1070,7 @@ Now when we call first_word, we get back a single value that is tied to the unde
 
 We now have a straightforward API that’s much harder to mess up, because the compiler will ensure the references into the String remain valid. Remember the bug in the program in Listing 4-8, when we got the index to the end of the first word but then cleared the string so our index was invalid? That code was logically incorrect but didn’t show any immediate errors. The problems would show up later if we kept trying to use the first word index with an emptied string. Slices make this bug impossible and let us know we have a problem with our code much sooner. Using the slice version of first_word will throw a compile-time error:
 
-```rs
+```rust
 fn main() {
     let mut s = String::from("hello world");
 
@@ -1104,7 +1104,7 @@ String Literals Are Slices
 
 Recall that we talked about string literals being stored inside the binary. Now that we know about slices, we can properly understand string literals:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let s = "Hello, world!";
@@ -1117,7 +1117,7 @@ String Slices as Parameters
 
 Knowing that you can take slices of literals and String values leads us to one more improvement on `first_word`, and that’s its signature:
 
-```rs
+```rust
 fn first_word(s: &str) -> &str {
 ```
 
@@ -1125,7 +1125,7 @@ fn first_word(s: &str) -> &str {
 
 If we have a string slice, we can pass that directly. If we have a `String`, we can pass a slice of the entire `String`. Defining a function to take a string slice instead of a reference to a `String` makes our API more general and useful without losing any functionality:
 
-```rs
+```rust
 fn first_word(s: &str) -> &str {
     let bytes = s.as_bytes();
 
@@ -1158,7 +1158,7 @@ Other Slices
 
 String slices, as you might imagine, are specific to strings. But there’s a more general slice type, too. Consider this array:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let a = [1, 2, 3, 4, 5];
@@ -1183,7 +1183,7 @@ Structs are similar to tuples. Like tuples, the pieces of a struct can be differ
 
 To define a struct, we enter the keyword struct and name the entire struct. Then, inside curly brackets, we define the names and types of the pieces of data, which we call fields.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -1200,7 +1200,7 @@ fn main() {
 
 create _instance_ of struct
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     struct User {
@@ -1223,7 +1223,7 @@ fn main() {
 
 To get a specific value from a struct, we can use dot notation. If we wanted just this user’s email address, we could use `user1.email` wherever we wanted to use this value. If the instance is mutable, we can change a value by using the dot notation and assigning into a particular field. Listing 5-3 shows how to change the value in the `email` field of a mutable `User` instance.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     struct User {
@@ -1252,7 +1252,7 @@ Using the Field Init Shorthand when Variables and Fields Have the Same Name
 
 When the parameter names and the struct field names are exactly the same, we can use the field init shorthand syntax to avoid repetition of email and username in comment out line, as shown in Listing 5-5.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     struct User {
@@ -1286,7 +1286,7 @@ Creating Instances From Other Instances With Struct Update Syntax
 
 It’s often useful to create a new instance of a struct that uses most of an old instance’s values but changes some. You’ll do this using _struct update syntax_.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     struct User {
@@ -1326,7 +1326,7 @@ You can also define structs that look similar to tuples, called tuple structs. T
 
 To define a tuple struct, start with the `struct` keyword and the struct name followed by the types in the tuple. For example, here are definitions and usages of two tuple structs named `Color` and `Point`:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -1348,7 +1348,7 @@ You can also define structs that don’t have any fields! These are called unit-
 > In the User struct definition in Listing 5-1, we used the owned String type rather than the &str string slice type. This is a deliberate choice because we want instances of this struct to own all of its data and for that data to be valid for as long as the entire struct is valid.  
 > It’s possible for structs to store references to data owned by something else, but to do so requires the use of lifetimes, a Rust feature that we’ll discuss in Chapter 10. Lifetimes ensure that the data referenced by a struct is valid for as long as the struct is. Let’s say you try to store a reference in a struct without specifying lifetimes, like this, which won’t work:
 
-```rs
+```rust
 struct User {
     username: &str,
     email: &str,
@@ -1386,7 +1386,7 @@ error[E0106]: missing lifetime specifier
 
 use struct instance as function parameter
 
-```rs
+```rust
 struct Rectangle {
     width: u32,
     height: u32,
@@ -1414,7 +1414,7 @@ _Methods_ are similar to functions: they’re declared with the `fn` keyword and
 
 Defining Methods
 
-```rs
+```rust
 #![allow(used_methods)]
 fn main() {
     let rect = Rectangle {
@@ -1462,7 +1462,7 @@ Another useful feature of `impl` blocks is that we’re allowed to define functi
 
 Associated functions are often used for constructors that will return a new instance of the struct.
 
-```rs
+```rust
 fn main() {
     let square = Rectangle::square(20);
     println!("square detail: {:?}", square);
@@ -1501,7 +1501,7 @@ Multiple `impl` Blocks
 
 Each struct is allowed to have multiple impl blocks.
 
-```rs
+```rust
 fn main() {}
 
 
@@ -1547,7 +1547,7 @@ _Enumerations_, also referred to as _enums_. Enums allow you to define a type by
 
 Enums are defined with keyword `enum`
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     enum IpAddrKind {
@@ -1562,7 +1562,7 @@ fn main() {
 
 we can define a function that takes a enum as an argument
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     enum IpAddrKind {
@@ -1579,7 +1579,7 @@ fn main() {
 
 we can putting data directly into each enum variant. This new definition of the IpAddr enum says that both V4 and V6 variants will have associated String values:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     enum IpAddr {
@@ -1595,7 +1595,7 @@ fn main() {
 
 There’s another advantage to using an enum rather than a struct: **each variant can have different types and amounts of associated data**. Version four type IP addresses will always have four numeric components that will have values between 0 and 255. If we wanted to store `V4` addresses as four `u8` values but still express `V6` addresses as one `String` value, we wouldn’t be able to with a struct. Enums handle this case with ease:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -1612,7 +1612,7 @@ fn main() {
 
 we can also put any kind of data inside an enum variant: strings, numeric types, or structs, for example. You can even include another enum!
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -1633,7 +1633,7 @@ fn main() {
 
 Let’s look at another example of an enum in Listing 6-2: this one has a wide variety of types embedded in its variants.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -1657,7 +1657,7 @@ This enum has four variants with different types:
 
 Defining an enum with variants such as the ones in Listing 6-2 is similar to defining different kinds of struct definitions, except the enum doesn’t use the struct keyword and all the variants are grouped together under the Message type. The following structs could hold the same data that the preceding enum variants hold:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -1675,7 +1675,7 @@ But if we used the different structs, which each have their own type, we couldn�
 
 There is one more similarity between enums and structs: just as we’re able to define methods on structs using `impl`, we’re also able to define methods on enums. Here’s a method named `call` that we could define on our `Message` enum:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -1703,7 +1703,7 @@ The `Option` Enum and Its Advantages Over Null Values
 
 This enum is Option<T>, and it is defined by the standard library as follows:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     enum Option<T> {
@@ -1715,7 +1715,7 @@ fn main() {
 
 The `Option<T>` enum is so useful that it’s even included in the prelude; you don’t need to bring it into scope explicitly. In addition, so are its variants: you can use `Some` and `None` directly without the `Option:: prefix`. The `Option<T>` enum is still just a regular enum, and `Some(T)` and None are still variants of type `Option<T>`. The `<T>` a generic type parameter in Rust. Here are some examples of using Option values to hold number types and string types:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let some_number = Some(5);
@@ -1731,7 +1731,7 @@ When we have a `Some` value, we know that a value is present and the value is he
 
 In short, because `Option<T>` and `T` (where `T` can be any type) are different types, the compiler won’t let us use an `Option<T>` value as if it were definitely a valid value. For example, this code won’t compile because it’s trying to add an `i8` to an `Option<i8>`:
 
-```rs
+```rust
 let x: i8 = 5;
 let y: Option<i8> = Some(5);
 
@@ -1762,7 +1762,7 @@ In general, in order to use an `Option<T>` value, you want to have code that wil
 
 Rust has an extremely powerful control flow operator called `match` that allows you to compare a value against a series of patterns and then execute code based on which pattern matches. Patterns can be made up of literal values, variable names, wildcards, and many other things; The power of `match` comes from the expressiveness of the patterns and the fact that the compiler confirms that all possible cases are handled.
 
-```rs
+```rust
 #![allow(unused_variables)]
 
 #![allow(unused_variables)]
@@ -1803,7 +1803,7 @@ Another useful feature of match arms is that they can bind to the parts of the v
 
 In the match expression for the below code, we add a variable called `state` to the pattern that matches values of the variant `Coin::Quarter`. When a `Coin::Quarter` matches, the state variable will bind to the value of that quarter’s state. Then we can use `state` in the code for that arm, like so:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -1845,7 +1845,7 @@ Let’s say we want to write a function that takes an `Option<i32>` and, if ther
 
 This function is very easy to write, thanks to match, and will look like Listing 6-5.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     fn plus_one(x: Option<i32>) -> Option<i32> {
@@ -1869,7 +1869,7 @@ Matches Are Exhaustive
 
 There’s one other aspect of `match` we need to discuss. Consider this version of our `plus_one` function that has a bug and won’t compile:
 
-```rs
+```rust
 fn plus_one(x: Option<i32>) -> Option<i32> {
     match x {
         Some(i) => Some(i + 1),
@@ -1893,7 +1893,7 @@ The `_` Placeholder
 
 Rust also has a pattern we can use when we don’t want to list all possible values. For example, a u8 can have valid values of 0 through 255. If we only care about the values 1, 3, 5, and 7, we don’t want to have to list out 0, 2, 4, 6, 8, 9 all the way up to 255. Fortunately, we don’t have to: we can use the special pattern `_` instead:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -1916,7 +1916,7 @@ However, the match expression can be a bit wordy in a situation in which we care
 
 The `if let` syntax lets you combine `if` and `let` into a less verbose way to handle values that match one pattern while ignoring the rest. Consider the program in Listing 6-6 that matches on an `Option<u8>` value but only wants to execute code if the value is 3.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let some_u8_value = Some(0u8);
@@ -1933,7 +1933,7 @@ We want to do something with the `Some(3)` match but do nothing with any other `
 
 Instead, we could write this in a shorter way using `if let`. The following code behaves the same as the match in Listing 6-6:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let some_u8_value = Some(0u8);
@@ -1951,7 +1951,7 @@ In other words, you can think of `if let` as syntax sugar for a `match` that run
 
 We can include an `else` with an `if let`. The block of code that goes with the `else` is the same as the block of code that would go with the `_` case in the match expression that is equivalent to the `if let` and `else`.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     #[derive(Debug)]
@@ -1977,7 +1977,7 @@ fn main() {
 
 Or we could use an if let and else expression like this:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -2060,7 +2060,7 @@ Let's take restaurant as an example, Some parts in a restaurant are referred to 
 
 To structure our crate in the same way that a real restaurant works, we can organize our code into nested modules. Create a new library named `restaurant` by running `cargo new --lib restaurant`; then put the code in Listing 7-1 into src/lib.rs to define some modules and function signatures.
 
-```rs
+```rust
 mod front_of_house {
     mod hosting {
         fn add_to_waitlist() {}
@@ -2140,7 +2140,7 @@ But you can expose inner parts of child modules code to outer ancestor modules b
 
 Exposing Paths with the `pub` Keyword
 
-```rs
+```rust
 mod front_of_house {
     pub mod hosting {
         fn add_to_waitlist() {}
@@ -2180,7 +2180,7 @@ Adding the pub keyword in front of mod hosting makes the module public. But the 
 
 Let’s also make the add_to_waitlist function public by adding the pub keyword before its definition, as in Listing 7-7.
 
-```rs
+```rust
 mod front_of_house {
     pub mod hosting {
         pub fn add_to_waitlist() {}
@@ -2201,7 +2201,7 @@ Starting Relative Paths with `super`
 
 In file system, we can access parent directory using .., likewise in rust we can access parent module using keyword `super`
 
-```rs
+```rust
 fn serve_order() {}
 
 mod back_of_house {
@@ -2221,7 +2221,7 @@ Making Structs and Enums Public
 
 We can also use `pub` to designate structs and enums as public, but there are a few extra details. If we use `pub` before a struct definition, we make the struct public, but the struct’s fields will still be private. We can make each field public or not on a case-by-case basis.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     mod back_of_house {
@@ -2258,7 +2258,7 @@ fn main() {
 
 In contrast, if we make an enum public, all of its variants are then public. We only need the `pub` before the `enum` keyword
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -2284,7 +2284,7 @@ Enums aren’t very useful unless their variants are public; it would be annoyin
 
 Using path to refer to item in module tree is verbose and inconvenient. We can bring a path into a scope once and then use items in that path as if they're local items with the `use` keyword.
 
-```rs
+```rust
 mod front_of_house {
     pub mod hosting {
         pub fn add_to_waitlist() {}
@@ -2307,7 +2307,7 @@ Adding use and a path in a scope is similar to creating a symbolic link in the f
 
 Creating Idiomatic `use` Paths
 
-```rs
+```rust
 mod front_of_house {
     pub mod hosting {
         pub fn add_to_waitlist() {}
@@ -2332,7 +2332,7 @@ Bringing the function’s parent module into scope with `use` so we have to spec
 
 On the other hand, when bringing in structs, enums, and other items with `use`, it’s idiomatic to specify the full path. Listing 7-14 shows the idiomatic way to bring the standard library’s HashMap struct into the scope of a binary crate.
 
-```rs
+```rust
 use std::collections::HashMap;
 
 fn main() {
@@ -2347,7 +2347,7 @@ Providing New Names with the `as` Keyword
 
 If we’re bringing two items with the same name into scope with use statements, we can use 'as' keyword after the path to create a new local name or alias for the item.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     use std::fmt::Result;
@@ -2371,7 +2371,7 @@ Re-exporting Names with `pub use`
 
 When we bring a name into scope with the `use` keyword, the name available in the new scope is private. To enable the code that calls our code to refer to that name as if it had been defined in that code’s scope, we can combine `pub` and `use`. This technique is called _re-exporting_ because we’re bringing an item into scope but also making that item available for others to bring into their scope.
 
-```rs
+```rust
 mod front_of_house {
     pub mod hosting {
         pub fn add_to_waitlist() {}
@@ -2407,7 +2407,7 @@ Adding rand as a dependency in Cargo.toml tells Cargo to download the rand packa
 
 Then, to bring `rand` definitions into the scope of our package, we added a `use` line starting with the name of the package, `rand`, and listed the items we wanted to bring into scope.
 
-```rs
+```rust
 use rand::Rng;
 fn main() {
     let secret_number = rand::thread_rng().gen_range(1, 101);
@@ -2420,7 +2420,7 @@ Using Nested Paths to Clean Up Large `use` Lists
 
 If we’re using multiple items defined in the same package or same module, listing each item on its own line can take up a lot of vertical space in our files.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -2430,7 +2430,7 @@ fn main() {
 }
 ```
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -2445,7 +2445,7 @@ The Glob Operator
 
 If we want to bring all public items defined in a path into scope, we can specify that path followed by `*`, the glob operator:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -2461,7 +2461,7 @@ The glob operator is often used when testing to bring everything under test into
 
 So far, all the examples in this chapter defined multiple modules in one file. When modules get large, you might want to move their definitions to a separate file to make the code easier to navigate.
 
-```rs
+```rust
 mod front_of_house;
 
 pub use crate::front_of_house::hosting;
@@ -2477,7 +2477,7 @@ pub fn eat_at_restaurant() {
 
 And src/front_of_house.rs gets the definitions from the body of the front_of_house module, as shown in Listing 7-22.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -2509,7 +2509,7 @@ Rust lets you split a package into multiple crates and a crate into modules so y
 
 Creating a New Vector
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let v: Vec<i32> = Vec::new();
@@ -2518,7 +2518,7 @@ fn main() {
 
 > Listing 8-1: Creating a new, empty vector to hold values of type `i32`
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let v = vec![1, 2, 3]; // rust can infer that the type of element in vector v
@@ -2531,7 +2531,7 @@ Updating a Vector
 
 add element by `push`
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let mut v = Vec::new();
@@ -2549,7 +2549,7 @@ Dropping a Vector Drops Its Elements
 
 a vector is freed when it goes out of scope
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     {
@@ -2567,7 +2567,7 @@ When the vector gets dropped, all of its contents are also dropped, meaning thos
 
 Reading Elements of Vectors
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let v = vec![1, 2, 3, 4, 5];
@@ -2594,7 +2594,7 @@ When access a non-existent element from vector:
 - &[] will cause panic
 - get will return None
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let v = vec![1, 2, 3, 4, 5];
@@ -2608,7 +2608,7 @@ fn main() {
 
 When the program has a valid reference, the borrow checker enforces the ownership and borrowing rules (covered in Chapter 4) to ensure this reference and any other references to the contents of the vector remain valid. Recall the rule that states you can’t have mutable and immutable references in the same scope. That rule applies in Listing 8-7, where we hold an immutable reference to the first element in a vector and try to add an element to the end, which won’t work.
 
-```rs
+```rust
 let mut v = vec![1, 2, 3, 4, 5];
 
 let first = &v[0];
@@ -2640,7 +2640,7 @@ The code in Listing 8-7 might look like it should work: why should a reference t
 
 Iterating over the Values in a Vector
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -2655,7 +2655,7 @@ let v = vec![100, 32, 57];
 
 We can also iterate over mutable references to each element in a mutable vector in order to make changes to all the elements. The for loop in Listing 8-9 will add 50 to each element.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let mut v = vec![100, 32, 57];
@@ -2673,7 +2673,7 @@ Using an Enum to Store Multiple Types
 
 Vectors can only store values that are the same type. When we want to save elements of a different type in a vector, we can define an enum whose variants will hold the different value types, and then all the variants will be considered the same type.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -2705,7 +2705,7 @@ The `String` type, which is provided by Rust’s standard library rather than co
 
 Creating a New String
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let mut s = String::new(); //creates a new empty string called s, which we can then load data into.
@@ -2714,7 +2714,7 @@ fn main() {
 
 > Listing 8-11: Creating a new, empty `String`
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -2735,7 +2735,7 @@ A `String` can grow in size and its contents can change, just like the contents 
 
 Appending to a String with `push_str` and `push`
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let mut s = String::from("foo");
@@ -2749,7 +2749,7 @@ fn main() {
 
 the `push` method takes a single character as parameter and adds it to `String`.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let mut s = String::from("lo");
@@ -2761,7 +2761,7 @@ fn main() {
 
 Concatenation with the `+` Operator or the `format!` Macro
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let s1 = String::from("Hello, ");
@@ -2774,13 +2774,13 @@ fn main() {
 
 The `+` operator uses the `add` method, whose signature looks something like this:
 
-```rs
+```rust
     fn add(self, s: &str) -> String;
 ```
 
 When we need to concatenate multiple strings, we can use `format!`
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let s1 = String::from("tic");
@@ -2795,7 +2795,7 @@ Indexing into Strings
 
 In rust we can't index a `String`, becauase `String`'s intenal representation is `Vec<u8>`, and some `String` contains muti-bytes characters.
 
-```rs
+```rust
 let s1 = String::from("hello");
 let h = s1[0];
 
@@ -2815,7 +2815,7 @@ Internal Representation
 
 A `String` is a wrapper over a `Vec<u8>`.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let len = String::from("Hola").len();
@@ -2824,7 +2824,7 @@ fn main() {
 
 In this case, len will be 4, which means the vector storing the string “Hola” is 4 bytes long. Each of these letters takes 1 byte when encoded in UTF-8.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let len = String::from("世界").len();
@@ -2843,7 +2843,7 @@ Slicing Strings
 
 Indexing into a string is often a bad idea because it’s not clear what the return type of the string-indexing operation should be: a byte value, a character, a grapheme cluster, or a string slice. Therefore, Rust asks you to be more specific if you really need to use indices to create string slices. To be more specific in your indexing and indicate that you want a string slice, rather than indexing using [] with a single number, you can use [] with a range to create a string slice containing particular bytes:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let hello = "世界";
@@ -2860,7 +2860,7 @@ Methods for Iterating Over Strings
 
 Fortunately, you can access elements in a string in other ways.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     for c in "世界".chars() { // iterate over char sequence for the string
@@ -2879,7 +2879,7 @@ Strings Are Not So Simple
 
 Creating a New Hash Map
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     use std::collections::HashMap;
@@ -2895,7 +2895,7 @@ fn main() {
 
 Another way of constructing a hash map is by using the `collect` method on a vector of tuples, where each tuple consists of a key and its value. The `collect` method gathers data into a number of collection types, including `HashMap`.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -2916,7 +2916,7 @@ Hash Maps and Ownership
 
 For types that implement the `Copy` trait, like `i32`, the values are copied into the hash map. For owned values like `String`, the values will be moved and the hash map will be the owner of those values, as demonstrated in Listing 8-22.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     use std::collections::HashMap;
@@ -2939,7 +2939,7 @@ If we insert references to values into the hash map, the values won’t be moved
 
 Accessing Values in a Hash Map
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     use std::collections::HashMap;
@@ -2956,7 +2956,7 @@ fn main() {
 
 Iterate over a map
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     use std::collections::HashMap;
@@ -2980,7 +2980,7 @@ Overwriting a Value
 
 when insert different value for the same key, map will only keep the last value for the key
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -2999,7 +2999,7 @@ fn main() {
 
 Only Inserting a Value If the Key Has No Value
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -3019,7 +3019,7 @@ fn main() {
 
 Updating a Value Based on the Old Value
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -3058,7 +3058,7 @@ Rust has the type Result<T, E> for recoverable errors and the panic! macro that 
 
 When the panic! macro executes, your program will print a failure message, unwind and clean up the stack, and then quit.
 
-```rs
+```rust
 fn main() {
     panic!("crash and burn");
 }
@@ -3075,7 +3075,7 @@ note: Run with `RUST_BACKTRACE=1` for a backtrace.
 
 Using a `panic!` Backtrace
 
-```rs
+```rust
 fn main() {
     let v = vec![1, 2, 3];
 
@@ -3095,7 +3095,7 @@ $ RUST_BACKTRACE=1 cargo run
 
 Rust use `Result<T,E> to represent a function call result that may succeed or fail(not panic)
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -3108,7 +3108,7 @@ fn main() {
 
 Open a file that may succeed or fail
 
-```rs
+```rust
 use std::fs::File;
 
 fn main() {
@@ -3129,7 +3129,7 @@ fn main() {
 
 If the function can report different errors, we can have a inner match in the `Err` block
 
-```rs
+```rust
 use std::fs::File;
 use std::io::ErrorKind;
 
@@ -3155,7 +3155,7 @@ The type of the value that `File::open` returns inside the Err variant is `io::E
 
 Using `match` works well enough, but it can be a bit verbose and doesn’t always communicate intent well. The `Result<T, E>` type has many helper methods defined on it to do various tasks. One of those methods, called `unwrap`, is a shortcut method that is implemented just like the match expression. If the `Result` value is the `Ok` variant, `unwrap` will return the value inside the `Ok`. If the `Result` is the `Err` variant, `unwrap` will call the `panic!` macro for us.
 
-```rs
+```rust
 use std::fs::File;
 
 fn main() {
@@ -3165,7 +3165,7 @@ fn main() {
 
 Another method, expect, which is similar to unwrap, lets us also choose the panic! error message. Using expect instead of unwrap and providing good error messages can convey your intent and make tracking down the source of a panic easier.
 
-```rs
+```rust
 use std::fs::File;
 
 fn main() {
@@ -3179,7 +3179,7 @@ When you’re writing a function whose implementation calls something that might
 
 For example, Listing 9-6 shows a function that reads a username from a file. If the file doesn’t exist or can’t be read, this function will return those errors to the code that called this function.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     use std::io;
@@ -3213,7 +3213,7 @@ This pattern of propagating errors is so common in Rust that Rust provides the q
 
 **A Shortcut for Propagating Errors: the `?` Operator**
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     use std::io;
@@ -3237,7 +3237,7 @@ There is a difference between what the `match` expression from Listing 9-6 and t
 
 The `?` operator eliminates a lot of boilerplate and makes this function’s implementation simpler. We could even shorten this code further by chaining method calls immediately after the `?`, as shown in Listing 9-8.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     use std::io;
@@ -3256,7 +3256,7 @@ fn main() {
 
 > Listing 9-8: Chaining method calls after the `?` operator
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     use std::io;
@@ -3276,7 +3276,7 @@ The `?` operator can be used in functions that have a return type of `Result`, b
 
 We’re only allowed to use the `?` operator in a function that returns `Result` or `Option` or another type that implements `std::ops::Try`
 
-```rs
+```rust
 use std::fs::File;
 
 fn main() {
@@ -3302,7 +3302,7 @@ However, when failure is expected, it’s more appropriate to return a `Result` 
 
 **Creating Custom Types for Validation**
 
-```rs
+```rust
 loop {
     // --snip--
 
@@ -3323,7 +3323,7 @@ loop {
 
 We can make a new type and put the validations in a function to create an instance of the type rather than repeating the validations everywhere.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     pub struct Guess {
@@ -3362,7 +3362,7 @@ We can use generics to create definitions for items like function signatures or 
 
 When defining a function that uses generics, we place the generics in the signature of the function where we would usually specify the data types of the parameters and return value.
 
-```rs
+```rust
 fn largest<T>(list: &[T]) -> T { // T is generic type for parameter and return value
     let mut largest = list[0];
 
@@ -3394,7 +3394,7 @@ fn main() {
 
 We can also define structs to use a generic type parameter in one or more fields using the <> syntax.
 
-```rs
+```rust
 struct Point<T> {
     x: T,
     y: T,
@@ -3408,7 +3408,7 @@ fn main() {
 
 To define a Point struct where x and y are both generics but could have different types, we can use multiple generic type parameters.
 
-```rs
+```rust
 struct Point<T, U> {
     x: T,
     y: U,
@@ -3423,7 +3423,7 @@ fn main() {
 
 **In Enum Definitions**
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     enum Option<T> {
@@ -3443,7 +3443,7 @@ fn main() {
 
 We can implement methods on structs and enums (as we did in Chapter 5) and use generic types in their definitions, too.
 
-```rs
+```rust
 struct Point<T> {
     x: T,
     y: T,
@@ -3468,7 +3468,7 @@ By declaring T as a generic type after impl, Rust can identify that the type in 
 
 Generic type parameters in a struct definition aren’t always the same as those you use in that struct’s method signatures. For example, Listing 10-11 defines the method `mixup` on the `Point<T, U>` struct from Listing 10-8. The method takes another `Point` as a parameter, which might have different types from the `self Point` we’re calling `mixup` on. The method creates a new Point instance with the `x` value from the `self Point` (of type `T`) and the `y` value from the passed-in `Point` (of type `W`).
 
-```rs
+```rust
 struct Point<T, U> {
     x: T,
     y: U,
@@ -3511,7 +3511,7 @@ A type’s behavior consists of the methods we can call on that type. Different 
 
 For example, we define a trait that have a method that can summarize news contents
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     pub trait Summary {
@@ -3526,7 +3526,7 @@ fn main() {
 
 We can implements the trait for different kinds of news: NewsArticle, Tweet, etc.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -3568,7 +3568,7 @@ Implementing a trait on a type is similar to implementing regular methods. The d
 
 After implementing the trait, we can call the methods on instances of `NewsArticle` and `Tweet` in the same way we call regular methods, like this:
 
-```rs
+```rust
 let tweet = Tweet {
     username: String::from("horse_ebooks"),
     content: String::from("of course, as you probably already know, people"),
@@ -3587,7 +3587,7 @@ Sometimes it’s useful to have default behavior for some or all of the methods 
 
 Listing 10-14 shows how to specify a default string for the `summarize` method of the `Summary` trait instead of only defining the method signature, as we did in Listing 10-12.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     pub trait Summary {
@@ -3604,7 +3604,7 @@ To use a default implementation to summarize instances of `NewsArticle` instead 
 
 Default implementations can call other methods in the same trait, even if those other methods don’t have a default implementation. In this way, a trait can provide a lot of useful functionality and only require implementors to specify a small part of it.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -3627,7 +3627,7 @@ fn main() {
 
 **Traits as Parameters**
 
-```rs
+```rust
 pub fn notify(item: impl Summary) { // a method that accept a trait as parameter
     println!("Breaking news! {}", item.summarize());
 }
@@ -3639,7 +3639,7 @@ Instead of a concrete type for the `item` parameter, we specify the `impl` keywo
 
 The `impl Trait` syntax works for straightforward cases but is actually syntax sugar for a longer form, which is called a _trait bound_; it looks like this:
 
-```rs
+```rust
 pub fn notify<T: Summary>(item: T) {
     println!("Breaking news! {}", item.summarize());
 }
@@ -3651,13 +3651,13 @@ This longer form is equivalent to the example in the previous section but is mor
 
 We can also specify more than one trait bound. Say we wanted `notify` to use display formatting on `item` as well as the `summarize` method: we specify in the notify definition that item must implement both `Display` and `Summary`. We can do so using the `+` syntax:
 
-```rs
+```rust
 pub fn notify(item: impl Summary + Display) {
 ```
 
 The `+` syntax is also valid with trait bounds on generic types:
 
-```rs
+```rust
 pub fn notify<T: Summary + Display>(item: T) {
 ```
 
@@ -3665,13 +3665,13 @@ pub fn notify<T: Summary + Display>(item: T) {
 
 Using too many trait bounds has its downsides. Each generic has its own trait bounds, so functions with multiple generic type parameters can contain lots of trait bound information between the function’s name and its parameter list, making the function signature hard to read. For this reason, Rust has alternate syntax for specifying trait bounds inside a where clause after the function signature. So instead of writing this:
 
-```rs
+```rust
 fn some_function<T: Display + Clone, U: Clone + Debug>(t: T, u: U) -> i32 {
 ```
 
 we can use a `where` clause, like this:
 
-```rs
+```rust
 fn some_function<T, U>(t: T, u: U) -> i32
     where T: Display + Clone,
           U: Clone + Debug
@@ -3684,7 +3684,7 @@ This function’s signature is less cluttered: the function name, parameter list
 
 We can also use the impl Trait syntax in the return position to return a value of some type that implements a trait, as shown here:
 
-```rs
+```rust
 fn returns_summarizable() -> impl Summary {
     Tweet {
         username: String::from("horse_ebooks"),
@@ -3701,7 +3701,7 @@ The ability to return a type that is only specified by the trait it implements i
 
 However, you can only use `impl Trait` if you’re returning a single type. For example, this code that returns either a `NewsArticle` or a `Tweet` with the return type specified as `impl Summary` wouldn’t work :x:
 
-```rs
+```rust
 fn returns_summarizable(switch: bool) -> impl Summary {
     if switch {
         NewsArticle {
@@ -3740,7 +3740,7 @@ error[E0369]: binary operation `>` cannot be applied to type `T`
 
 In the body of `largest` we wanted to compare two values of type `T` using the greater than (`>`) operator. Because that operator is defined as a default method on the standard library trait `std::cmp::PartialOrd`, we need to specify `PartialOrd` in the trait bounds for `T` so the largest function can work on slices of any type that we can compare.
 
-```rs
+```rust
 fn largest<T: PartialOrd>(list: &[T]) -> T {
 ```
 
@@ -3770,7 +3770,7 @@ The key line in this error is cannot move out of type `[T]`, a non-copy slice. W
 
 To call this code with only those types that implement the `Copy` trait, we can add `Copy` to the trait bounds of `T`!
 
-```rs
+```rust
 fn largest<T: PartialOrd + Copy>(list: &[T]) -> T {
     let mut largest = list[0];
 
@@ -3804,7 +3804,7 @@ Another way we could implement `largest` is for the function to return a referen
 
 By using a trait bound with an `impl` block that uses generic type parameters, we can implement methods conditionally for types that implement the specified traits. For example, the type `Pair<T>` in Listing 10-16 always implements the `new` function. But `Pair<T>` only implements the `cmp_display` method if its inner type `T` implements the `PartialOrd` trait that enables comparison and the Display trait that enables printing.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -3840,7 +3840,7 @@ fn main() {
 
 We can also conditionally implement a trait for any type that implements another trait. Implementations of a trait on any type that satisfies the trait bounds are called _blanket implementations_ and are extensively used in the Rust standard library. For example, the standard library implements the `ToString` trait on any type that implements the `Display` trait. The `impl` block in the standard library looks similar to this code:
 
-```rs
+```rust
 impl<T: Display> ToString for T {
     // --snip--
 }
@@ -3862,7 +3862,7 @@ The concept of lifetimes is somewhat different from tools in other programming l
 
 The main aim of lifetimes is to prevent dangling references, which cause a program to reference data other than the data it’s intended to reference. For example:
 
-```rs
+```rust
 {
     let r;
 
@@ -3896,7 +3896,7 @@ error[E0597]: `x` does not live long enough
 
 The Rust compiler has a _borrow checker_ that compares scopes to determine whether all borrows are valid. Listing 10-18 shows the same code as Listing 10-17 but with annotations showing the lifetimes of the variables.
 
-```rs
+```rust
 {
     let r;                // ---------+-- 'a
                           //          |
@@ -3915,7 +3915,7 @@ Here, we’ve annotated the lifetime of `r` with `'a` and the lifetime of `x` wi
 
 Listing 10-19 fixes the code so it doesn’t have a dangling reference and compiles without any errors.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     {
@@ -3939,7 +3939,7 @@ Now that you know where the lifetimes of references are and how Rust analyzes li
 
 Let’s write a function that returns the longer of two string slices. This function will take two string slices and return a string slice.
 
-```rs
+```rust
 fn main() {
     let string1 = String::from("abcd");
     let string2 = "xyz";
@@ -3985,7 +3985,7 @@ Lifetime annotations have a slightly unusual syntax: the names of lifetime param
 
 Here are some examples: a reference to an `i32` without a lifetime parameter, a reference to an `i32` that has a lifetime parameter named `'a`, and a mutable reference to an `i32` that also has the lifetime `'a`.
 
-```rs
+```rust
 &i32        // a reference
 &'a i32     // a reference with an explicit lifetime
 &'a mut i32 // a mutable reference with an explicit lifetime
@@ -3997,7 +3997,7 @@ One lifetime annotation by itself doesn’t have much meaning, because the annot
 
 Now let’s examine lifetime annotations in the context of the `longest` function. As with generic type parameters, we need to declare generic lifetime parameters inside angle brackets between the function name and the parameter list. The constraint we want to express in this signature is that all the references in the parameters and the return value must have the same lifetime. We’ll name the lifetime `'a` and then add it to each reference, as shown in Listing 10-22.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
@@ -4020,7 +4020,7 @@ When we pass concrete references to `longest`, the concrete lifetime that is sub
 
 Let’s look at how the lifetime annotations restrict the `longest` function by passing in references that have different concrete lifetimes. Listing 10-23 is a straightforward example.
 
-```rs
+```rust
 fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
     if x.len() > y.len() {
         x
@@ -4046,7 +4046,7 @@ In this example, `string1` is valid until the end of the outer scope, `string2` 
 
 Next, let’s try an example that shows that the lifetime of the reference in `result` must be the smaller lifetime of the two arguments. We’ll move the declaration of the `result` variable outside the inner scope but leave the assignment of the value to the `result` variable inside the scope with `string2`. Then we’ll move the `println!` that uses `result` outside the inner scope, after the inner scope has ended. The code in Listing 10-24 will not compile.
 
-```rs
+```rust
 fn main() {
     let string1 = String::from("long string is long");
     let result;
@@ -4081,7 +4081,7 @@ The error shows that for `result` to be valid for the `println!` statement, `str
 
 The way in which you need to specify lifetime parameters depends on what your function is doing. For example, if we changed the implementation of the `longest` function to always return the first parameter rather than the longest string slice, we wouldn’t need to specify a lifetime on the y parameter. The following code will compile:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -4095,7 +4095,7 @@ In this example, we’ve specified a lifetime parameter `'a` for the parameter x
 
 **When returning a reference from a function, the lifetime parameter for the return type needs to match the lifetime parameter for one of the parameters.** If the reference returned does not refer to one of the parameters, it must refer to a value created within this function, which would be a dangling reference because the value will go out of scope at the end of the function. Consider this attempted implementation of the `longest` function that won’t compile:
 
-```rs
+```rust
 fn longest<'a>(x: &str, y: &str) -> &'a str {
     let result = String::from("really long string");
     result.as_str()
@@ -4132,7 +4132,7 @@ Ultimately, lifetime syntax is about connecting the lifetimes of various paramet
 
 So far, we’ve only defined structs to hold owned types. It’s possible for structs to hold references, but in that case we would need to add a lifetime annotation on every reference in the struct’s definition.
 
-```rs
+```rust
 struct ImportantExcerpt<'a> {
     part: &'a str,
 }
@@ -4156,7 +4156,7 @@ The `main` function here creates an instance of the `ImportantExcerpt` struct th
 
 You’ve learned that every reference has a lifetime and that you need to specify lifetime parameters for functions or structs that use references. However, in Chapter 4 we had a function in Listing 4-9, which is shown again in Listing 10-26, that compiled without lifetime annotations.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     fn first_word(s: &str) -> &str {
@@ -4177,7 +4177,7 @@ Listing 10-26: A function we defined in Listing 4-9 that compiled without lifeti
 
 The reason this function compiles without lifetime annotations is historical: in early versions (pre-1.0) of Rust, this code wouldn’t have compiled because every reference needed an explicit lifetime. At that time, the function signature would have been written like this:
 
-```rs
+```rust
 fn first_word<'a>(s: &'a str) -> &'a str {
 ```
 
@@ -4203,7 +4203,7 @@ In method signatures inside the `impl` block, references might be tied to the li
 
 First, we’ll use a method named `level` whose only parameter is a reference to `self` and whose return value is an `i32`, which is not a reference to anything:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -4223,7 +4223,7 @@ The lifetime parameter declaration after `impl` and its use after the type name 
 
 Here is an example where the third lifetime elision rule applies:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     struct ImportantExcerpt<'a> {
@@ -4245,7 +4245,7 @@ There are two input lifetimes, so Rust applies the first lifetime elision rule a
 
 One special lifetime we need to discuss is `'static`, which means that this reference can live for the entire duration of the program. All string literals have the `'static` lifetime, which we can annotate as follows:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let s: &'static str = "I have a static lifetime.";
@@ -4260,7 +4260,7 @@ You might see suggestions to use the `'static` lifetime in error messages. But b
 
 Let’s briefly look at the syntax of specifying generic type parameters, trait bounds, and lifetimes all in one function!
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -4289,7 +4289,7 @@ Generic type parameters let you apply the code to different types. Traits and tr
 
 ### 11.1. How to Write Tests
 
-```rs
+```rust
 fn main() {}
 
 #[cfg(test)]
@@ -4305,7 +4305,7 @@ the `#[test]` annotation before the `fn` line: this attribute indicates this is 
 
 **Checking Results with the `assert!` Macro**
 
-```rs
+```rust
 fn main() {}
 
 #[derive(Debug)]
@@ -4350,7 +4350,7 @@ Testing Equality with the `assert_eq!` and `assert_ne!` Macros
 
 Adding Custom Failure Messages
 
-```rs
+```rust
 #[test]
 fn greeting_contains_name() {
     let result = greeting("Carol");
@@ -4374,7 +4374,7 @@ Checking for Panics with `should_panic`
 
 Adding attribute `should_panic`, to our test function makes a test pass if the code inside the function panics; the test will fail if the code inside the function doesn’t panic.
 
-```rs
+```rust
 fn main() {}
 pub struct Guess {
     value: i32,
@@ -4408,7 +4408,7 @@ mod tests {
 
 Tests that use `should_panic` can be imprecise because they only indicate that the code has caused some panic. A `should_panic` test would pass even if the test panics for a different reason from the one we were expecting to happen. To make `should_panic` tests more precise, we can add an optional `expected` parameter to the `should_panic` attribute. The test harness will make sure that the failure message contains the provided text.
 
-```rs
+```rust
 fn main() {}
 pub struct Guess {
     value: i32,
@@ -4450,7 +4450,7 @@ mod tests {
 
 So far, we’ve written tests that panic when they fail. We can also write tests that use `Result<T, E>!`
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     #[cfg(test)]
@@ -4497,7 +4497,7 @@ If we want to see printed values for passing tests as well, we can tell Rust to 
 
 Sometimes, running a full test suite can take a long time. If you’re working on code in a particular area, you might want to run only the tests pertaining to that code. You can choose which tests to run by passing `cargo test` the name or names of the test(s) you want to run as an argument.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -4564,7 +4564,7 @@ test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out
 
 Sometimes a few specific tests can be very time-consuming to execute, so you might want to exclude them during most runs of `cargo test`. Rather than listing as arguments all tests you do want to run, you can instead annotate the time-consuming tests using the ignore attribute to exclude them, as shown here:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -4601,7 +4601,7 @@ The #[cfg(test)] annotation on the tests module tells Rust to compile and run th
 
 Rust’s privacy rules do allow you to test private functions.
 
-```rs
+```rust
 fn main() {}
 
 pub fn add_two(a: i32) -> i32 {
@@ -4637,7 +4637,7 @@ We create a tests directory at the top level of our project directory, next to _
 
 Filename: tests/integration_test.rs
 
-```rs
+```rust
 use adder;
 
 #[test]
@@ -4693,7 +4693,7 @@ The different behavior of files in the tests directory is most noticeable when y
 
 Filename: tests/common.rs
 
-```rs
+```rust
 #![allow(unused_variables)]
 pub fn setup() {
     // setup code specific to your library's tests would go here
@@ -4742,7 +4742,7 @@ This is one of the reasons Rust projects that provide a binary have a straightfo
 
 ### 12.1. Accepting Command Line Arguments
 
-```rs
+```rust
 use std::env;
 
 fn main() {
@@ -4755,7 +4755,7 @@ fn main() {
 
 **Saving the Argument Values in Variables**
 
-```rs
+```rust
 use std::env;
 
 fn main() {
@@ -4773,7 +4773,7 @@ fn main() {
 
 **Reading a File**
 
-```rs
+```rust
 use std::env;
 use std::fs;
 
@@ -4819,7 +4819,7 @@ This pattern is about separating concerns: _main.rs_ handles running the program
 
 We’ll extract the functionality for parsing arguments into a function that `main` will call to prepare for moving the command line parsing logic to _src/lib.rs._. Listing 12-5 shows the new start of main that calls a new function `parse_config`, which we’ll define in _src/main.rs_ for the moment.
 
-```rs
+```rust
 fn main() {
     let args: Vec<String> = env::args().collect();
 
@@ -4840,7 +4840,7 @@ fn parse_config(args: &[String]) -> (&str, &str) {
 
 **Grouping Configuration Values**
 
-```rs
+```rust
 use std::env;
 use std::fs;
 
@@ -4875,7 +4875,7 @@ fn parse_config(args: &[String]) -> Config {
 
 **Creating a Constructor for Config**
 
-```rs
+```rust
 use std::env;
 
 fn main() {
@@ -4907,7 +4907,7 @@ impl Config {
 
 **Improving the Error Message**
 
-```rs
+```rust
 // --snip--
 fn new(args: &[String]) -> Config {
     if args.len() < 3 {
@@ -4920,7 +4920,7 @@ fn new(args: &[String]) -> Config {
 
 **Returning a `Result` from new Instead of Calling `panic!`**
 
-```rs
+```rust
 use std::process;
 
 fn main() {
@@ -4938,7 +4938,7 @@ fn main() {
 
 **Calling `Config::new` and Handling Errors**
 
-```rs
+```rust
 use std::process;
 
 fn main() {
@@ -4960,7 +4960,7 @@ Now that we’ve finished refactoring the configuration parsing, let’s turn to
 
 Listing 12-11 shows the extracted `run` function. For now, we’re just making the small, incremental improvement of extracting the function. We’re still defining the function in _src/main.rs_.
 
-```rs
+```rust
 fn main() {
     // --snip--
 
@@ -4986,7 +4986,7 @@ fn run(config: Config) {
 
 With the remaining program logic separated into the `run` function, we can improve the error handling, as we did with `Config::new` in Listing 12-9.
 
-```rs
+```rust
 use std::error::Error;
 
 // --snip--
@@ -5010,7 +5010,7 @@ Third, the `run` function now returns an `Ok` value in the success case. We’ve
 
 When you run this code, it will compile but will display a warning:
 
-```rs
+```rust
 warning: unused `std::result::Result` that must be used
   --> src/main.rs:17:5
    |
@@ -5025,7 +5025,7 @@ Rust tells us that our code ignored the `Result` value and the `Result` value mi
 
 **Handling Errors Returned from `run` in `main`**
 
-```rs
+```rust
 fn main() {
     // --snip--
 
@@ -5059,7 +5059,7 @@ Let’s move all the code that isn’t the main function from _src/main.rs_ to _
 
 **Writing a Failing Test**
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -5102,7 +5102,7 @@ Currently, our test is failing because we always return an empty vector. To fix 
 - If it doesn’t, do nothing.
 - Return the list of results that match.
 
-```rs
+```rust
 #![allow(unused_variables)]
 
 use std::env;
@@ -5127,7 +5127,7 @@ fn main() {
 }
 ```
 
-```rs
+```rust
 #![allow(unused_variables)]
 
 use std::error::Error;
@@ -5194,7 +5194,7 @@ Pick three.";
 
 **Writing a Failing Test for the Case-Insensitive `search` Function**
 
-```rs
+```rust
 #![allow(unused_variables)]
 #[cfg(test)]
 mod tests {
@@ -5236,7 +5236,7 @@ Trust me.";
 
 **Implementing the `search_case_insensitive` Function**
 
-```rs
+```rust
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let query = query.to_lowercase();
     let mut result: Vec<&str> = Vec::new();
@@ -5251,7 +5251,7 @@ pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a st
 
 > Listing 12-21: Defining the `search_case_insensitive` function to lowercase the query and the line before comparing them
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -5295,7 +5295,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 
 The functions for working with environment variables are in the `env` module in the standard library, we’ll use the `var` function from the `env` module to check for an environment variable named `CASE_INSENSITIVE`.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -5351,7 +5351,7 @@ At the moment, we’re writing all of our output to the terminal using the `prin
 
 We’ll use the code in Listing 12-24 to change how error messages are printed. Because of the refactoring we did earlier in this chapter, all the code that prints error messages is in one function, `main`. The standard library provides the `eprintln!` macro that prints to the standard error stream, so let’s change the two places we were calling `println!` to print errors to use `eprintln!` instead.
 
-```rs
+```rust
 fn main() {
     let args: Vec<String> = env::args().collect();
 
@@ -5395,7 +5395,7 @@ Consider this hypothetical situation: we work at a startup that’s making an ap
 
 We’ll simulate calling this hypothetical algorithm with the function `simulated_expensive_calculation` shown in Listing 13-1, which will print `calculating slowly...`, wait for two seconds, and then return whatever number we passed in.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     use std::thread;
@@ -5420,7 +5420,7 @@ The required inputs are these:
 
 The output will be the recommended workout plan.
 
-```rs
+```rust
 fn main() {
     let simulated_user_specified_value = 10;
     let simulated_random_number = 7;
@@ -5440,7 +5440,7 @@ We’ve hardcoded the variable `simulated_user_specified_value` as 10 and the va
 
 Now that we have the context, let’s get to the algorithm. The function `generate_workout` in Listing 13-3 contains the business logic of the app that we’re most concerned with in this example. The rest of the code changes in this example will be made to this function.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
 use std::thread;
@@ -5488,7 +5488,7 @@ This code works the way the business wants it to now, but we want to refactor th
 
 **Refactoring Using Functions**
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -5538,7 +5538,7 @@ We want to define code in one place in our program, but only execute that code w
 
 Instead of always calling the `simulated_expensive_calculation` function before the `if` blocks, we can define a closure and store the _closure_ in a variable rather than storing the result of the function call, as shown in Listing 13-5. We can actually move the whole body of `simulated_expensive_calculation` within the closure we’re introducing here.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     use std::thread;
@@ -5563,7 +5563,7 @@ Note that this `let` statement means `expensive_closure` contains the definition
 
 We call a closure like we do a function: we specify the variable name that holds the closure definition and follow it with parentheses containing the argument values we want to use, as shown in Listing 13-6.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -5614,7 +5614,7 @@ However, we’ve reintroduced one of the problems from Listing 13-3: we’re sti
 
 But if we want to increase explicitness and clarity at the cost of being more verbose than is strictly necessary, we can annotate the types for the closure we defined in Listing 13-5 would look like the definition shown in Listing 13-7.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     use std::thread;
@@ -5632,7 +5632,7 @@ fn main() {
 
 The following is a vertical comparison of the syntax for the definition of a function that adds 1 to its parameter and a closure that has the same behavior. We’ve added some spaces to line up the relevant parts. This illustrates how closure syntax is similar to function syntax except for the use of pipes and the amount of syntax that is optional:
 
-```rs
+```rust
 fn  add_one_v1   (x: u32) -> u32 { x + 1 }
 let add_one_v2 = |x: u32| -> u32 { x + 1 };
 let add_one_v3 = |x|             { x + 1 };
@@ -5643,7 +5643,7 @@ The first line shows a function definition, and the second line shows a fully an
 
 Closure definitions will have one **concrete type** inferred for **each of their parameters and for their return value**. For instance, Listing 13-8 shows the definition of a short closure that just returns the value it receives as a parameter. Note that we haven’t added any type annotations to the definition: if we then try to call the closure twice, using a String as an argument the first time and a u32 the second time, we’ll get an error ❌.
 
-```rs
+```rust
 let example_closure = |x| x;
 
 let s = example_closure(String::from("hello"));
@@ -5683,7 +5683,7 @@ We add types to the `Fn` trait bound to represent the types of the parameters an
 
 Listing 13-9 shows the definition of the `Cacher` struct that holds a closure and an optional result value.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -5702,7 +5702,7 @@ The Cacher struct has a calculation field of the generic type `T`. The trait bou
 
 > Note: Functions can implement all three of the `Fn` traits too. If what we want to do doesn’t require capturing a value from the environment, we can use a function rather than a closure where we need something that implements an `Fn` trait.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -5743,7 +5743,7 @@ We want `Cacher` to manage the struct fields’ values rather than letting the c
 
 Listing 13-11 shows how we can use this Cacher struct in the function `generate_workout` from Listing 13-6.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     use std::thread;
@@ -5820,7 +5820,7 @@ there are two problems with the current implementation of Cacher that would make
 
 The first problem is that a Cacher instance assumes it will always get the same value for the parameter arg to the value method. That is, this test of Cacher will fail:
 
-```rs
+```rust
 #[test]
 fn call_with_different_values() {
     let mut c = Cacher::new(|a| a);
@@ -5844,7 +5844,7 @@ In the workout generator example, we only used closures as inline anonymous func
 
 Listing 13-12 has an example of a closure stored in the `equal_to_x` variable that uses the `x` variable from the closure’s surrounding environment.
 
-```rs
+```rust
 fn main() {
     let x = 4;
 
@@ -5876,7 +5876,7 @@ If you want to force the closure to take ownership of the values it uses in the 
 
 Code from Listing 13-12 with the `move` keyword added to the closure definition and using vectors instead of integers, because integers can be copied rather than moved; note that this code will not yet compile.
 
-```rs
+```rust
 fn main() {
     let x = vec![1, 2, 3];
 
@@ -5914,7 +5914,7 @@ The iterator pattern allows you to perform some task on a sequence of items in t
 
 In Rust, iterators are _lazy_, meaning they have no effect until you call methods that consume the iterator to use it up.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let v1 = vec![1, 2, 3];
@@ -5933,7 +5933,7 @@ The `Iterator` Trait and the `next` Method
 
 All iterators implement a trait named `Iterator` that is defined in the standard library. The definition of the trait looks like this:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     pub trait Iterator {
@@ -5952,7 +5952,7 @@ The `next` method, which returns one item of the iterator at a time wrapped in `
 
 We can call the `next` method on iterators directly;
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     #[test]
@@ -5981,7 +5981,7 @@ The `Iterator` trait has a number of different methods with default implementati
 
 Methods that call `next` are called _consuming adaptors_, because calling them uses up the iterator. One example is the `sum` method, which takes ownership of the iterator and iterates through the items by repeatedly calling `next`, thus consuming the iterator. As it iterates through, it adds each item to a running total and returns the total when iteration is complete.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -6008,7 +6008,7 @@ Other methods defined on the `Iterator` trait, known as _iterator adaptors_, all
 
 Listing 13-17 shows an example of calling the iterator adaptor method `map`, which takes a closure to call on each item to produce a new iterator. The closure here creates a new iterator in which each item from the vector has been incremented by 1. However, this code produces a warning:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let v1: Vec<i32> = vec![1, 2, 3];
@@ -6036,7 +6036,7 @@ The code in Listing 13-17 doesn’t do anything; the closure we’ve specified n
 
 To fix this and consume the iterator, we’ll use the `collect` method, which we used in Chapter 12 with `env::args` in Listing 12-1. This method consumes the iterator and collects the resulting values into a collection data type.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -6056,7 +6056,7 @@ Now that we’ve introduced iterators, we can demonstrate a common use of closur
 
 In Listing 13-19, we use `filter` with a closure that captures the `shoe_size` variable from its environment to iterate over a collection of Shoe struct instances. It will return only shoes that are the specified size.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -6107,7 +6107,7 @@ You can create iterators from the other collection types in the standard library
 
 To demonstrate, let’s create an iterator that will only ever count from 1 to 5. First, we’ll create a struct to hold some values. Then we’ll make this struct into an iterator by implementing the `Iterator` trait and using the values in that implementation.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -6129,7 +6129,7 @@ The `Counter` struct has one field named `count`. This field holds a `u32` value
 
 Next, we’ll implement the `Iterator` trait for our `Counter` type by defining the body of the `next` method to specify what we want to happen when this iterator is used, as shown in Listing 13-21:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -6163,7 +6163,7 @@ We want our iterator to add 1 to the current state, so we initialized `count` to
 
 Once we’ve implemented the `Iterator` trait, we have an iterator!
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -6205,7 +6205,7 @@ fn main() {
 
 we wanted to take the values produced by an instance of `Counter`, pair them with values produced by another `Counter` instance after skipping the first value, multiply each pair together, keep only those results that are divisible by 3, and add all the resulting values together, we could do so, as shown in the test in Listing 13-23:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -6387,7 +6387,7 @@ The `dev` and `release` shown in this build output indicate that the compiler is
 
 Cargo has default settings for each of the profiles that apply when there aren’t any `[profile.*]` sections in the project’s Cargo.toml file. By adding `[profile.*]` sections for any profile you want to customize, you can override any subset of the default settings. For example, here are the default values for the `opt-level` setting for the `dev` and `release` profiles:
 
-```rs
+```rust
 [profile.dev]
 opt-level = 0
 
@@ -6407,7 +6407,7 @@ Accurately documenting your packages will help other users know how and when to 
 
 Documentation comments use three slashes, `///`, instead of two and support Markdown notation for formatting the text. Place documentation comments just before the item they’re documenting. Listing 14-1 shows documentation comments for an `add_one` function in a crate named `my_crate`:
 
-````rs
+````rust
 /// Adds one to the number given.
 ///
 /// # Examples
@@ -6451,7 +6451,7 @@ Another style of doc comment, `//!`, adds documentation to the item that contain
 *
 For example, if we want to add documentation that describes the purpose of the `my_crate` crate that contains the `add_one` function, we can add documentation comments that start with `//!` to the beginning of the *src/lib.rs\* file, as shown in Listing 14-2:
 
-```rs
+```rust
 //! # My Crate
 //!
 //! `my_crate` is a collection of utilities to make performing certain
@@ -6486,7 +6486,7 @@ The good news is that if the structure isn’t convenient for others to use from
 
 For example, say we made a library named `art` for modeling artistic concepts. Within this library are two modules: a `kinds` module containing two enums named `PrimaryColor` and `SecondaryColor` and a `utils` module containing a function named mix, as shown in Listing 14-3:
 
-```rs
+```rust
 //! # Art
 //!
 //! A library for modeling artistic concepts.
@@ -6532,7 +6532,7 @@ Note that the `PrimaryColor` and `SecondaryColor` types aren’t listed on the f
 
 Another crate that depends on this library would need `use` statements that bring the items from `art` into scope, specifying the module structure that’s currently defined. Listing 14-4 shows an example of a crate that uses the `PrimaryColor` and `mix` items from the art crate:
 
-```rs
+```rust
 use art::kinds::PrimaryColor;
 use art::utils::mix;
 
@@ -6575,7 +6575,7 @@ The API documentation that `cargo doc` generates for this crate will now list an
 
 > Figure 14-4: The front page of the documentation for `art` that lists the re-exports
 
-```rs
+```rust
 use art::PrimaryColor;
 use art::mix;
 
@@ -6754,7 +6754,7 @@ Your add directory should now have these directories and files:
 
 In the _add-one/src/lib.rs_ file, let’s add an `add_one` function:
 
-```rs
+```rust
 pub fn add_one(x: i32) -> i32 {
     x + 1
 }
@@ -6772,7 +6772,7 @@ Cargo doesn’t assume that crates in a workspace will depend on each other, so 
 
 Next, let’s use the `add_one` function from the `add-one` crate in the `adder` crate. Open the _adder/src/main.rs_ file and add a use line at the top to bring the new `add-one` library crate into scope. Then change the `main` function to call the `add_one` function, as in Listing 14-7.
 
-```rs
+```rust
 use add_one;
 
 fn main() {
@@ -6840,7 +6840,7 @@ Using the same version of `rand` across the workspace saves space because we won
 
 For another enhancement, let’s add a test of the `add_one::add_one` function within the `add_one` crate:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 pub fn add_one(x: i32) -> i32 {
@@ -7001,7 +7001,7 @@ Although functional programming languages use cons lists frequently, the cons li
 
 Listing 15-2 contains an enum definition for a cons list. Note that this code won’t compile yet because the `List` type doesn’t have a known size, which we’ll demonstrate.
 
-```rs
+```rust
 enum List {
     Cons(i32, List),
     Nil,
@@ -7012,7 +7012,7 @@ enum List {
 
 Using the `List` type to store the list `1, 2, 3` would look like the code in Listing 15-3:
 
-```rs
+```rust
 use crate::List::{Cons, Nil};
 
 fn main() {
@@ -7047,7 +7047,7 @@ The error shows this type “has infinite size.” The reason is that we’ve de
 
 Recall the `Message` enum we defined in Listing 6-2 when we discussed enum definitions in Chapter 6:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 enum Message {
@@ -7081,7 +7081,7 @@ In this suggestion, “indirection” means that instead of storing a value dire
 
 We can change the definition of the `List` enum in Listing 15-2 and the usage of the `List` in Listing 15-3 to the code in Listing 15-5, which will compile:
 
-```rs
+```rust
 enum List {
     Cons(i32, Box<List>),
     Nil,
@@ -7117,7 +7117,7 @@ We’ll explore how implementing the `Deref` trait makes it possible for smart p
 
 A regular reference is a type of pointer, and one way to think of a pointer is as an arrow to a value stored somewhere else. In Listing 15-6, we create a reference to an `i32` value and then use the dereference operator to follow the reference to the data:
 
-```rs
+```rust
 fn main() {
     let x = 5;
     let y = &x;
@@ -7159,7 +7159,7 @@ Comparing a number and a reference to a number isn’t allowed because they’re
 
 We can rewrite the code in Listing 15-6 to use a `Box<T>` instead of a reference; the dereference operator will work as shown in Listing 15-7:
 
-```rs
+```rust
 fn main() {
     let x = 5;
     let y = Box::new(x);
@@ -7179,7 +7179,7 @@ Let’s build a smart pointer similar to the Box<T> type provided by the standar
 
 The `Box<T>` type is ultimately defined as a tuple struct with one element, so Listing 15-8 defines a `MyBox<T`> type in the same way. We’ll also define a `new` function to match the `new` function defined on `Box<T>`.
 
-```rs
+```rust
 struct MyBox<T>(T);
 
 impl<T> MyBox<T> {
@@ -7195,7 +7195,7 @@ fn main() {}
 
 Let’s try adding the main function in Listing 15-7 to Listing 15-8 and changing it to use the `MyBox<T>` type we’ve defined instead of `Box<T>`.
 
-```rs
+```rust
 struct MyBox<T>(T);
 
 impl<T> MyBox<T> {
@@ -7240,7 +7240,7 @@ Our `MyBox<T>` type can’t be dereferenced because we haven’t implemented tha
 
 The `Deref` trait, provided by the standard library, requires us to implement one method named `deref` that borrows `self` and returns a reference to the inner data.
 
-```rs
+```rust
 use std::ops::Deref;
 
 impl<T> Deref for MyBox<T> {
@@ -7280,7 +7280,7 @@ Without the `Deref` trait, the compiler can only dereference `&` references. The
 
 When we entered `*y` in Listing 15-9, behind the scenes Rust actually ran this code:
 
-```rs
+```rust
 *(y.deref())
 ```
 
@@ -7298,7 +7298,7 @@ Deref coercion was added to Rust so that programmers writing function and method
 
 To see deref coercion in action, let’s use the `MyBox<T>` type we defined in Listing 15-8 as well as the implementation of `Deref` that we added in Listing 15-10. Listing 15-11 shows the definition of a function that has a string slice parameter:
 
-```rs
+```rust
 fn hello(name: &str) {
     println!("Hello, {}!", name);
 }
@@ -7310,7 +7310,7 @@ fn main() {}
 
 We can call the `hello` function with a string slice as an argument, such as `hello("Rust");` for example. Deref coercion makes it possible to call `hello` with a reference to a value of type `MyBox<String>`, as shown in Listing 15-12:
 
-```rs
+```rust
 use std::ops::Deref;
 
 impl<T> Deref for MyBox<T> {
@@ -7345,7 +7345,7 @@ Here we’re calling the `hello` function with the argument `&m`, which is a ref
 
 If Rust didn’t implement deref coercion, we would have to write the code in Listing 15-13 instead of the code in Listing 15-12 to call `hello` with a value of type `&MyBox<String>`.
 
-```rs
+```rust
 use std::ops::Deref;
 
 impl<T> Deref for MyBox<T> {
@@ -7404,7 +7404,7 @@ Specify the code to run when a value goes out of scope by implementing the `Drop
 
 `CustomSmartPointer` example will print `Dropping CustomSmartPointer!` when the instance goes out of scope.
 
-```rs
+```rust
 struct CustomSmartPointer {
     data: String,
 }
@@ -7446,7 +7446,7 @@ Unfortunately, it’s not straightforward to disable the automatic `drop` functi
 
 If we try to call the `Drop` trait’s `drop` method manually by modifying the main function from Listing 15-14, as shown in Listing 15-15, we’ll get a compiler error: ❌
 
-```rs
+```rust
 struct CustomSmartPointer {
     data: String,
 }
@@ -7496,7 +7496,7 @@ We can’t disable the automatic insertion of `drop` when a value goes out of sc
 
 The `std::mem::drop` function is different from the `drop` method in the `Drop` trait. We call it by passing the value we want to force to be dropped early as an argument.
 
-```rs
+```rust
 struct CustomSmartPointer {
     data: String,
 }
@@ -7556,7 +7556,7 @@ We’ll create list a that contains `5` and then `10`. Then we’ll make two mor
 
 Trying to implement this scenario using our definition of `List` with `Box<T>` won’t work, as shown in Listing 15-17: ❌
 
-```rs
+```rust
 enum List {
     Cons(i32, Box<List>),
     Nil,
@@ -7602,7 +7602,7 @@ We could change the definition of `Cons` to hold references instead, but then we
 
 Instead, we’ll change our definition of `List` to use `Rc<T>` in place of `Box<T>`, as shown in Listing 15-18. Each `Cons` variant will now hold a value and an `Rc<T>` pointing to a List. When we create `b`, instead of taking ownership of `a`, we’ll clone the `Rc<List>` that `a` is holding, thereby increasing the number of references from one to two and letting `a` and `b` share ownership of the data in that `Rc<List>`. We’ll also clone `a` when creating `c`, increasing the number of references from two to three. Every time we call `Rc::clone`, the reference count to the data within the `Rc<List>` will increase, and the data won’t be cleaned up unless there are zero references to it.
 
-```rs
+```rust
 enum List {
     Cons(i32, Rc<List>),
     Nil,
@@ -7628,7 +7628,7 @@ We could have called `a.clone()` rather than `Rc::clone(&a)`, but Rust’s conve
 
 Let’s change our working example in Listing 15-18 so we can see the reference counts changing as we create and drop references to the `Rc<List>` in `a`.
 
-```rs
+```rust
 enum List {
     Cons(i32, Rc<List>),
     Nil,
@@ -7704,7 +7704,7 @@ Mutating the value inside an immutable value is the _interior mutability_ patter
 
 A consequence of the borrowing rules is that when you have an immutable value, you can’t borrow it mutably. For example, this code won’t compile: ❌
 
-```rs
+```rust
 fn main() {
     let x = 5;
     let y = &mut x;
@@ -7742,7 +7742,7 @@ Rust doesn’t have objects in the same sense as other languages have objects, a
 
 Here’s the scenario we’ll test: we’ll create a library that tracks a value against a maximum value and sends messages based on how close to the maximum value the current value is. This library could be used to keep track of a user’s quota for the number of API calls they’re allowed to make, for example.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     pub trait Messenger {
@@ -7792,7 +7792,7 @@ One important part of this code is that the `Messenger` trait has one method cal
 
 We need a mock object that, instead of sending an email or text message when we call `send`, will only keep track of the messages it’s told to send. We can create a new instance of the mock object, create a `LimitTracker` that uses the mock object, call the set_value method on `LimitTracker`, and then check that the mock object has the messages we expect. Listing 15-21 shows an attempt to implement a mock object to do just that, but the borrow checker won’t allow it:
 
-```rs
+```rust
 pub trait Messenger {
     fn send(&self, msg: &str);
 }
@@ -7897,7 +7897,7 @@ We can’t modify the `MockMessenger` to keep track of the messages, because the
 
 This is a situation in which interior mutability can help! We’ll store the `sent_messages` within a `RefCell<T>`, and then the send message will be able to modify `sent_messages` to store the messages we’ve seen.
 
-```rs
+```rust
 pub trait Messenger {
     fn send(&self, msg: &str);
 }
@@ -7991,7 +7991,7 @@ The `RefCell<T>` keeps track of how many `Ref<T>` and `RefMut<T>` smart pointers
 
 If we try to violate these rules, rather than getting a compiler error as we would with references, the implementation of `RefCell<T>` will panic at runtime. Listing 15-23 shows a modification of the implementation of `send` in Listing 15-22. We’re deliberately trying to create two mutable borrows active for the same scope to illustrate that `RefCell<T>` prevents us from doing this at runtime.
 
-```rs
+```rust
 pub trait Messenger {
     fn send(&self, msg: &str);
 }
@@ -8108,7 +8108,7 @@ A common way to use `RefCell<T>` is in combination with `Rc<T>`. Recall that `Rc
 
 For example, recall the cons list example in Listing 15-18 where we used `Rc<T>` to allow multiple lists to share ownership of another list. Because `Rc<T>` holds only immutable values, we can’t change any of the values in the list once we’ve created them. Let’s add in `RefCell<T>` to gain the ability to change the values in the lists. Listing 15-24 shows that by using a `RefCell<T>` in the `Cons` definition, we can modify the value stored in all the lists:
 
-```rs
+```rust
 #[derive(Debug)]
 enum List {
     Cons(Rc<RefCell<i32>>, Rc<List>),
@@ -8167,7 +8167,7 @@ Rust’s memory safety guarantees make it difficult, but not impossible, to acci
 
 **Creating a Reference Cycle**
 
-```rs
+```rust
 use crate::List::{Cons, Nil};
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -8196,7 +8196,7 @@ We’re using another variation of the `List` definition from Listing 15-5. The 
 
 In Listing 15-26, we’re adding a `main` function that uses the definitions in Listing 15-25. This code creates a list in `a` and a list in `b` that points to the list in `a`. Then it modifies the list in `a` to point to `b`, creating a reference cycle. There are println! statements along the way to show what the reference counts are at various points in this process.
 
-```rs
+```rust
 use crate::List::{Cons, Nil};
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -8288,7 +8288,7 @@ We want a `Node` to own its children, and we want to share that ownership with v
 
 Next, we’ll use our struct definition and create one `Node` instance named `leaf` with the value 3 and no children, and another instance named `branch` with the value 5 and `leaf` as one of its children, as shown in Listing 15-27:
 
-```rs
+```rust
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -8323,7 +8323,7 @@ Thinking about the relationships another way, a parent node should own its child
 
 So instead of `Rc<T>`, we’ll make the type of parent use `Weak<T>`, specifically a `RefCell<Weak<Node>>`. Now our Node struct definition looks like this:
 
-```rs
+```rust
 use std::cell::RefCell;
 use std::rc::{Rc, Weak};
 
@@ -8357,7 +8357,7 @@ fn main() {
 
 A node will be able to refer to its parent node but doesn’t own its parent. In Listing 15-28, we update `main` to use this new definition so the `leaf` node will have a way to refer to its parent, `branch`:
 
-```rs
+```rust
 use std::cell::RefCell;
 use std::rc::{Rc, Weak};
 
@@ -8413,7 +8413,7 @@ The lack of infinite output indicates that this code didn’t create a reference
 
 Let’s look at how the `strong_count` and `weak_count` values of the `Rc<Node>` instances change by creating a new inner scope and moving the creation of `branch` into that scope. By doing so, we can see what happens when `branch` is created and then dropped when it goes out of scope. The modifications are shown in Listing 15-29:
 
-```rs
+```rust
 use std::cell::RefCell;
 use std::rc::{Rc, Weak};
 
@@ -8525,7 +8525,7 @@ The green-threading M:N model requires a larger language runtime to manage threa
 
 To create a new thread, we call the `thread::spawn` function and pass it a closure containing the code we want to run in the new thread. 
 
-```rs
+```rust
 use std::thread;
 use std::time::Duration;
 
@@ -8568,7 +8568,7 @@ The code in Listing 16-1 not only stops the spawned thread prematurely most of t
 
 We can fix the problem of the spawned thread not getting to run, or not getting to run completely, by saving the return value of `thread::spawn` in a variable. The return type of `thread::spawn` is `JoinHandle`. A `JoinHandle` is an owned value that, when we call the `join` method on it, will wait for its thread to finish. Listing 16-2 shows how to use the `JoinHandle` of the thread we created in Listing 16-1 and call `join` to make sure the spawned thread finishes before `main` exits:
 
-```rs
+```rust
 use std::thread;
 use std::time::Duration;
 
@@ -8599,7 +8599,7 @@ The `move` closure is often used alongside `thread::spawn` because it allows you
 
 In Chapter 13, we mentioned we can use the `move` keyword before the parameter list of a closure to force the closure to take ownership of the values it uses in the environment. This technique is especially useful when creating new threads in order to transfer ownership of values from one thread to another.
 
-```rs
+```rust
 use std::thread;
 
 fn main() {
@@ -8653,7 +8653,7 @@ Rust infers how to capture v, and because `println!` only needs a reference to `
 
 Listing 16-4 provides a scenario that’s more likely to have a reference to `v` that won’t be valid:
 
-```rs
+```rust
 use std::thread;
 
 fn main() {
@@ -8684,7 +8684,7 @@ help: to force the closure to take ownership of `v` (and any other referenced va
 
 By adding the `move` keyword before the closure, we force the closure to take ownership of the values it’s using rather than allowing Rust to infer that it should borrow the values. The modification to Listing 16-3 shown in Listing 16-5 will compile and run as we intend:
 
-```rs
+```rust
 use std::thread;
 
 fn main() {
@@ -8742,7 +8742,7 @@ Here, we’ll work up to a program that has one thread to generate values and se
 
 First, in Listing 16-6, we’ll create a channel but not do anything with it. Note that this won’t compile yet because Rust can’t tell what type of values we want to send over the channel.
 
-```rs
+```rust
 use std::sync::mpsc;
 
 fn main() {
@@ -8758,7 +8758,7 @@ The `mpsc::channel` function returns a tuple, the first element of which is the 
 
 Let’s move the transmitting end into a spawned thread and have it send one string so the spawned thread is communicating with the main thread.
 
-```rs
+```rust
 use std::sync::mpsc;
 use std::thread;
 
@@ -8780,7 +8780,7 @@ The transmitting end has a `send` method that takes the value we want to send. T
 
 In Listing 16-8, we’ll get the value from the receiving end of the channel in the main thread. 
 
-```rs
+```rust
 use std::sync::mpsc;
 use std::thread;
 
@@ -8803,7 +8803,7 @@ The receiving end of a channel has two useful methods: `recv` and `try_recv`. We
 
 The `try_recv` method doesn’t block, but will instead return a `Result<T, E>` immediately: an `Ok` value holding a message if one is available and an `Err` value if there aren’t any messages this time. Using `try_recv` is useful if this thread has other work to do while waiting for messages: we could write a loop that calls `try_recv` every so often, handles a message if one is available, and otherwise does other work for a little while until checking again. Let’s do an experiment to show how channels and ownership work together to prevent problems: we’ll try to use a `val` value in the spawned thread after we’ve sent it down the channel. Try compiling the code in Listing 16-9 to see why this code isn’t allowed:
 
-```rs
+```rust
 use std::sync::mpsc;
 use std::thread;
 
@@ -8850,7 +8850,7 @@ Our concurrency mistake has caused a compile time error. The `send` function tak
 
 **Sending Multiple Values and Seeing the Receiver Waiting**
 
-```rs
+```rust
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
@@ -8900,7 +8900,7 @@ The ownership rules play a vital role in message sending because they help you w
 
 Earlier we mentioned that `mpsc` was an acronym for multiple producer, single consumer. Let’s put `mpsc` to use and expand the code in Listing 16-10 to create multiple threads that all send values to the same receiver. We can do so by cloning the transmitting half of the channel, as shown in Listing 16-11:
 
-```rs
+```rust
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
@@ -8988,7 +8988,7 @@ Management of mutexes can be incredibly tricky to get right, which is why so man
 
 As an example of how to use a mutex, let’s start by using a mutex in a single-threaded context, as shown in Listing 16-12:
 
-```rs
+```rust
 use std::sync::Mutex;
 
 fn main() {
@@ -9019,7 +9019,7 @@ After dropping the lock, we can print the mutex value and see that we were able 
 
 Now, let’s try to share a value between multiple threads using `Mutex<T>`. We’ll spin up 10 threads and have them each increment a counter value by 1, so the counter goes from 0 to 10. The next example in Listing 16-13 will have a compiler error, and we’ll use that error to learn more about using `Mutex<T>` and how Rust helps us use it correctly.
 
-```rs
+```rust
 use std::sync::Mutex;
 use std::thread;
 
@@ -9080,7 +9080,7 @@ The error message states that the `counter` value was moved in the previous iter
 
 In Chapter 15, we gave a value multiple owners by using the smart pointer `Rc<T>` to create a reference counted value. Let’s do the same here and see what happens. We’ll wrap the `Mutex<T>` in `Rc<T>` in Listing 16-14 and clone the `Rc<T>` before moving ownership to the thread. Now that we’ve seen the errors, we’ll also switch back to using the `for` loop, and we’ll keep the `move` keyword with the closure.
 
-```rs
+```rust
 use std::rc::Rc;
 use std::sync::Mutex;
 use std::thread;
@@ -9142,7 +9142,7 @@ You might then wonder why all primitive types aren’t atomic and why standard l
 
 `Arc<T>` and `Rc<T>` have the same API, so we fix our program by changing the use line, the call to new, and the call to clone. The code in Listing 16-15 will finally compile and run:
 
-```rs
+```rust
 use std::sync::{Arc, Mutex};
 use std::thread;
 
@@ -9230,7 +9230,7 @@ Another aspect commonly associated with OOP is the idea of *encapsulation*, whic
 
 We discussed how to control encapsulation in Chapter 7: we can use the `pub` keyword to decide which modules, types, functions, and methods in our code should be public, and by default everything else is private.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -9245,7 +9245,7 @@ pub struct AveragedCollection {
 
 The struct is marked `pub` so that other code can use it, but the fields within the struct remain private. This is important in this case because we want to ensure that whenever a value is added or removed from the list, the average is also updated. We do this by implementing `add`, `remove`, and `average` methods on the struct, as shown in Listing 17-2:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -9330,7 +9330,7 @@ We’ve mentioned that in Rust, we refrain from calling structs and enums “obj
 
 Listing 17-3 shows how to define a trait named `Draw` with one method named `draw`:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -9344,7 +9344,7 @@ fn main() {
 
 Next comes some new syntax: Listing 17-4 defines a struct named `Screen` that holds a vector named `components`. This vector is of type `Box<dyn Draw>`, which is a trait object; it’s a stand-in for any type inside a `Box` that implements the `Draw` trait.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -9362,7 +9362,7 @@ fn main() {
 
 On the `Screen` struct, we’ll define a method named `run` that will call the draw method on each of its components, as shown in Listing 17-5:
 
-```rs
+```rust
 #![allow(unused_variables)]
 pub trait Draw {
     fn draw(&self);
@@ -9391,7 +9391,7 @@ On the other hand, with the method using trait objects, one `Screen` instance ca
 
 Now we’ll add some types that implement the Draw trait. We’ll provide the Button type. To imagine what the implementation might look like, a `Button` struct might have fields for `width`, `height`, and `label`, as shown in Listing 17-7:
 
-```rs
+```rust
 pub trait Draw {
     fn draw(&self);
 }
@@ -9429,7 +9429,7 @@ The `width`, `height`, and `label` fields on `Button` will differ from the field
 
 If someone using our library decides to implement a `SelectBox` struct that has `width`, `height`, and `options` fields, they implement the `Draw` trait on the `SelectBox` type as well, as shown in Listing
 
-```rs
+```rust
 use gui::Draw;
 
 struct SelectBox {
@@ -9451,7 +9451,7 @@ fn main() {}
 
 Our library’s user can now write their `main` function to create a `Screen` instance. To the `Screen` instance, they can add a `SelectBox` and a `Button` by putting each in a `Box<T> `to become a trait object. They can then call the `run` method on the `Screen` instance, which will call draw on each of the components. Listing 17-9 shows this implementation:
 
-```rs
+```rust
 use gui::Draw;
 
 struct SelectBox {
@@ -9517,7 +9517,7 @@ The `Self` keyword is an alias for the type we’re implementing the traits or m
 
 An example of a trait whose methods are not object safe is the standard library’s `Clone` trait. The signature for the `clone` method in the `Clone` trait looks like this:
 
-```rs
+```rust
 pub trait Clone {
     fn clone(&self) -> Self;
 }
@@ -9527,7 +9527,7 @@ The `String` type implements the Clone trait, and when we call the `clone` metho
 
 The compiler will indicate when you’re trying to do something that violates the rules of object safety in regard to trait objects. For example, let’s say we tried to implement the Screen struct in Listing 17-4 to hold types that implement the `Clone` trait instead of the `Draw` trait, like this:
 
-```rs
+```rust
 pub struct Screen {
     pub components: Vec<Box<dyn Clone>>,
 }
@@ -9574,7 +9574,7 @@ Any other changes attempted on a post should have no effect. For example, if we 
 
 Listing 17-11 shows this workflow in code form: this is an example usage of the API we’ll implement in a library crate named `blog`. This won’t compile yet because we haven’t implemented the `blog` crate yet.
 
-```rs
+```rust
 use blog::Post;
 
 fn main() {
@@ -9599,7 +9599,7 @@ Defining `Post` and Creating a New Instance in the Draft State
 
 Let’s get started on the implementation of the library! We need a public `Post` struct that holds some content, so we’ll start with the definition of the struct and an associated public new function to create an instance of `Post`, as shown in Listing 17-12. We’ll also make a private `State` trait. Then `Post` will hold a trait object of `Box<dyn State>` inside an `Option<T>` in a private field named `state`. You’ll see why the `Option<T>` is necessary in a bit.
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 fn main() {
@@ -9635,7 +9635,7 @@ When we create a new `Post`, we set its `state` field to a `Some` value that hol
 
 Listing 17-11 showed that we want to be able to call a method named `add_text` and pass it a `&str` that is then added to the text content of the blog post. We implement this as a method rather than exposing the `content` field as `pub`. This means we can implement a method later that will control how the `content` field’s data is read. The `add_text` method is pretty straightforward, so let’s add the implementation in Listing 17-13 to the `impl Post` block:
 
-```rs
+```rust
 pub struct Post {
     state: Option<Box<dyn State>>,
     content: String,
@@ -9672,7 +9672,7 @@ The `add_text` method takes a mutable reference to `self`, because we’re chang
 
 Even after we’ve called `add_text` and added some content to our post, we still want the `content` method to return an empty string slice because the post is still in the draft state, as shown on line 7 of Listing 17-11. For now, let’s implement the `content` method with the simplest thing that will fulfill this requirement: always returning an empty string slice. We’ll change this later once we implement the ability to change a post’s state so it can be published. So far, posts can only be in the draft state, so the post content should always be empty. Listing 17-14 shows this placeholder implementation:
 
-```rs
+```rust
 impl Post {
     // --snip--
     pub fn content(&self) -> &str {
@@ -9687,7 +9687,7 @@ impl Post {
 
 Next, we need to add functionality to request a review of a post, which should change its state from `Draft` to `PendingReview`. Listing 17-15 shows this code:
 
-```rs
+```rust
 pub struct Post {
     state: Option<Box<dyn State>>,
     content: String,
@@ -9760,7 +9760,7 @@ We’ll leave the `content` method on Post as is, returning an empty string slic
 
 The `approve` method will be similar to the `request_review` method: it will set `state` to the value that the current state says it should have when that state is approved, as shown in Listing 17-16:
 
-```rs
+```rust
 #![allow(unused_variables)]
 pub struct Post {
     state: Option<Box<dyn State>>,
@@ -9850,7 +9850,7 @@ Similar to `request_review`, if we call the `approve` method on a `Draft`, it wi
 
 Now we need to update the `content` method on `Post`: if the state is `Published`, we want to return the value in the post’s `content` field; otherwise, we want to return an empty string slice, as shown in Listing 17-17:
 
-```rs
+```rust
 pub struct Post {
     state: Option<Box<dyn State>>,
     content: String,
@@ -9877,7 +9877,7 @@ We then call the `unwrap` method, which we know will never panic, because we kno
 
 **At this point, when we call `content` on the `&Box<dyn State>`, deref coercion will take effect on the `&` and the `Box` so the `content` method will ultimately be called on the type that implements the `State` trait. That means we need to add `content` to the `State` trait definition**, and that is where we’ll put the logic for what content to return depending on which state we have, as shown in Listing 17-18: 
 
-```rs
+```rust
 trait State {
     // --snip--
     fn content<'a>(&self, post: &'a Post) -> &'a str {
@@ -9932,7 +9932,7 @@ We’ll show you how to rethink the state pattern to get a different set of trad
 
 Let’s consider the first part of `main` in Listing 17-11:
 
-```rs
+```rust
 use blog::Post;
 
 fn main() {
@@ -9951,7 +9951,7 @@ fn main() {
 
 We still enable the creation of new posts in the draft state using `Post::new` and the ability to add text to the post’s content. But instead of having a `content` method on a draft post that returns an empty string, we’ll make it so draft posts don’t have the `content` method at all. That way, if we try to get a draft post’s content, we’ll get a compiler error telling us the method doesn’t exist. As a result, it will be impossible for us to accidentally display draft post content in production, because that code won’t even compile. Listing 17-19 shows the definition of a `Post` struct and a `DraftPost` struct, as well as methods on each:
 
-```rs
+```rust
 
 #![allow(unused_variables)]
 pub struct Post {
@@ -9993,7 +9993,7 @@ The `DraftPost` struct has an `add_text` method, so we can add text to `content`
 
 So how do we get a published post? We want to enforce the rule that a draft post has to be reviewed and approved before it can be published. A post in the pending review state should still not display any content. Let’s implement these constraints by adding another struct, `PendingReviewPost`, defining the `request_review` method on `DraftPost` to return a `PendingReviewPost`, and defining an `approve` method on `PendingReviewPost` to return a `Post`, as shown in Listing 17-20:
 
-```rs
+```rust
 #![allow(unused_variables)]
 pub struct Post {
     content: String,
@@ -10047,7 +10047,7 @@ The `request_review` and `approve` methods take ownership of `self`, thus consum
 
 But we also have to make some small changes to `main`. The `request_review` and `approve` methods **return new instances rather than modifying the struct** they’re called on, so we need to add more `let post =` shadowing assignments to save the returned instances. We also can’t have the assertions about the draft and pending review post’s contents be empty strings, nor do we need them: we can’t compile code that tries to use the content of posts in those states any longer. The updated code in main is shown in Listing 17-21:
 
-```rs
+```rust
 use blog::Post;
 
 fn main() {
@@ -10091,7 +10091,7 @@ This chapter is a reference on all things related to patterns. We’ll cover the
 
 As discussed in Chapter 6, we use patterns in the arms of `match` expressions. Formally, `match` expressions are defined as the keyword `match`, a value to match on, and one or more match arms that consist of a pattern and an expression to run if the value matches that arm’s pattern, like this:
 
-```rs
+```rust
 match VALUE {
     PATTERN => EXPRESSION,
     PATTERN => EXPRESSION,
@@ -10111,7 +10111,7 @@ Listing 18-1 shows that it’s also possible to mix and match `if let`, `else if
 
 The code in Listing 18-1 shows a series of checks for several conditions that decide what the background color should be. For this example, we’ve created variables with hardcoded values that a real program might receive from user input.
 
-```rs
+```rust
 fn main() {
     let favorite_color: Option<&str> = None;
     let is_tuesday = false;
@@ -10145,7 +10145,7 @@ The downside of using `if let` expressions is that the compiler doesn’t check 
 
 Similar in construction to `if let`, the `while let` conditional loop allows a `while` loop to run for as long as a pattern continues to match. The example in Listing 18-2 shows a `while let` loop that uses a vector as a stack and prints the values in the vector in the opposite order in which they were pushed.
 
-```rs
+```rust
 fn main() {
     let mut stack = Vec::new();
 
@@ -10169,7 +10169,7 @@ In a `for` loop, the pattern is the value that directly follows the keyword `for
 
 Listing 18-3 demonstrates how to use a pattern in a `for` loop to destructure, or break apart, a tuple as part of the `for` loop.
 
-```rs
+```rust
 fn main() {
     let v = vec!['a', 'b', 'c'];
 
@@ -10187,7 +10187,7 @@ We use the `enumerate` method to adapt an iterator to produce a value and that v
 
 For example, consider this straightforward variable assignment with `let`:
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     let x = 5;
@@ -10196,7 +10196,7 @@ fn main() {
 
 Throughout this book, we’ve used `let` like this hundreds of times, and although you might not have realized it, you were using patterns! More formally, a `let` statement looks like this:
 
-```rs
+```rust
 let PATTERN = EXPRESSION;
 ```
 
@@ -10204,7 +10204,7 @@ In statements like `let x = 5;` with a variable name in the `PATTERN` slot, the 
 
 To see the pattern matching aspect of `let` more clearly, consider Listing 18-4, which uses a pattern with `let` to destructure a tuple.
 
-```rs
+```rust
 fn main() {
     let (x, y, z) = (1, 2, 3);
 }
@@ -10216,7 +10216,7 @@ Here, we match a tuple against a pattern. Rust compares the value `(1, 2, 3)` to
 
 If the number of elements in the pattern doesn’t match the number of elements in the tuple, the overall type won’t match and we’ll get a compiler error. For example, Listing 18-5 shows an attempt to destructure a tuple with three elements into two variables, which won’t work.
 
-```rs
+```rust
 fn main() {
     let (x, y) = (1, 2, 3);
 }
@@ -10252,7 +10252,7 @@ If we wanted to ignore one or more of the values in the tuple, we could use `_` 
 
 Function parameters can also be patterns. The code in Listing 18-6, which declares a function named foo that takes one parameter named `x` of type `i32`, should by now look familiar.
 
-```rs
+```rust
 fn foo(x: i32) {
     // code goes here
 }
@@ -10264,7 +10264,7 @@ fn main() {}
 
 The `x` part is a pattern! As we did with `let`, we could match a tuple in a function’s arguments to the pattern. Listing 18-7 splits the values in a tuple as we pass it to a function.
 
-```rs
+```rust
 fn print_coordinates(&(x, y): &(i32, i32)) {
     println!("Current location: ({}, {})", x, y);
 }
@@ -10293,7 +10293,7 @@ In general, you shouldn’t have to worry about the distinction between refutabl
 
 Let’s look at an example of what happens when we try to use a refutable pattern where Rust requires an irrefutable pattern and vice versa. Listing 18-8 shows a `let` statement, but for the pattern we’ve specified `Some(x)`, a refutable pattern. As you might expect, this code will not compile. ❌
 
-```rs
+```rust
 fn main() {
     let some_option_value: Option<i32> = None;
     let Some(x) = some_option_value;
@@ -10306,7 +10306,7 @@ If `some_option_value` was a None value, it would fail to match the pattern `Som
 
 Rust complains that it doesn’t make sense to use `if let` with an irrefutable pattern:
 
-```rs
+```rust
 $ cargo run
    Compiling patterns v0.1.0 (file:///projects/patterns)
 error[E0005]: refutable pattern in local binding: `None` not covered
@@ -10338,7 +10338,7 @@ For this reason, match arms must use refutable patterns, except for the last arm
 
 As you saw in Chapter 6, you can match patterns against literals directly. The following code gives some examples:
 
-```rs
+```rust
 fn main() {
     let x = 1;
     match x {
@@ -10356,7 +10356,7 @@ This code prints `one` because the value in `x` is 1. This syntax i
 
 Named variables are irrefutable patterns that match any value, and we’ve used them many times in the book. However, there is a complication when you use named variables in `match` expressions. Because `match` starts a new scope, variables declared as part of a pattern inside the `match` expression will shadow those with the same name outside the `match` construct, as is the case with all variables. In Listing 18-11, we declare a variable named `x` with the value `Some(5)` and a variable `y` with the value `10`. We then create a `match` expression on the value `x`. Look at the patterns in the match arms and `println!` at the end, and try to figure out what the code will print before running this code or reading further.
 
-```rs
+```rust
 fn main() {
     let x = Some(5);
     let y = 10;
@@ -10388,7 +10388,7 @@ To create a `match` expression that compares the values of the outer `x` and `y`
 
 In `match` expressions, you can match multiple patterns using the `|` syntax, which means *or*. For example, the following code matches the value of `x` against the match arms, the first of which has an or option, meaning if the value of `x` matches either of the values in that arm, that arm’s code will run:
 
-```rs
+```rust
 fn main() {
     let x = 1;
 
@@ -10406,7 +10406,7 @@ This code prints `one or two`.
 
 The `..=` syntax allows us to match to an inclusive range of values. In the following code, when a pattern matches any of the values within the range, that arm will execute:
 
-```rs
+```rust
 fn main() {
     let x = 5;
 
@@ -10423,7 +10423,7 @@ Ranges are only allowed with numeric values or `char` values, because the compil
 
 Here is an example using ranges of `char` values:
 
-```rs
+```rust
 fn main() {
     let x = 'c';
 
@@ -10445,7 +10445,7 @@ We can also use patterns to destructure structs, enums, tuples, and references t
 
 Listing 18-12 shows a Point struct with two fields, `x` and `y`, that we can break apart using a pattern with a `let` statement.
 
-```rs
+```rust
 struct Point {
     x: i32,
     y: i32,
@@ -10466,7 +10466,7 @@ This code creates the variables `a` and `b` that match the values of the `x` and
 
 Because having variable names match the fields is common and because writing `let Point { x: x, y: y } = p;` contains a lot of duplication, there is a shorthand for patterns that match struct fields: you only need to list the name of the struct field, and the variables created from the pattern will have the same names. Listing 18-13 shows code that behaves in the same way as the code in Listing 18-12, but the variables created in the `let` pattern are `x` and `y` instead of `a` and `b`.
 
-```rs
+```rust
 struct Point {
     x: i32,
     y: i32,
@@ -10489,7 +10489,7 @@ We can also destructure with literal values as part of the struct pattern rather
 
 Listing 18-14 shows a `match` expression that separates `Point` values into three cases: points that lie directly on the `x` axis (which is true when `y = 0`), on the `y` axis (`x = 0`), or neither.
 
-```rs
+```rust
 struct Point {
     x: i32,
     y: i32,
@@ -10518,7 +10518,7 @@ In this example, the value `p` matches the second arm by virtue of `x` containin
 
 The pattern to destructure an enum should correspond to the way the data stored within the enum is defined. As an example, in Listing 18-15 we use the Message enum from Listing 6-2 and write a match with patterns that will destructure each inner value.
 
-```rs
+```rust
 enum Message {
     Quit,
     Move { x: i32, y: i32 },
@@ -10564,7 +10564,7 @@ Until now, all our examples have been matching structs or enums that were one le
 
 For example, we can refactor the code in Listing 18-15 to support RGB and HSV colors in the `ChangeColor` message, as shown in Listing 18-16.
 
-```rs
+```rust
 enum Color {
     Rgb(i32, i32, i32),
     Hsv(i32, i32, i32),
@@ -10602,7 +10602,7 @@ The pattern of the first arm in the `match` expression matches a `Message::Chang
 
 We can mix, match, and nest destructuring patterns in even more complex ways. The following example shows a complicated destructure where we nest structs and tuples inside a tuple and destructure all the primitive values out:
 
-```rs
+```rust
 fn main() {
     struct Point {
         x: i32,
@@ -10625,7 +10625,7 @@ You’ve seen that it’s sometimes useful to ignore values in a pattern, such a
 
 We’ve used the underscore (`_`) as a wildcard pattern that will match any value but not bind to the value. Although the underscore `_` pattern is especially useful as the last arm in a `match` expression, we can use it in any pattern, including function parameters, as shown in Listing 18-17.
 
-```rs
+```rust
 fn foo(_: i32, y: i32) {
     println!("This code only uses the y parameter: {}", y);
 }
@@ -10645,7 +10645,7 @@ In most cases when you no longer need a particular function parameter, you would
 
 We can also use `_` inside another pattern to ignore just part of a value, for example, when we want to test for only part of a value but have no use for the other parts in the corresponding code we want to run. Listing 18-18 shows code responsible for managing a setting’s value. The business requirements are that the user should not be allowed to overwrite an existing customization of a setting but can unset the setting and give it a value if it is currently unset.
 
-```rs
+```rust
 fn main() {
     let mut setting_value = Some(5);
     let new_setting_value = Some(10);
@@ -10671,7 +10671,7 @@ In all other cases (if either `setting_value` or `new_setting_value` are `None`)
 
 We can also use underscores in multiple places within one pattern to ignore particular values. Listing 18-19 shows an example of ignoring the second and fourth values in a tuple of five items.
 
-```rs
+```rust
 fn main() {
     let numbers = (2, 4, 8, 16, 32);
 
@@ -10692,7 +10692,7 @@ This code will print `Some numbers: 2, 8, 32`, and the values 4 and 16 will be i
 
 If you create a variable but don’t use it anywhere, Rust will usually issue a warning because that could be a bug. But sometimes it’s useful to create a variable you won’t use yet, such as when you’re prototyping or just starting a project. In this situation, you can tell Rust not to warn you about the unused variable by starting the name of the variable with an underscore. In Listing 18-20, we create two unused variables, but when we run this code, we should only get a warning about one of them.
 
-```rs
+```rust
 fn main() {
     let _x = 5;
     let y = 10;
@@ -10705,7 +10705,7 @@ Here we get a warning about not using the variable `y`, but we don’t get a war
 
 Note that there is a subtle difference between using only `_` and using a name that starts with an underscore. The syntax `_x` still binds the value to the variable, whereas `_` doesn’t bind at all. To show a case where this distinction matters, Listing 18-21 will provide us with an error.
 
-```rs
+```rust
 fn main() {
     let s = Some(String::from("Hello!"));
 
@@ -10721,7 +10721,7 @@ fn main() {
 
 We’ll receive an error because the `s` value will still be moved into `_s`, which prevents us from using `s` again. However, using the underscore by itself doesn’t ever bind to the value. Listing 18-22 will compile without any errors because s doesn’t get moved into `_`.
 
-```rs
+```rust
 fn main() {
     let s = Some(String::from("Hello!"));
 
@@ -10741,7 +10741,7 @@ This code works just fine because we never bind `s` to anything; it isn’t move
 
 With values that have many parts, we can use the `..` syntax to use only a few parts and ignore the rest, avoiding the need to list underscores for each ignored value. The `..` pattern ignores any parts of a value that we haven’t explicitly matched in the rest of the pattern. In Listing 18-23, we have a `Point` struct that holds a coordinate in three-dimensional space. In the `match` expression, we want to operate only on the `x` coordinate and ignore the values in the `y` and `z` fields.
 
-```rs
+```rust
 fn main() {
     struct Point {
         x: i32,
@@ -10763,7 +10763,7 @@ We list the `x` value and then just include the `..` pattern. This is quicker th
 
 The syntax `..` will expand to as many values as it needs to be. Listing 18-24 shows how to use `..` with a tuple.
 
-```rs
+```rust
 fn main() {
     let numbers = (2, 4, 8, 16, 32);
 
@@ -10781,7 +10781,7 @@ In this code, the first and last value are matched with `first` and `last`. The 
 
 However, using `..` must be unambiguous. If it is unclear which values are intended for matching and which should be ignored, Rust will give us an error. Listing 18-25 shows an example of using .. ambiguously, so it will not compile.
 
-```rs
+```rust
 fn main() {
     let numbers = (2, 4, 8, 16, 32);
 
@@ -10824,7 +10824,7 @@ A *match guard* is an additional `if` condition specified after the pattern in a
 
 The condition can use variables created in the pattern. Listing 18-26 shows a `match` where the first arm has the pattern `Some(x)` and also has a match guard of `if x < 5`.
 
-```rs
+```rust
 fn main() {
     let num = Some(4);
 
@@ -10846,7 +10846,7 @@ There is no way to express the `if x < 5` condition within a pattern, so the mat
 
 In Listing 18-11, we mentioned that we could use match guards to solve our pattern-shadowing problem. Recall that a new variable was created inside the pattern in the `match` expression instead of using the variable outside the `match`. That new variable meant we couldn’t test against the value of the outer variable. Listing 18-27 shows how we can use a match guard to fix this problem.
 
-```rs
+```rust
 fn main() {
     let x = Some(5);
     let y = 10;
@@ -10869,7 +10869,7 @@ The match guard `if n == y` is not a pattern and therefore doesn’t introduce n
 
 You can also use the or operator `|` in a match guard to specify multiple patterns; the match guard condition will apply to all the patterns. Listing 18-28 shows the precedence of combining a match guard with a pattern that uses `|`. The important part of this example is that the `if y` match guard applies to `4`, `5`, and `6`, even though it might look like `if y` only applies to `6`.
 
-```rs
+```rust
 fn main() {
     let x = 4;
     let y = false;
@@ -10885,13 +10885,13 @@ Listing 18-28: Combining multiple patterns with a match guard
 
 The match condition states that the arm only matches if the value of `x` is equal to `4`, `5`, or `6` and if `y` is `true`. When this code runs, the pattern of the first arm matches because `x` is `4`, but the match guard `if y` is false, so the first arm is not chosen. The code moves on to the second arm, which does match, and this program prints `no`. The reason is that the `if` condition applies to the whole pattern `4 | 5 | 6`, not only to the last value `6`. In other words, the precedence of a match guard in relation to a pattern behaves like this:
 
-```rs
+```rust
 (4 | 5 | 6) if y => ...
 ```
 
 rather than this:
 
-```rs
+```rust
 4 | 5 | (6 if y) => ...
 ```
 
@@ -10901,7 +10901,7 @@ After running the code, the precedence behavior is evident: if the match guard w
 
 The at operator (`@`) lets us create a variable that holds a value at the same time we’re testing that value to see whether it matches a pattern. Listing 18-29 shows an example where we want to test that a `Message::Hello` `id` field is within the range `3..=7`. But we also want to bind the value to the variable `id_variable` so we can use it in the code associated with the arm. We could name this variable `id`, the same as the field, but for this example we’ll use a different name.
 
-```rs
+```rust
 fn main() {
     enum Message {
         Hello { id: i32 },
@@ -10986,7 +10986,7 @@ By opting out of having Rust enforce these guarantees, you can give up guarantee
 
 Listing 19-1 shows how to create an immutable and a mutable raw pointer from references.
 
-```rs
+```rust
 fn main() {
     let mut num = 5;
 
@@ -11003,7 +11003,7 @@ We’ve created raw pointers by using `as` to cast an immutable and a mutable re
 
 Next, we’ll create a raw pointer whose validity we can’t be so certain of. Listing 19-2 shows how to create a raw pointer to an arbitrary location in memory. Trying to use arbitrary memory is undefined: there might be data at that address or there might not, the compiler might optimize the code so there is no memory access, or the program might error with a segmentation fault. Usually, there is no good reason to write code like this, but it is possible.
 
-```rs
+```rust
 fn main() {
     let address = 0x012345usize;
     let r = address as *const i32;
@@ -11015,7 +11015,7 @@ fn main() {
 
 Recall that we can create raw pointers in safe code, but we can’t dereference raw pointers and read the data being pointed to. In Listing 19-3, we use the dereference operator `*` on a raw pointer that requires an `unsafe` block.
 
-```rs
+```rust
 fn main() {
     let mut num = 5;
 
@@ -11043,7 +11043,7 @@ The second type of operation that requires an unsafe block is calls to unsafe fu
 
 Here is an unsafe function named dangerous that doesn’t do anything in its body:
 
-```rs
+```rust
 fn main() {
     unsafe fn dangerous() {}
 
@@ -11082,7 +11082,7 @@ Bodies of unsafe functions are effectively `unsafe` blocks, so to perform other 
 
 Just because a function contains unsafe code doesn’t mean we need to mark the entire function as unsafe. In fact, wrapping unsafe code in a safe function is a common abstraction. As an example, let’s study a function from the standard library, `split_at_mut`, that requires some unsafe code and explore how we might implement it. This safe method is defined on mutable slices: it takes one slice and makes it two by splitting the slice at the index given as an argument. Listing 19-4 shows how to use `split_at_mut`.
 
-```rs
+```rust
 fn main() {
     let mut v = vec![1, 2, 3, 4, 5, 6];
 
@@ -11099,7 +11099,7 @@ fn main() {
 
 We can’t implement this function using only safe Rust. An attempt might look something like Listing 19-5, which won’t compile. For simplicity, we’ll implement `split_at_mut` as a function rather than a method and only for slices of `i32` values rather than for a generic type `T`. 
 
-```rs
+```rust
 fn split_at_mut(slice: &mut [i32], mid: usize) -> (&mut [i32], &mut [i32]) {
     let len = slice.len();
 
@@ -11150,7 +11150,7 @@ Rust’s borrow checker can’t understand that we’re borrowing different part
 
 Listing 19-6 shows how to use an `unsafe` block, a raw pointer, and some calls to unsafe functions to make the implementation of `split_at_mut` work.
 
-```rs
+```rust
 use std::slice;
 
 fn split_at_mut(slice: &mut [i32], mid: usize) -> (&mut [i32], &mut [i32]) {
@@ -11185,7 +11185,7 @@ Note that we don’t need to mark the resulting `split_at_mut` function as `unsa
 
 In contrast, the use of `slice::from_raw_parts_mut` in Listing 19-7 would likely crash when the slice is used. This code takes an arbitrary memory location and creates a slice 10,000 items long.
 
-```rs
+```rust
 fn main() {
     use std::slice;
 
@@ -11206,7 +11206,7 @@ Sometimes, your Rust code might need to interact with code written in another la
 
 Listing 19-8 demonstrates how to set up an integration with the `abs` function from the C standard library. Functions declared within `extern` blocks are always unsafe to call from Rust code. The reason is that other languages don’t enforce Rust’s rules and guarantees, and Rust can’t check them, so responsibility falls on the programmer to ensure safety.
 
-```rs
+```rust
 extern "C" {
     fn abs(input: i32) -> i32;
 }
@@ -11247,7 +11247,7 @@ Until now, we’ve not talked about global variables, which Rust does support bu
 
 In Rust, global variables are called *static* variables. Listing 19-9 shows an example declaration and use of a static variable with a string slice as a value.
 
-```rs
+```rust
 static HELLO_WORLD: &str = "Hello, world!";
 
 fn main() {
@@ -11263,7 +11263,7 @@ Constants and immutable static variables might seem similar, but a subtle differ
 
 Another difference between constants and static variables is that static variables can be mutable. Accessing and modifying mutable static variables is *unsafe*. Listing 19-10 shows how to declare, access, and modify a mutable static variable named COUNTER.
 
-```rs
+```rust
 static mut COUNTER: u32 = 0;
 
 fn add_to_count(inc: u32) {
@@ -11291,7 +11291,7 @@ With mutable data that is globally accessible, it’s difficult to ensure there 
 
 The final action that works only with `unsafe` is implementing an unsafe trait. A trait is unsafe when at least one of its methods has some invariant that the compiler can’t verify. We can declare that a trait is unsafe by adding the `unsafe` keyword before `trait` and marking the implementation of the trait as `unsafe` too, as shown in Listing 19-11.
 
-```rs
+```rust
 unsafe trait Foo {
     // methods go here
 }
@@ -11325,7 +11325,7 @@ Using `unsafe` to take one of the five actions (superpowers) just discussed isn�
 
 One example of a trait with an associated type is the `Iterator` trait that the standard library provides. The associated type is named `Item` and stands in for the type of the values the type implementing the `Iterator` trait is iterating over.
 
-```rs
+```rust
 #![allow(unused_variables)]
 fn main() {
     pub trait Iterator {
@@ -11344,7 +11344,7 @@ Associated types might seem like a similar concept to generics, in that the latt
 
 Let’s examine the difference between the two concepts with an example from Chapter 13 that implements the `Iterator` trait on the `Counter` struct. In Listing 13-21, we specified that the `Item` type was `u32`:
 
-```rs
+```rust
 struct Counter {
     count: u32,
 }
@@ -11374,7 +11374,7 @@ fn main() {}
 
 This syntax seems comparable to that of generics. So why not just define the `Iterator` trait with generics, as shown in Listing 19-13?
 
-```rs
+```rust
 pub trait Iterator<T> {
     fn next(&mut self) -> Option<T>;
 }
@@ -11394,7 +11394,7 @@ A great example of a situation where this technique is useful is with operator o
 
 Rust doesn’t allow you to create your own operators or overload arbitrary operators. But you can overload the operations and corresponding traits listed in `std::ops` by implementing the traits associated with the operator. For example, in Listing 19-14 we overload the `+` operator to add two `Point` instances together. We do this by implementing the `Add` trait on a `Point` struct:
 
-```rs
+```rust
 use std::ops::Add;
 
 #[derive(Debug, PartialEq)]
@@ -11428,7 +11428,7 @@ The add method adds the `x` values of two `Point` instances and the `y` values o
 
 The default generic type in this code is within the `Add` trait. Here is its definition:
 
-```rs
+```rust
 trait Add<RHS=Self> {
     type Output;
 
@@ -11442,7 +11442,7 @@ When we implemented `Add` for `Point`, we used the default for `RHS` because we 
 
 We have two structs, `Millimeters` and `Meters`, holding values in different units. We want to add values in millimeters to values in meters and have the implementation of `Add` do the conversion correctly. We can implement `Add` for `Millimeters` with `Meters` as the `RHS`, as shown in Listing 19-15.
 
-```rs
+```rust
 use std::ops::Add;
 
 struct Millimeters(u32);
@@ -11476,7 +11476,7 @@ Nothing in Rust prevents a trait from having a method with the same name as anot
 
 When calling methods with the same name, you’ll need to tell Rust which one you want to use. Consider the code in Listing 19-16 where we’ve defined two traits, `Pilot` and `Wizard`, that both have a method called `fly`. We then implement both traits on a type `Human` that already has a method named `fly` implemented on it. Each `fly` method does something different.
 
-```rs
+```rust
 trait Pilot {
     fn fly(&self);
 }
@@ -11512,7 +11512,7 @@ fn main() {}
 
 When we call `fly` on an instance of `Human`, the compiler defaults to calling the method that is directly implemented on the type, as shown in Listing 19-17.
 
-```rs
+```rust
 fn main() {
     let person = Human;
     person.fly();
@@ -11525,7 +11525,7 @@ Running this code will print `*waving arms furiously*`, showing that Rust called
 
 To call the `fly` methods from either the `Pilot` trait or the `Wizard` trait, we need to use more explicit syntax to specify which `fly` method we mean. Listing 19-18 demonstrates this syntax.
 
-```rs
+```rust
 fn main() {
     let person = Human;
     Pilot::fly(&person);
@@ -11542,7 +11542,7 @@ Because the `fly` method takes a `self` parameter, if we had two types that both
 
 However, associated functions that are part of traits don’t have a `self` parameter. When two types in the same scope implement that trait, Rust can’t figure out which type you mean unless you use *fully qualified syntax*. For example, the `Animal` trait in Listing 19-19 has the associated function `baby_name`, the implementation of `Animal` for the struct `Dog`, and the associated function `baby_name` defined on `Dog` directly.
 
-```rs
+```rust
 trait Animal {
     fn baby_name() -> String;
 }
@@ -11580,7 +11580,7 @@ A baby dog is called a Spot
 
 We want to call the `baby_name` function that is part of the `Animal` trait that we implemented on `Dog` so the code prints A baby dog is called a puppy. The technique of specifying the trait name that we used in Listing 19-18 doesn’t help here; if we change main to the code in Listing 19-20, we’ll get a compilation error.
 
-```rs
+```rust
 fn main() {
     println!("A baby dog is called a {}", Animal::baby_name());
 }
@@ -11614,7 +11614,7 @@ To learn more, run the command again with --verbose.
 
 To disambiguate and tell Rust that we want to use the implementation of `Animal` for `Dog`, we need to use fully qualified syntax. Listing 19-21 demonstrates how to use fully qualified syntax.
 
-```rs
+```rust
 fn main() {
     println!("A baby dog is called a {}", <Dog as Animal>::baby_name());
 }
@@ -11634,7 +11634,7 @@ A baby dog is called a puppy
 
 In general, fully qualified syntax is defined as follows:
 
-```rs
+```rust
 <Type as Trait>::function(receiver_if_method, next_arg, ...);
 ```
 
@@ -11656,7 +11656,7 @@ For example, let’s say we want to make an `OutlinePrint` trait with an `outlin
 
 In the implementation of `outline_print`, we want to use the `Display` trait’s functionality. Therefore, we need to specify that the `OutlinePrint` trait will work only for types that also implement `Display` and provide the functionality that `OutlinePrint` needs. We can do that in the trait definition by specifying `OutlinePrint: Display`. This technique is similar to adding a trait bound to the trait. Listing 19-22 shows an implementation of the `OutlinePrint` trait.
 
-```rs
+```rust
 use std::fmt;
 
 trait OutlinePrint: fmt::Display {
@@ -11680,7 +11680,7 @@ Because we’ve specified that `OutlinePrint` requires the `Display` trait, we c
 
 We implement `Display` on `Point` and satisfy the constraint that `OutlinePrint` requires, like so:
 
-```rs
+```rust
 use std::fmt;
 
 impl fmt::Display for Point {
@@ -11696,7 +11696,7 @@ In Chapter 10 in the “Implementing a Trait on a Type” section, we mentioned 
 
 As an example, let’s say we want to implement `Display` on `Vec<T>`, which the orphan rule prevents us from doing directly because the `Display` trait and the `Vec<T>` type are defined outside our crate. We can make a `Wrapper` struct that holds an instance of `Vec<T>`; then we can implement `Display` on `Wrapper` and use the `Vec<T>` value, as shown in Listing 19-23.
 
-```rs
+```rust
 use std::fmt;
 
 struct Wrapper(Vec<String>);
@@ -11738,7 +11738,7 @@ Newtypes can also hide internal implementation. For example, we could provide a 
 
 Along with the newtype pattern, Rust provides the ability to declare a type alias to give an existing type another name. For this we use the `type` keyword. For example, we can create the alias `Kilometers` to `i32` like so:
 
-```rs
+```rust
 fn main() {
     type Kilometers = i32;
 
@@ -11753,13 +11753,13 @@ Because `Kilometers` and `i32` are the same type, we can add values of both type
 
 The main use case for type synonyms is to reduce repetition. For example, we might have a lengthy type like this:
 
-```rs
+```rust
 Box<dyn Fn() + Send + 'static>
 ```
 
 Writing this lengthy type in function signatures and as type annotations all over the code can be tiresome and error prone. Imagine having a project full of code like that in Listing 19-24.
 
-```rs
+```rust
 fn main() {
     let f: Box<dyn Fn() + Send + 'static> = Box::new(|| println!("hi"));
 
@@ -11778,7 +11778,7 @@ fn main() {
 
 A type alias makes this code more manageable by reducing the repetition. In Listing 19-25, we’ve introduced an alias named `Thunk` for the verbose type and can replace all uses of the type with the shorter alias `Thunk`.
 
-```rs
+```rust
 fn main() {
     type Thunk = Box<dyn Fn() + Send + 'static>;
 
@@ -11801,7 +11801,7 @@ This code is much easier to read and write! Choosing a meaningful name for a typ
 
 Type aliases are also commonly used with the `Result<T, E>` type for reducing repetition. Consider the `std::io` module in the standard library. I/O operations often return a `Result<T, E>` to handle situations when operations fail to work. This library has a `std::io::Error` struct that represents all possible I/O errors. Many of the functions in `std::io` will be returning `Result<T, E>` where the `E` is `std::io::Error`, such as these functions in the `Write` trait:
 
-```rs
+```rust
 #![allow(unused_variables)]
 use std::fmt;
 use std::io::Error;
@@ -11817,13 +11817,13 @@ pub trait Write {
 
 The `Result<..., Error>` is repeated a lot. As such, `std::io` has this type of alias declaration:
 
-```rs
+```rust
 type Result<T> = std::result::Result<T, std::io::Error>;
 ```
 
 Because this declaration is in the `std::io` module, we can use the fully qualified alias `std::io::Result<T>`—that is, a `Result<T, E>` with the `E` filled in as `std::io::Error`. The `Write` trait function signatures end up looking like this:
 
-```rs
+```rust
 use std::fmt;
 
 type Result<T> = std::result::Result<T, std::io::Error>;
@@ -11845,7 +11845,7 @@ The type alias helps in two ways: it makes code easier to write and it gives us 
 
 Rust has a special type named `!` that’s known in type theory lingo as the *empty type* because it has no values. We prefer to call it the *never type* because it stands in the place of the return type when a function will never return. Here is an example:
 
-```rs
+```rust
 fn bar() -> ! {
     // --snip--
     panic!();
@@ -11858,7 +11858,7 @@ This code is read as “the function bar returns never.” Functions that return
 
 But what use is a type you can never create values for? Recall the code from Listing 2-5; we’ve reproduced part of it here in Listing 19-26.
 
-```rs
+```rust
         let guess: u32 = match guess.trim().parse() {
             Ok(num) => num,
             Err(_) => continue,
@@ -11869,7 +11869,7 @@ But what use is a type you can never create values for? Recall the code from Lis
 
 At the time, we skipped over some details in this code. In Chapter 6 in “The `match` Control Flow Operator” section, we discussed that `match` arms must all return the same type. So, for example, the following code doesn’t work: ❌
 
-```rs
+```rust
     let guess = match guess.trim().parse() {
         Ok(_) => 5,
         Err(_) => "hello",
@@ -11884,7 +11884,7 @@ The formal way of describing this behavior is that expressions of type `!` can b
 
 The never type is useful with the `panic!` macro as well. Remember the unwrap function that we call on `Option<T>` values to produce a value or panic? Here is its definition:
 
-```rs
+```rust
 enum Option<T> {
     Some(T),
     None,
@@ -11906,7 +11906,7 @@ In this code, the same thing happens as in the match in Listing 19-26: Rust sees
 
 One final expression that has the type `!` is a loop:
 
-```rs
+```rust
     print!("forever ");
 
     loop {
@@ -11922,7 +11922,7 @@ Due to Rust’s need to know certain details, such as how much space to allocate
 
 Let’s dig into the details of a dynamically sized type called `str`, which we’ve been using throughout the book. That’s right, not `&str`, but `str` on its own, is a DST. We can’t know how long the string is until runtime, meaning we can’t create a variable of type `str`, nor can we take an argument of type `str`. Consider the following code, which does not work: ❌
 
-```rs
+```rust
 fn main() {
     let s1: str = "Hello there!";
     let s2: str = "How's it going?";
@@ -11939,7 +11939,7 @@ We can combine `str` with all kinds of pointers: for example, `Box<str>` or `Rc<
 
 To work with DSTs, Rust has a particular trait called the `Sized` trait to determine whether or not a type’s size is known at compile time. This trait is automatically implemented for everything whose size is known at compile time. In addition, **Rust implicitly adds a bound on `Sized` to every generic function.** That is, a generic function definition like this:
 
-```rs
+```rust
 fn generic<T>(t: T) {
     // --snip--
 }
@@ -11947,7 +11947,7 @@ fn generic<T>(t: T) {
 
 is actually treated as though we had written this:
 
-```rs
+```rust
 fn generic<T: Sized>(t: T) {
     // --snip--
 }
@@ -11955,7 +11955,7 @@ fn generic<T: Sized>(t: T) {
 
 By default, generic functions will work only on types that have a known size at compile time. However, you can use the following special syntax to relax this restriction:
 
-```rs
+```rust
 fn generic<T: ?Sized>(t: &T) {
     // --snip--
 }
@@ -11971,7 +11971,7 @@ Also note that we switched the type of the `t` parameter from `T` to `&T`. Becau
 
 We’ve talked about how to pass closures to functions; you can also pass regular functions to functions! This technique is useful when you want to pass a function you’ve already defined rather than defining a new closure. Doing this with function pointers will allow you to use functions as arguments to other functions. Functions coerce to the type `fn` (with a lowercase f), not to be confused with the `Fn` closure trait. The `fn` type is called a function pointer. The syntax for specifying that a parameter is a function pointer is similar to that of closures, as shown in Listing 19-27.
 
-```rs
+```rust
 fn add_one(x: i32) -> i32 {
     x + 1
 }
@@ -11999,7 +11999,7 @@ An example of where you would want to only accept fn and not closures is when in
 
 As an example of where you could use either a closure defined inline or a named function, let’s look at a use of `map`. To use the `map` function to turn a vector of numbers into a vector of strings, we could use a closure, like this:
 
-```rs
+```rust
 fn main() {
     let list_of_numbers = vec![1, 2, 3];
     let list_of_strings: Vec<String> =
@@ -12009,7 +12009,7 @@ fn main() {
 
 Or we could name a function as the argument to `map` instead of the closure, like this:
 
-```rs
+```rust
 fn main() {
     let list_of_numbers = vec![1, 2, 3];
     let list_of_strings: Vec<String> =
@@ -12021,7 +12021,7 @@ Note that we must use the fully qualified syntax that we talked about earlier in
 
 We have another useful pattern that exploits an implementation detail of tuple structs and tuple-struct enum variants. These types use `()` as initializer syntax, which looks like a function call. The initializers are actually implemented as functions returning an instance that’s constructed from their arguments. We can use these initializer functions as function pointers that implement the closure traits, which means we can specify the initializer functions as arguments for methods that take closures, like so:
 
-```rs
+```rust
 fn main() {
     enum Status {
         Value(u32),
@@ -12040,7 +12040,7 @@ Closures are represented by traits, which means you can’t return closures dire
 
 The following code tries to return a closure directly, but it won’t compile:
 
-```rs
+```rust
 fn returns_closure() -> dyn Fn(i32) -> i32 {
     |x| x + 1
 }
@@ -12083,7 +12083,7 @@ To learn more, run the command again with --verbose.
 
 The error references the `Sized` trait again! Rust doesn’t know how much space it will need to store the closure. We saw a solution to this problem earlier. We can use a trait object:
 
-```rs
+```rust
 fn returns_closure() -> Box<dyn Fn(i32) -> i32> {
     Box::new(|x| x + 1)
 }
@@ -12119,7 +12119,7 @@ The most widely used form of macros in Rust is *declarative macros*. These are a
 
 To define a macro, you use the `macro_rules!` construct. Let’s explore how to use `macro_rules!` by looking at how the `vec!` macro is defined. Chapter 8 covered how we can use the `vec!` macro to create a new vector with particular values. For example, the following macro creates a new vector containing three integers:
 
-```rs
+```rust
 let v: Vec<u32> = vec![1, 2, 3];
 ```
 
@@ -12127,7 +12127,7 @@ We could also use the `vec!` macro to make a vector of two integers or a vector 
 
 Listing 19-28 shows a slightly simplified definition of the `vec!` macro.
 
-```rs
+```rust
 #[macro_export]
 macro_rules! vec {
     ( $( $x:expr ),* ) => {
@@ -12160,7 +12160,7 @@ When we call this macro with `vec![1, 2, 3]`;, the `$x` pattern matches three ti
 
 Now let’s look at the pattern in the body of the code associated with this arm: `temp_vec.push()` within `$()*` is generated for each part that matches `$()` in the pattern zero or more times depending on how many times the pattern matches. The `$x` is replaced with each expression matched. When we call this macro with `vec![1, 2, 3];`, the code generated that replaces this macro call will be the following:
 
-```rs
+```rust
 {
     let mut temp_vec = Vec::new();
     temp_vec.push(1);
@@ -12182,7 +12182,7 @@ The three kinds of procedural macros (custom derive, attribute-like, and functio
 
 When creating procedural macros, the definitions must reside in their own crate with a special crate type. This is for complex technical reasons that we hope to eliminate in the future. Using procedural macros looks like the code in Listing 19-29, where `some_attribute` is a placeholder for using a specific macro.
 
-```rs
+```rust
 use proc_macro;
 
 #[some_attribute]
@@ -12200,7 +12200,7 @@ Let’s look at the different kinds of procedural macros. We’ll start with a c
 
 Let’s create a crate named `hello_macro` that defines a trait named `HelloMacro` with one associated function named `hello_macro`. Rather than making our crate users implement the `HelloMacro` trait for each of their types, we’ll provide a procedural macro so users can annotate their type with `#[derive(HelloMacro)]` to get a default implementation of the `hello_macro` function. The default implementation will print `Hello, Macro! My name is TypeName!` where `TypeName` is the name of the type on which this trait has been defined. In other words, we’ll write a crate that enables another programmer to write code like Listing 19-30 using our crate.
 
-```rs
+```rust
 use hello_macro::HelloMacro;
 use hello_macro_derive::HelloMacro;
 
@@ -12222,7 +12222,7 @@ $ cargo new hello_macro --lib
 
 Next, we’ll define the `HelloMacro` trait and its associated function:
 
-```rs
+```rust
 pub trait HelloMacro {
     fn hello_macro();
 }
@@ -12230,7 +12230,7 @@ pub trait HelloMacro {
 
 We have a trait and its function. At this point, our crate user could implement the trait to achieve the desired functionality, like so:
 
-```rs
+```rust
 use hello_macro::HelloMacro;
 
 struct Pancakes;
@@ -12271,7 +12271,7 @@ quote = "1.0"
 
 To start defining the procedural macro, place the code in Listing 19-31 into your *src/lib.rs* file for the `hello_macro_derive` crate. Note that this code won’t compile until we add a definition for the `impl_hello_macro` function.
 
-```rs
+```rust
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
@@ -12301,7 +12301,7 @@ The `hello_macro_derive` function will be called when a user of our library spec
 
 **The `hello_macro_derive` function first converts the `input` from a `TokenStream` to a data structure that we can then interpret and perform operations on. This is where `syn` comes into play. The `parse` function in `syn` takes a `TokenStream` and returns a `DeriveInput` struct representing the parsed Rust code.** Listing 19-32 shows the relevant parts of the `DeriveInput` struct we get from parsing the `struct Pancakes;` string:
 
-```rs
+```rust
 DeriveInput {
     // --snip--
 
@@ -12331,7 +12331,7 @@ You might have noticed that we’re calling `unwrap` to cause the `hello_macro_d
 
 Now that we have the code to turn the annotated Rust code from a `TokenStream` into a `DeriveInput` instance, let’s generate the code that implements the `HelloMacro` trait on the annotated type, as shown in Listing 19-33.
 
-```rs
+```rust
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
@@ -12389,14 +12389,14 @@ Next, let’s explore how the other kinds of procedural macros differ from custo
 
 Attribute-like macros are similar to custom derive macros, but instead of generating code for the `derive` attribute, they allow you to create new attributes. They’re also more flexible: `derive` only works for structs and enums; attributes can be applied to other items as well, such as functions. Here’s an example of using an attribute-like macro: say you have an attribute named `route` that annotates functions when using a web application framework:
 
-```rs
+```rust
 #[route(GET, "/")]
 fn index() {
 ```
 
 This `#[route]` attribute would be defined by the framework as a procedural macro. The signature of the macro definition function would look like this:
 
-```rs
+```rust
 #[proc_macro_attribute]
 pub fn route(attr: TokenStream, item: TokenStream) -> TokenStream {
 ```
@@ -12409,13 +12409,13 @@ Other than that, attribute-like macros work the same way as custom derive macros
 
 Function-like macros define macros that look like function calls. Similarly to `macro_rules!` macros, they’re more flexible than functions; for example, they can take an unknown number of arguments. However, `macro_rules!` macros can be defined only using the match-like syntax we discussed in the section “Declarative Macros with `macro_rules!` for General Metaprogramming” earlier. Function-like macros take a `TokenStream` parameter and their definition manipulates that `TokenStream` using Rust code as the other two types of procedural macros do. An example of a function-like macro is an `sql!` macro that might be called like so:
 
-```rs
+```rust
 let sql = sql!(SELECT * FROM posts WHERE id=1);
 ```
 
 This macro would parse the SQL statement inside it and check that it’s syntactically correct, which is much more complex processing than a `macro_rules!` macro can do. The `sql!` macro would be defined like this:
 
-```rs
+```rust
 #[proc_macro]
 pub fn sql(input: TokenStream) -> TokenStream {
 ```
