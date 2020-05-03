@@ -107,4 +107,8 @@ members = [
     "examples/list19-30",
     "examples/list19-30_hello_macro",
     "examples/list19-30_hello_macro_derive",
+    "examples/list20-1",
+    "examples/list20-10",
+    "examples/list20-20",
+
 ]
