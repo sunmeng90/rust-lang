@@ -10332,9 +10332,9 @@ To learn more, run the command again with --verbose.
 
 For this reason, match arms must use refutable patterns, except for the last arm, which should match any remaining values with an irrefutable pattern. Rust allows us to use an irrefutable pattern in a `match` with only one arm, but this syntax isn’t particularly useful and could be replaced with a simpler `let` statement.
 
-### 18.3. Pattern Syntax
+### 18.3. Pattern Syntax
 
-#### Matching Literals
+#### Matching Literals
 
 As you saw in Chapter 6, you can match patterns against literals directly. The following code gives some examples:
 
@@ -10352,7 +10352,7 @@ fn main() {
 
 This code prints `one` because the value in `x` is 1. This syntax is useful when you want your code to take an action if it gets a particular concrete value.
 
-#### Matching Named Variables
+#### Matching Named Variables
 
 Named variables are irrefutable patterns that match any value, and we’ve used them many times in the book. However, there is a complication when you use named variables in `match` expressions. Because `match` starts a new scope, variables declared as part of a pattern inside the `match` expression will shadow those with the same name outside the `match` construct, as is the case with all variables. In Listing 18-11, we declare a variable named `x` with the value `Some(5)` and a variable `y` with the value `10`. We then create a `match` expression on the value `x`. Look at the patterns in the match arms and `println!` at the end, and try to figure out what the code will print before running this code or reading further.
 
@@ -10384,7 +10384,7 @@ When the `match` expression is done, its scope ends, and so does the scope of th
 
 To create a `match` expression that compares the values of the outer `x` and `y`, rather than introducing a shadowed variable, we would need to use a match guard conditional instead. We’ll talk about match guards later in the “Extra Conditionals with Match Guards” section.
 
-#### Multiple Patterns
+#### Multiple Patterns
 
 In `match` expressions, you can match multiple patterns using the `|` syntax, which means *or*. For example, the following code matches the value of `x` against the match arms, the first of which has an or option, meaning if the value of `x` matches either of the values in that arm, that arm’s code will run:
 
@@ -10402,7 +10402,7 @@ fn main() {
 
 This code prints `one or two`.
 
-#### Matching Ranges of Values with `..=`
+#### Matching Ranges of Values with `..=`
 
 The `..=` syntax allows us to match to an inclusive range of values. In the following code, when a pattern matches any of the values within the range, that arm will execute:
 
@@ -10437,7 +10437,7 @@ fn main() {
 
 Rust can tell that `c` is within the first pattern’s range and prints `early ASCII letter`.
 
-#### Destructuring to Break Apart Values
+#### Destructuring to Break Apart Values
 
 We can also use patterns to destructure structs, enums, tuples, and references to use different parts of these values. Let’s walk through each value.
 
